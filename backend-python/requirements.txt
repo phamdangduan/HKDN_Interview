@@ -1,0 +1,13 @@
+# TalentAI Python Backend Dependencies (Legacy / Backup Service)
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+sqlalchemy>=2.0.0
+pymysql>=1.1.0
+cryptography>=42.0.0
+python-dotenv>=1.0.0
+pydantic>=2.7.0
+google-genai>=0.1.1
+gTTS>=2.5.0
+python-multipart>=0.0.9
+pdfplumber>=0.11.0
+pypdf>=4.0.0

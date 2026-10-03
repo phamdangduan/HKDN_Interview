@@ -1,0 +1,67 @@
+# ==============================================================================
+# 🐳 TALENTAI DOCKER COMPOSE CONFIGURATION
+# Chạy toàn bộ hệ thống bằng 1 lệnh duy nhất: docker compose up -d
+# ==============================================================================
+services:
+  # ----------------------------------------------------------------------------
+  # 1. CƠ SỞ DỮ LIỆU MYSQL 8.0
+  # ----------------------------------------------------------------------------
+  mysql:
+    image: mysql:8.0
+    container_name: talentai-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-123456}
+      MYSQL_DATABASE: talentai_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - talentai_mysql_data:/var/lib/mysql
+      # Tự động nạp cấu trúc bảng và dữ liệu mẫu khi tạo container lần đầu
+      - ./database.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - talentai_network
+
+  # ----------------------------------------------------------------------------
+  # 2. ỨNG DỤNG TALENTAI (BACKEND TYPESCRIPT + GIAO DIỆN FRONTEND)
+  # ----------------------------------------------------------------------------
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: talentai-app
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      APP_PORT: 8000
+      APP_ENV: production
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: ${DB_PASSWORD:-123456}
+      DB_NAME: talentai_db
+      DATABASE_URL: mysql://root:${DB_PASSWORD:-123456}@mysql:3306/talentai_db
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-AQ.Ab8RN6JvNFPt_R_K5XvSMvFIzISBvzdL_tHNhHEFAD2NBoimng}
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks:
+      - talentai_network
+
+# ------------------------------------------------------------------------------
+# VOLUMES & NETWORKS
+# ------------------------------------------------------------------------------
+volumes:
+  talentai_mysql_data:
+    driver: local
+
+networks:
+  talentai_network:
+    driver: bridge

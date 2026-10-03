@@ -1,0 +1,16 @@
+# Docker Ignore Configuration
+node_modules/
+backend-ts/node_modules/
+backend-ts/dist/
+backend-python/
+dist/
+.git/
+.gitignore
+docs/
+*.md
+*.bat
+.env
+*.tmp
+*.temp
+scratch/
+tmp/

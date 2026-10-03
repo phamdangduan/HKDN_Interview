@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Campaign {
+  id               Int                @id @default(autoincrement())
+  title            String             @db.VarChar(255)
+  company          String             @db.VarChar(255)
+  location         String?            @db.VarChar(255)
+  stipend          String?            @db.VarChar(100)
+  perks            String?            @db.Text
+  job_description  String             @db.Text
+  cutoff_score     Int                @default(80)
+  target_level     String?            @default("fresher") @db.VarChar(50)
+  track            String?            @default("backend") @db.VarChar(100)
+  status           String             @default("active") @db.VarChar(50)
+  created_at       DateTime?          @default(now()) @db.DateTime(0)
+  updated_at       DateTime?          @default(now()) @updatedAt @db.DateTime(0)
+  candidates       Candidate[]
+  interview_sessions InterviewSession[]
+
+  @@map("campaigns")
+}
+
+model Candidate {
+  id                 Int                @id @default(autoincrement())
+  full_name          String             @db.VarChar(255)
+  email              String             @db.VarChar(255)
+  phone              String?            @db.VarChar(50)
+  cv_filename        String?            @db.VarChar(255)
+  cv_text            String?            @db.LongText
+  campaign_id        Int?
+  target_level       String?            @default("fresher") @db.VarChar(50)
+  created_at         DateTime?          @default(now()) @db.DateTime(0)
+  campaign           Campaign?          @relation(fields: [campaign_id], references: [id], onDelete: SetNull)
+  interview_sessions InterviewSession[]
+
+  @@map("candidates")
+}
+
+model InterviewSession {
+  id               String          @id @db.VarChar(64)
+  candidate_id     Int?
+  campaign_id      Int?
+  mode             String          @default("self_practice") @db.VarChar(50)
+  role_target      String          @db.VarChar(255)
+  target_level     String?         @default("fresher") @db.VarChar(50)
+  track            String?         @default("backend") @db.VarChar(100)
+  requirement_text String?         @db.Text
+  persona          String          @default("Alex Chen") @db.VarChar(100)
+  difficulty_level Int             @default(4)
+  duration_minutes Int             @default(30)
+  status           String          @default("in_progress") @db.VarChar(50)
+  created_at       DateTime?       @default(now()) @db.DateTime(0)
+  completed_at     DateTime?       @db.DateTime(0)
+  candidate        Candidate?      @relation(fields: [candidate_id], references: [id], onDelete: Cascade)
+  campaign         Campaign?       @relation(fields: [campaign_id], references: [id], onDelete: SetNull)
+  turns            InterviewTurn[]
+  evaluation       StarEvaluation?
+
+  @@map("interview_sessions")
+}
+
+model InterviewTurn {
+  id                Int              @id @default(autoincrement())
+  session_id        String           @db.VarChar(64)
+  turn_number       Int
+  question_text     String           @db.Text
+  answer_transcript String?          @db.Text
+  audio_url         String?          @db.VarChar(500)
+  probed_aspect     String?          @db.VarChar(255)
+  created_at        DateTime?        @default(now()) @db.DateTime(0)
+  session           InterviewSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@map("interview_turns")
+}
+
+model StarEvaluation {
+  id                 Int              @id @default(autoincrement())
+  session_id         String           @unique @db.VarChar(64)
+  situation_score    Float            @default(0)
+  task_score         Float            @default(0)
+  action_score       Float            @default(0)
+  result_score       Float            @default(0)
+  total_score        Float            @default(0)
+  is_passed          Boolean          @default(false)
+  strengths          String?          @db.Text
+  weaknesses         String?          @db.Text
+  ai_recommendations String?          @db.Text
+  dossier_summary    String?          @db.Text
+  turn_evaluations   String?          @db.Text
+  created_at         DateTime?        @default(now()) @db.DateTime(0)
+  session            InterviewSession @relation(fields: [session_id], references: [id], onDelete: Cascade)
+
+  @@map("star_evaluations")
+}

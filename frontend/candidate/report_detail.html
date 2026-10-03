@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 selection:bg-sky-200 selection:text-slate-900">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Báo cáo Đánh giá Phỏng vấn Chi tiết (Session #SESS-9042) | TalentAI</title>
+  <meta name="description" content="Chi tiết báo cáo phỏng vấn chuẩn cấu trúc STAR: Bảng điểm 5 năng lực, Audio Replay từng câu trả lời có sóng âm và bản viết lại tối ưu của Giám khảo AI.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .audio-playing .waveform-bar {
+      animation: audioPulse 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes audioPulse {
+      0% { height: 20%; }
+      100% { height: 95%; }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-[#F8FAFC] min-h-screen flex flex-col">
+
+  <!-- ==================== 1. IN-APP HEADER NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 h-16 border-b border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-8 flex items-center justify-between">
+    
+    <!-- Left: Brand & Breadcrumb -->
+    <div class="flex items-center gap-4">
+      <a href="dashboard.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:scale-105 transition-transform">
+          T
+        </div>
+        <span class="font-bold text-lg text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+      </a>
+
+      <div class="h-4 w-px bg-slate-200 hidden sm:block"></div>
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 hidden sm:flex">
+        <a href="dashboard.html" class="hover:text-[#2980B9] transition">Candidate Hub</a>
+        <span>/</span>
+        <a href="report_detail.html" class="hover:text-[#2980B9] transition">Báo cáo</a>
+        <span>/</span>
+        <span class="text-slate-800 font-bold font-mono">#SESS-9042</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+      <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tổng quan</a>
+      <a href="setup.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tạo phiên mới</a>
+      <a href="report_detail.html" class="px-3 py-1.5 rounded-lg text-[#2980B9] bg-sky-50">Chi tiết Báo cáo</a>
+      <a href="cv_studio.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Kho CV &amp; Thư</a>
+      <a href="../public/faq.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Trợ giúp</a>
+    </nav>
+
+    <!-- Right: Export & Actions -->
+    <div class="flex items-center gap-3">
+      <button type="button" onclick="window.print()" class="hidden sm:inline-flex items-center gap-1.5 px-3.5 py-1.5 border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition">
+        <svg class="w-4 h-4 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg>
+        <span>Xuất PDF Dossier</span>
+      </button>
+
+      <a href="setup.html" class="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs rounded-xl shadow-md transition">
+        <span>+ Luyện buổi mới</span>
+      </a>
+    </div>
+
+  </header>
+
+  <!-- ==================== 2. MAIN REPORT DETAIL CONTAINER ==================== -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Top Executive Scorecard Hero -->
+    <div class="rounded-3xl bg-white border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-slate-100">
+        <div class="space-y-1.5">
+          <div class="flex flex-wrap items-center gap-2">
+            <span id="reportLevelBadge" class="px-2.5 py-0.5 rounded-full bg-sky-100 text-[#1F6B9E] text-xs font-black uppercase tracking-wider">
+              🔵 FRESHER
+            </span>
+            <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold" id="reportStatusBadge">
+              ✓ Hoàn thành phiên phỏng vấn
+            </span>
+            <span class="text-xs text-slate-400 font-mono" id="reportSessionDisplay">Phiên: #SESS-2026-9042</span>
+          </div>
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight" id="reportRoleTitle">
+            Backend Software Engineer (Java / Spring Boot)
+          </h1>
+          <p class="text-sm text-slate-600" id="reportSubHeader">
+            Vệt công nghệ: <strong class="text-slate-900" id="reportTrackName">Backend Engineering</strong> &bull; Giám khảo AI: <strong class="text-[#2980B9]">Alex Chen (Principal Architect)</strong>
+          </p>
+        </div>
+
+        <!-- Big Score Badge -->
+        <div class="flex items-center gap-4 bg-gradient-to-br from-slate-900 to-[#0F2F45] text-white p-4 sm:p-5 rounded-2xl shadow-lg shrink-0">
+          <div class="text-center">
+            <span class="text-[10px] font-bold uppercase tracking-wider text-sky-300 block">Tổng Điểm STAR</span>
+            <div class="text-4xl font-extrabold tracking-tight text-white mt-0.5">
+              84<span class="text-lg text-slate-400 font-normal">/100</span>
+            </div>
+            <span class="inline-block mt-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30">
+              Top 15% Ứng viên
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Executive Verdict -->
+      <div class="bg-sky-50/70 rounded-2xl border border-sky-200/80 p-5 flex items-start gap-3.5">
+        <div class="w-8 h-8 rounded-xl bg-[#2980B9] text-white flex items-center justify-center shrink-0 text-sm font-bold shadow-md">
+          AI
+        </div>
+        <div class="space-y-1">
+          <h3 class="text-sm font-extrabold text-slate-900">Nhận Xét Tổng Quát Của Giám Khảo David Miller:</h3>
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed">
+            &ldquo;Ứng viên Minh nắm rất vững bản chất Java Core, tư duy lập trình hướng đối tượng (OOP) và cấu trúc dữ liệu. Ở câu hỏi về HashMap và Spring Transaction, bạn đã áp dụng chuẩn STAR để giải thích luồng xử lý và cách bắt lỗi Rollback rõ ràng. Điểm cần nâng cao: Cần tìm hiểu thêm về cách Hibernate sinh câu lệnh SQL ngầm để tránh lỗi N+1 Query và cơ chế Connection Pool. Với nền tảng hiện tại, bạn hoàn toàn sẵn sàng vượt qua vòng phỏng vấn kỹ thuật của FPT Software.&rdquo;
+          </p>
+        </div>
+      </div>
+
+      <!-- 4 Core STAR Competencies Score Grid -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+        
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-center space-y-1">
+          <p class="text-[11px] font-bold text-slate-500 uppercase">Situation (Tình huống)</p>
+          <p class="text-xl font-extrabold text-[#2980B9]" id="scoreSituation">21<span class="text-xs text-slate-400 font-normal">/25</span></p>
+          <span class="text-[10px] text-emerald-600 font-bold block" id="labelSituation">Bối cảnh</span>
+        </div>
+
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-center space-y-1">
+          <p class="text-[11px] font-bold text-slate-500 uppercase">Task (Nhiệm vụ)</p>
+          <p class="text-xl font-extrabold text-[#2980B9]" id="scoreTask">20<span class="text-xs text-slate-400 font-normal">/25</span></p>
+          <span class="text-[10px] text-emerald-600 font-bold block" id="labelTask">Mục tiêu</span>
+        </div>
+
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-center space-y-1">
+          <p class="text-[11px] font-bold text-slate-500 uppercase">Action (Hành động)</p>
+          <p class="text-xl font-extrabold text-[#2980B9]" id="scoreAction">22<span class="text-xs text-slate-400 font-normal">/25</span></p>
+          <span class="text-[10px] text-emerald-600 font-bold block" id="labelAction">Giải pháp thực tế</span>
+        </div>
+
+        <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 text-center space-y-1">
+          <p class="text-[11px] font-bold text-slate-500 uppercase">Result (Kết quả)</p>
+          <p class="text-xl font-extrabold text-[#2980B9]" id="scoreResult">18<span class="text-xs text-slate-400 font-normal">/25</span></p>
+          <span class="text-[10px] text-amber-600 font-bold block" id="labelResult">Số liệu đo lường</span>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================== TURN-BY-TURN INTERACTIVE STAR ANALYSIS ==================== -->
+    <div class="space-y-6" id="turnCardsSection">
+      
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-xl font-extrabold text-slate-900 tracking-tight">Chi Tiết Từng Lượt Hỏi Đáp &amp; Đối Chiếu Đánh Giá STAR</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Phân tích tính chính xác, sự hợp lý của câu trả lời và gợi ý khắc phục từ Giám khảo AI.</p>
+        </div>
+        <span class="text-xs font-bold text-slate-500 bg-white px-3 py-1.5 rounded-xl border border-slate-200" id="totalQuestionsCountBadge">
+          Lịch sử phiên thực tế
+        </span>
+      </div>
+
+      <div id="turnCardsContainer" class="space-y-6">
+
+
+      <!-- TURN 1 CARD -->
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        
+        <!-- Question Header -->
+        <div class="flex items-start justify-between gap-4">
+          <div class="space-y-1">
+            <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-[#2980B9] text-xs font-bold">
+              Câu hỏi 1 / 5 &bull; Bản chất Java Core &amp; Cấu trúc Dữ liệu
+            </span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 pt-1">
+              &ldquo;Trong Java, cơ chế hoạt động bên dưới của HashMap là gì? Khi xảy ra xung đột băm (Hash Collision), Java 8 đã tối ưu hóa cấu trúc dữ liệu từ LinkedList sang cấu trúc gì và với điều kiện nào?&rdquo;
+            </h3>
+            <p class="text-[11px] text-slate-400 italic">Mục đích hỏi: Kiểm tra nền tảng bản chất Java Core, tư duy thuật toán và cơ chế quản lý bộ nhớ.</p>
+          </div>
+          <span class="text-lg font-extrabold text-[#2980B9] bg-sky-50 px-3 py-1.5 rounded-xl border border-sky-100 shrink-0">
+            88 / 100
+          </span>
+        </div>
+
+        <!-- Audio Replay Bar (Interactive Simulator) -->
+        <div class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="toggleAudio(this, 'wave1')" class="w-10 h-10 rounded-full bg-[#2980B9] hover:bg-[#1F6B9E] text-white flex items-center justify-center font-bold shrink-0 shadow-md transition">
+              <svg class="w-4 h-4 ml-0.5 play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div>
+              <p class="text-xs font-bold text-white">Bản ghi âm câu trả lời của bạn (Turn 1)</p>
+              <p class="text-[11px] text-slate-400 font-mono audio-time">00:00 / 01:42 &bull; 16-bit 48kHz PCM</p>
+            </div>
+          </div>
+
+          <!-- Waveform Simulator -->
+          <div id="wave1" class="flex items-center gap-1 h-8 max-w-sm w-full overflow-hidden opacity-75">
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 25%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 60%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 90%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 40%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 80%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 100%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 65%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 30%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 75%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 50%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 85%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 40%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 70%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 95%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 20%"></div>
+          </div>
+        </div>
+
+        <!-- Candidate Transcript -->
+        <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Trích dẫn câu trả lời của bạn:</span>
+          <p class="text-xs sm:text-sm text-slate-700 leading-relaxed italic">
+            &ldquo;HashMap lưu dữ liệu dưới dạng Node key-value trong mảng bucket. Khi gọi put(), Java tính hash từ key.hashCode() rồi dùng phép bit (n - 1) &amp; hash để tìm index bucket. Khi xảy ra trùng lặp index (Hash Collision), các Node được liên kết dạng LinkedList. Từ Java 8, để tránh suy giảm hiệu năng từ O(1) về O(n) khi bucket có quá nhiều phần tử, nếu độ dài danh sách vượt ngưỡng TREEIFY_THRESHOLD là 8 và mảng có ít nhất 64 bucket, Java sẽ tự động chuyển đổi danh sách liên kết sang Cây Đỏ Đen (Red-Black Tree), giúp độ phức tạp tìm kiếm giảm xuống chỉ còn O(log n).&rdquo;
+          </p>
+        </div>
+
+        <!-- STAR Rubric Breakdown -->
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-emerald-800 text-xs">Situation (Tình huống)</span>
+              <span class="font-bold text-emerald-700 text-xs">9.5/10</span>
+            </div>
+            <p class="text-[11px] text-emerald-900 leading-relaxed">Rất xuất sắc: Định lượng rõ bối cảnh tải tăng x4 lần và tỷ lệ timeout 6%.</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-emerald-800 text-xs">Task (Nhiệm vụ)</span>
+              <span class="font-bold text-emerald-700 text-xs">8.5/10</span>
+            </div>
+            <p class="text-[11px] text-emerald-900 leading-relaxed">Xác định chuẩn vai trò Product Lead điều phối liên bộ phận trong sự cố.</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl border border-emerald-200 bg-emerald-50/60 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-emerald-800 text-xs">Action (Hành động)</span>
+              <span class="font-bold text-emerald-700 text-xs">9.0/10</span>
+            </div>
+            <p class="text-[11px] text-emerald-900 leading-relaxed">Giải pháp kỹ thuật cụ thể (Circuit Breaker &amp; Kafka Async Queue).</p>
+          </div>
+
+          <div class="p-3.5 rounded-xl border border-amber-200 bg-amber-50/60 space-y-1">
+            <div class="flex items-center justify-between">
+              <span class="font-extrabold text-amber-800 text-xs">Result (Kết quả)</span>
+              <span class="font-bold text-amber-700 text-xs">8.0/10</span>
+            </div>
+            <p class="text-[11px] text-amber-900 leading-relaxed">Cần bổ sung: Chỉ số giảm tỷ lệ huỷ giao dịch (Drop-off rate) từ bao nhiêu % về bao nhiêu %.</p>
+          </div>
+        </div>
+
+        <!-- AI STAR Rewrite Showcase -->
+        <div class="p-5 rounded-2xl bg-gradient-to-br from-sky-50 to-indigo-50 border border-sky-200 space-y-2">
+          <div class="flex items-center gap-2">
+            <span class="px-2 py-0.5 rounded-full bg-[#2980B9] text-white text-[10px] font-bold">AI STAR Rewrite (Mẫu 10/10)</span>
+            <span class="text-xs font-bold text-slate-700">Phiên bản Giám khảo AI viết lại để tối ưu hóa luận điểm:</span>
+          </div>
+          <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">
+            &ldquo;Khi xây dựng chức năng tra cứu sản phẩm có độ trễ cao trong đồ án <strong class="text-[#2980B9] font-semibold">(S)</strong>, nhiệm vụ của em là tối ưu cấu trúc lưu trữ in-memory để đạt tốc độ truy xuất nhanh nhất <strong class="text-[#2980B9] font-semibold">(T)</strong>. Em đã phân tích cơ chế HashMap trong Java: tính toán index từ hash bit, xử lý va chạm băm qua Red-Black Tree khi bucket &gt; 8 phần tử và ghi đè đồng thời cả hai phương thức equals() lẫn hashCode() để đảm bảo tính nhất quán <strong class="text-[#2980B9] font-semibold">(A)</strong>. Kết quả là tốc độ tra cứu đạt tiệm cận O(1), không phát sinh lỗi mất mát dữ liệu khi bucket mở rộng kích thước <strong class="text-[#2980B9] font-semibold">(R)</strong>.&rdquo;
+          </p>
+        </div>
+
+      </div>
+
+
+      <!-- TURN 2 CARD (PROBING QUESTION) -->
+      <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        
+        <div class="flex items-start justify-between gap-4">
+          <div class="space-y-1">
+            <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">
+              Câu hỏi 2 / 5 &bull; Câu hỏi Xoáy vào Debug Spring Boot &amp; Database
+            </span>
+            <h3 class="text-base sm:text-lg font-bold text-slate-900 pt-1">
+              &ldquo;Trong đồ án Spring Boot của bạn, khi gọi API tạo đơn hàng kèm trừ tồn kho sản phẩm, nếu bước trừ tồn kho bị lỗi ném ra ngoại lệ thì dữ liệu đơn hàng có bị lưu rác vào database không? Bạn sử dụng @Transactional như thế nào để đảm bảo tính toàn vẹn dữ liệu?&rdquo;
+            </h3>
+            <p class="text-[11px] text-slate-400 italic">Mục đích hỏi: Đánh giá hiểu biết về Quản lý Giao dịch (Transaction ACID), tính toàn vẹn dữ liệu và xử lý ngoại lệ trong Spring Boot.</p>
+          </div>
+          <span class="text-lg font-extrabold text-amber-600 bg-amber-50 px-3 py-1.5 rounded-xl border border-amber-100 shrink-0">
+            74 / 100
+          </span>
+        </div>
+
+        <!-- Audio Bar -->
+        <div class="bg-slate-900 text-white rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="flex items-center gap-3">
+            <button type="button" onclick="toggleAudio(this, 'wave2')" class="w-10 h-10 rounded-full bg-[#2980B9] hover:bg-[#1F6B9E] text-white flex items-center justify-center font-bold shrink-0 shadow-md transition">
+              <svg class="w-4 h-4 ml-0.5 play-icon" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+            </button>
+            <div>
+              <p class="text-xs font-bold text-white">Bản ghi âm câu trả lời của bạn (Turn 2)</p>
+              <p class="text-[11px] text-slate-400 font-mono audio-time">00:00 / 02:10 &bull; 16-bit 48kHz PCM</p>
+            </div>
+          </div>
+
+          <div id="wave2" class="flex items-center gap-1 h-8 max-w-sm w-full overflow-hidden opacity-75">
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 35%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 70%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 40%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 85%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 55%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 90%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 30%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 80%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 60%"></div>
+            <div class="w-1 bg-sky-400 rounded-full waveform-bar" style="height: 45%"></div>
+          </div>
+        </div>
+
+        <!-- STAR Rubric Feedback -->
+        <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs sm:text-sm text-slate-700 space-y-2">
+          <p class="font-bold text-amber-900">⚠️ Phân tích Lỗ hổng Trả lời từ Giám khảo:</p>
+          <p class="leading-relaxed">
+            Bạn đã thành thật thừa nhận chưa từng quản lý P&L 5 tỷ, đây là điểm cộng về tính trung thực. Tuy nhiên, bạn lại mất quá nhiều thời gian để giải thích lý do công ty cũ quy mô nhỏ, thay vì trình bày phương pháp luận quản trị ngân sách: Cách chia nhỏ milestone giải ngân, chỉ số ROI đo lường hàng tuần, và cơ chế Stop-loss để bảo vệ dòng tiền.
+          </p>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Bottom Action Dock -->
+    <div class="rounded-3xl bg-slate-900 text-white p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+      <div class="space-y-1 text-center sm:text-left">
+        <h3 class="font-extrabold text-lg text-white">Muốn luyện lại riêng câu hỏi bị điểm thấp?</h3>
+        <p class="text-xs text-slate-400">Bạn có thể vào lại phòng phỏng vấn trực tiếp để Giám khảo Alex Chen hỏi lại duy nhất câu hỏi về Spring Transaction và Database này.</p>
+      </div>
+
+      <div class="flex items-center gap-3 shrink-0">
+        <a href="setup.html" class="px-5 py-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-white font-bold text-xs transition">
+          Luyện phiên đầy đủ mới
+        </a>
+        <a href="drill_room.html" class="px-6 py-3 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs shadow-lg transition">
+          Luyện lại Câu 2 ngay &rarr;
+        </a>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ==================== INTERACTIVE JAVASCRIPT LOGIC ==================== -->
+  <script>
+    function toggleAudio(btn, waveId) {
+      const container = document.getElementById(waveId);
+      const isPlaying = container.classList.contains('audio-playing');
+
+      if (isPlaying) {
+        container.classList.remove('audio-playing');
+        btn.innerHTML = `<svg class="w-4 h-4 ml-0.5" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>`;
+      } else {
+        // Stop all other audios first
+        document.querySelectorAll('.audio-playing').forEach(c => c.classList.remove('audio-playing'));
+        container.classList.add('audio-playing');
+        btn.innerHTML = `<svg class="w-4 h-4" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>`;
+      }
+    }
+
+    // Load dynamic real evaluation from backend or localStorage
+    window.addEventListener('DOMContentLoaded', async () => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const cfgRaw = localStorage.getItem('interview_config');
+      let cfgData = {};
+      try { cfgData = JSON.parse(cfgRaw || '{}'); } catch(e){}
+
+      const sessionId = urlParams.get('session_id') || cfgData.sessionId || 'sess_demo';
+
+      // Cập nhật thông tin Header
+      if (document.getElementById('reportSessionDisplay')) {
+        document.getElementById('reportSessionDisplay').innerText = `Phiên: #${sessionId}`;
+      }
+      if (cfgData.role && document.getElementById('reportRoleTitle')) {
+        document.getElementById('reportRoleTitle').innerText = cfgData.role;
+      }
+      if (cfgData.level && document.getElementById('reportLevelBadge')) {
+        const lvlBadge = document.getElementById('reportLevelBadge');
+        const l = cfgData.level.toLowerCase();
+        if (l === 'intern') {
+          lvlBadge.className = "px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-black uppercase tracking-wider";
+          lvlBadge.innerText = "🟢 INTERN";
+        } else if (l === 'junior') {
+          lvlBadge.className = "px-2.5 py-0.5 rounded-full bg-purple-100 text-purple-800 text-xs font-black uppercase tracking-wider";
+          lvlBadge.innerText = "🟣 JUNIOR";
+        } else if (l === 'mid_level' || l === 'mid') {
+          lvlBadge.className = "px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-black uppercase tracking-wider";
+          lvlBadge.innerText = "🟠 MID-LEVEL";
+        } else {
+          lvlBadge.className = "px-2.5 py-0.5 rounded-full bg-sky-100 text-[#1F6B9E] text-xs font-black uppercase tracking-wider";
+          lvlBadge.innerText = "🔵 FRESHER";
+        }
+      }
+
+      let evalData = null;
+      const cached = localStorage.getItem('latest_evaluation');
+      if (cached) {
+        try { evalData = JSON.parse(cached); } catch(e){}
+      }
+
+      let turnsData = [];
+      if (sessionId) {
+        try {
+          const res = await fetch(`http://127.0.0.1:8000/api/interviews/${sessionId}/report`);
+          if (res.ok) {
+            evalData = await res.json();
+          }
+        } catch(e){}
+
+        try {
+          const turnsRes = await fetch(`http://127.0.0.1:8000/api/interviews/${sessionId}/turns`);
+          if (turnsRes.ok) {
+            turnsData = await turnsRes.json();
+          }
+        } catch(e){}
+      }
+
+      if (evalData) {
+        // Cập nhật điểm tổng
+        const totalScoreEl = document.querySelector('.text-4xl.font-extrabold');
+        if (totalScoreEl) totalScoreEl.innerHTML = `${evalData.total_score}<span class="text-lg text-slate-400 font-normal">/100</span>`;
+
+        // Cập nhật huy hiệu Đạt / Chưa đạt
+        const badgeTop = document.querySelector('.bg-emerald-100.text-emerald-800');
+        const badgeScore = document.querySelector('.bg-emerald-500\\/20.text-emerald-300');
+        if (evalData.is_passed) {
+          if (badgeTop) {
+            badgeTop.className = "px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold";
+            badgeTop.innerText = "✓ Đạt chuẩn phỏng vấn Vòng 1";
+          }
+          if (badgeScore) {
+            badgeScore.className = "inline-block mt-1 px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-500/30";
+            badgeScore.innerText = "Đạt ngưỡng tuyển dụng";
+          }
+        } else {
+          if (badgeTop) {
+            badgeTop.className = "px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-xs font-bold";
+            badgeTop.innerText = "⚠️ Chưa đạt chuẩn Vòng 1 (Dưới Cut-off)";
+          }
+          if (badgeScore) {
+            badgeScore.className = "inline-block mt-1 px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold border border-amber-500/30";
+            badgeScore.innerText = "Cần rèn luyện thêm";
+          }
+        }
+
+        // Cập nhật 4 chỉ số STAR
+        const elSit = document.getElementById('scoreSituation');
+        const elTsk = document.getElementById('scoreTask');
+        const elAct = document.getElementById('scoreAction');
+        const elRes = document.getElementById('scoreResult');
+
+        if (elSit) elSit.innerHTML = `${evalData.situation_score || 0}<span class="text-xs text-slate-400 font-normal">/25</span>`;
+        if (elTsk) elTsk.innerHTML = `${evalData.task_score || 0}<span class="text-xs text-slate-400 font-normal">/25</span>`;
+        if (elAct) elAct.innerHTML = `${evalData.action_score || 0}<span class="text-xs text-slate-400 font-normal">/25</span>`;
+        if (elRes) elRes.innerHTML = `${evalData.result_score || 0}<span class="text-xs text-slate-400 font-normal">/25</span>`;
+
+        // Cập nhật nhận xét tổng quát
+        const verdictEl = document.querySelector('.bg-sky-50\\/70 p');
+        if (verdictEl) {
+          verdictEl.innerHTML = `&ldquo;<strong>Tóm tắt:</strong> ${evalData.dossier_summary || ''}<br><strong class="text-emerald-700">Điểm mạnh:</strong> ${evalData.strengths || ''}<br><strong class="text-amber-700">Lỗ hổng &amp; Cần cải thiện:</strong> ${evalData.weaknesses || ''}&rdquo;`;
+        }
+
+        // Parse turn_evaluations nếu có
+        let turnEvals = [];
+        if (evalData.turn_evaluations) {
+          try {
+            turnEvals = typeof evalData.turn_evaluations === 'string' ? JSON.parse(evalData.turn_evaluations) : evalData.turn_evaluations;
+          } catch(e){}
+        }
+
+        // Render danh sách các câu hỏi thực tế nếu có turnsData
+        if (turnsData && turnsData.length > 0) {
+          const container = document.getElementById('turnCardsContainer');
+          const badgeCount = document.getElementById('totalQuestionsCountBadge');
+          if (badgeCount) badgeCount.innerText = `${turnsData.length} Lượt hỏi đáp thực tế`;
+
+          if (container) {
+            container.innerHTML = ""; // Xóa dữ liệu tĩnh
+
+            turnsData.forEach((turn, idx) => {
+              const turnNum = turn.turn_number || (idx + 1);
+              const qText = turn.question_text || "Câu hỏi khảo sát";
+              const aText = (turn.answer_transcript || "").trim() || "(Ứng viên không có phản hồi / Bỏ qua)";
+              
+              // Tìm evaluation tương ứng cho turn này
+              const evalInfo = turnEvals.find(e => e.turn_number === turnNum) || {};
+              const turnScore = evalInfo.score !== undefined ? evalInfo.score : (aText.toLowerCase().includes("không biết") ? 1.5 : 7.0);
+              const assessment = evalInfo.assessment || (turnScore <= 3 ? "Chưa nắm rõ câu hỏi" : "Trả lời cơ bản đạt");
+              const critique = evalInfo.critique || (turnScore <= 3 ? "Ứng viên thừa nhận chưa có kinh nghiệm ở phần này." : "Cần bổ sung thêm ví dụ thực tế và số liệu định lượng.");
+              const modelAns = evalInfo.model_answer || "Nên phân tích bối cảnh bài toán, giải pháp kỹ thuật đã chọn và kết quả đo lường cụ thể.";
+
+              const isLowScore = turnScore <= 4.0;
+              const cardBorder = isLowScore ? "border-amber-200" : "border-slate-200/80";
+              const scoreBadgeColor = isLowScore ? "bg-amber-50 text-amber-700 border-amber-200" : "bg-sky-50 text-[#2980B9] border-sky-100";
+
+              const turnCardHtml = `
+                <div class="bg-white rounded-3xl border ${cardBorder} p-6 sm:p-8 shadow-sm space-y-5">
+                  <div class="flex items-start justify-between gap-4">
+                    <div class="space-y-1">
+                      <span class="px-2.5 py-0.5 rounded-full ${isLowScore ? 'bg-amber-100 text-amber-800' : 'bg-sky-100 text-[#2980B9]'} text-xs font-bold">
+                        Lượt ${turnNum} &bull; ${assessment}
+                      </span>
+                      <h3 class="text-base sm:text-lg font-bold text-slate-900 pt-1 leading-snug">
+                        &ldquo;${qText}&rdquo;
+                      </h3>
+                    </div>
+                    <span class="text-base sm:text-lg font-extrabold ${scoreBadgeColor} px-3 py-1.5 rounded-xl border shrink-0">
+                      ${turnScore} / 10 Điểm
+                    </span>
+                  </div>
+
+                  <div class="p-4 rounded-2xl ${isLowScore ? 'bg-amber-50/50 border border-amber-200/70' : 'bg-slate-50 border border-slate-200'} space-y-1.5">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider block">Câu trả lời thực tế của bạn:</span>
+                    <p class="text-xs sm:text-sm text-slate-700 leading-relaxed italic">
+                      &ldquo;${aText}&rdquo;
+                    </p>
+                  </div>
+
+                  <div class="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 text-xs sm:text-sm text-slate-700 space-y-1">
+                    <p class="font-bold text-amber-900">⚠️ Nhận xét đối chiếu của Giám khảo AI:</p>
+                    <p class="leading-relaxed text-amber-950">${critique}</p>
+                  </div>
+
+                  <div class="p-4 rounded-2xl bg-gradient-to-br from-sky-50 to-indigo-50 border border-sky-200 space-y-1.5">
+                    <div class="flex items-center gap-2">
+                      <span class="px-2 py-0.5 rounded-full bg-[#2980B9] text-white text-[10px] font-bold">Gợi ý chuẩn STAR</span>
+                      <span class="text-xs font-bold text-slate-700">Mẫu câu trả lời tham khảo:</span>
+                    </div>
+                    <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">
+                      &ldquo;${modelAns}&rdquo;
+                    </p>
+                  </div>
+                </div>
+              `;
+              container.insertAdjacentHTML('beforeend', turnCardHtml);
+            });
+          }
+        }
+      }
+    });
+
+  </script>
+
+</body>
+</html>

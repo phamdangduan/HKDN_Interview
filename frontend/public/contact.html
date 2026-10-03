@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Liên hệ &amp; Đặt lịch Demo | TalentAI</title>
+  <meta name="description" content="Kết nối trực tiếp với đội ngũ kỹ sư và chuyên gia tuyển dụng của TalentAI để được hỗ trợ về phòng phỏng vấn AI, thanh toán gói lượt hoặc đặt lịch demo giải pháp tuyển dụng doanh nghiệp.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .topic-pill.active {
+      background-color: #2980B9;
+      color: #ffffff;
+      border-color: #2980B9;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-slate-50/60 min-h-screen flex flex-col selection:bg-sky-200 selection:text-slate-900">
+
+  <!-- ==================== 1. HEADER NAVBAR (CHUẨN 100% POVOTRA) ==================== -->
+  <header class="sticky top-0 z-50 w-full border-b border-b-[#E4E4E4] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <nav class="relative flex h-14 sm:h-16 items-center justify-between gap-3 px-5 sm:px-6 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-4 max-w-7xl mx-auto">
+      
+      <!-- Brand Logo -->
+      <div class="flex cursor-pointer items-center justify-self-start">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white shadow-md shadow-[#2980B9]/20 group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" x2="12" y1="19" x2="22"/>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+            <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider -mt-1 hidden sm:block">AI Mock Interview &amp; Coaching</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Links (Product dropdown, Resources dropdown, Pricing, Contact) -->
+      <div class="hidden items-center justify-center gap-2 md:flex">
+        
+        <!-- Product Dropdown -->
+        <div class="relative group">
+          <button type="button" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm sm:text-base font-semibold transition-colors text-slate-900 hover:bg-slate-100">
+            <span>Sản phẩm</span>
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          
+          <div class="absolute top-full left-0 w-80 bg-white border border-slate-200 rounded-xl p-3 shadow-xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50">
+            <a href="live_interviews.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition">
+              <p class="font-bold text-xs text-slate-900">Phỏng vấn Trực tiếp (Live Avatars)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Đối thoại giọng nói 2 chiều với AI Avatar cử động môi.</p>
+            </a>
+            <a href="interview_reports.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-xs text-slate-900">Báo cáo Đánh giá (Interview Reports)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Phân tích chuẩn cấu trúc STAR, bảng điểm 5 năng lực &amp; Audio Replay.</p>
+            </a>
+            <a href="cv_jd_matcher.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Bóc tách CV &amp; JD, Cover Letters</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Phát hiện khoảng trống năng lực &amp; tạo thư ứng tuyển chuẩn ATS.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Resources Dropdown -->
+        <div class="relative group">
+          <button type="button" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm sm:text-base font-semibold transition-colors text-slate-900 hover:bg-slate-100">
+            <span>Tài nguyên</span>
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          
+          <div class="absolute top-full left-0 w-72 bg-white border border-slate-200 rounded-xl p-3 shadow-xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50">
+            <a href="vi_sao_nen_gia_lap.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition">
+              <p class="font-bold text-slate-900 text-xs text-[#2980B9]">Khoa học Giả lập Phỏng vấn</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Safe to fail &amp; Deliberate Practice.</p>
+            </a>
+            <a href="faq.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Câu hỏi thường gặp (FAQ)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Giải đáp về độ trễ giọng nói, bảo mật dữ liệu &amp; tài khoản.</p>
+            </a>
+            <a href="../candidate/mock_room.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Demo Tương tác SPA &rarr;</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Trải nghiệm tương tác 4 màn hình thử nghiệm.</p>
+            </a>
+          </div>
+        </div>
+
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100" href="povotra_talentai.html#pricing">Bảng giá</a>
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100" href="about.html">Về chúng tôi</a>
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-[#2980B9] bg-sky-50/80" href="contact.html">Liên hệ</a>
+      </div>
+
+      <!-- Right Action CTA -->
+      <div class="hidden items-center justify-end gap-3 md:flex">
+        <a href="login.html">
+          <button class="inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-colors border border-slate-200 bg-white hover:bg-slate-50 h-10 py-2 px-4 text-slate-700">
+            Đăng nhập
+          </button>
+        </a>
+        <a href="signup.html">
+          <button class="inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-all bg-[#2980B9] text-white hover:bg-[#1F6B9E] h-10 py-2 px-5 shadow-sm shadow-[#2980B9]/20 hover:shadow-md">
+            Trải nghiệm ngay
+          </button>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <div class="flex shrink-0 md:hidden">
+        <button type="button" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 h-10 w-10">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white px-5 py-4 space-y-2">
+      <a href="index.html" class="block font-semibold text-slate-700 py-1.5">Trang chủ</a>
+      <a href="live_interviews.html" class="block font-semibold text-slate-700 py-1.5">Phỏng vấn Trực tiếp (Live Avatars)</a>
+      <a href="interview_reports.html" class="block font-semibold text-slate-700 py-1.5">Báo cáo Đánh giá (STAR Reports)</a>
+      <a href="cv_jd_matcher.html" class="block font-semibold text-slate-700 py-1.5">Bóc tách CV &amp; JD, Cover Letters</a>
+      <a href="about.html" class="block font-semibold text-slate-700 py-1.5">Về chúng tôi (About Us)</a>
+      <a href="contact.html" class="block font-bold text-[#2980B9] py-1.5">Liên hệ (Contact)</a>
+      <a href="faq.html" class="block font-semibold text-slate-700 py-1.5">Câu hỏi thường gặp (FAQ)</a>
+    </div>
+  </header>
+
+  <main class="flex-grow flex flex-col">
+
+    <!-- ==================== 2. HERO SECTION (CHUẨN 100% POVOTRA CONTACT HERO) ==================== -->
+    <section class="relative overflow-hidden border-b border-slate-200/80 bg-white">
+      <div aria-hidden="true" class="pointer-events-none absolute -left-24 -top-28 h-72 w-72 rounded-full bg-[#2980B9]/10 blur-3xl"></div>
+      <div aria-hidden="true" class="pointer-events-none absolute -right-24 top-8 h-64 w-64 rounded-full bg-cyan-400/10 blur-3xl"></div>
+      
+      <div class="relative mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-16 lg:px-10">
+        <h1 class="max-w-3xl text-3xl font-extrabold leading-tight tracking-tight text-slate-900 sm:text-4xl lg:text-5xl">
+          Nói chuyện với những người phát triển TalentAI
+        </h1>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+          Một buổi phỏng vấn gặp sự cố âm thanh, thắc mắc về gói lượt, đặt lịch demo cho doanh nghiệp hay ý tưởng giúp cải thiện trải nghiệm? Hãy gửi cho chúng tôi tại đây — thông tin sẽ chuyển thẳng đến đội ngũ phụ trách.
+        </p>
+
+        <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <a href="#form-section" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-[#2980B9] px-6 py-3.5 text-sm font-bold text-white hover:bg-[#1F6B9E] transition shadow-md shadow-[#2980B9]/20">
+            <span>Gửi tin nhắn trực tiếp</span>
+            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+          <a href="faq.html" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 transition">
+            Tra cứu câu hỏi thường gặp (FAQ)
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== 3. CONTACT FORM & INFO SECTION (CHUẨN POVOTRA CONTAINER) ==================== -->
+    <section id="form-section" class="relative overflow-hidden bg-slate-50/70 py-16 px-6 sm:px-8 lg:px-10 border-b border-slate-200">
+      <div class="container relative mx-auto max-w-6xl space-y-8">
+        
+        <!-- Gradient Banner Header Card -->
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#2980B9] via-[#2471A3] to-[#1F6B9E] px-6 py-8 text-white shadow-xl sm:px-10 sm:py-10">
+          <div aria-hidden="true" class="absolute -right-8 -top-8 h-40 w-40 rounded-full bg-white/10 blur-2xl"></div>
+          <div aria-hidden="true" class="absolute -bottom-12 left-1/3 h-32 w-32 rounded-full bg-cyan-300/20 blur-2xl"></div>
+          
+          <div class="relative max-w-2xl">
+            <p class="text-xs font-bold uppercase tracking-widest text-sky-200">TalentAI Support &amp; Enterprise Solutions</p>
+            <h2 class="mt-2 text-2xl font-bold sm:text-3xl">Chúng tôi luôn sẵn lòng lắng nghe bạn</h2>
+            <p class="mt-3 text-sm sm:text-base leading-relaxed text-blue-50/90">
+              Dù là sự cố phòng mock, tư vấn gói lượt phỏng vấn, hay yêu cầu tích hợp giải pháp tuyển dụng AI cho tập đoàn — chúng tôi luôn đồng hành và cam kết phản hồi trong vòng <strong>2 - 4 giờ làm việc</strong>.
+            </p>
+          </div>
+        </div>
+
+        <!-- 2 Columns: Info Cards (Left) & Form Card (Right) -->
+        <div class="grid grid-cols-1 gap-8 lg:grid-cols-5 lg:items-start">
+          
+          <!-- LEFT COLUMN: Contact channels info -->
+          <div class="space-y-4 lg:col-span-2">
+            <div>
+              <h3 class="text-base font-bold text-slate-900">Các kênh liên lạc khác</h3>
+              <p class="mt-1 text-xs text-slate-500">Chọn phương thức phù hợp và thuận tiện nhất cho bạn.</p>
+            </div>
+
+            <!-- Email card -->
+            <a href="mailto:support@talentai.vn" class="block group">
+              <div class="flex items-start gap-4 rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm transition-all hover:border-[#2980B9]/40 hover:shadow-md">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-sky-50 text-[#2980B9] transition-colors group-hover:bg-[#2980B9] group-hover:text-white">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                  </svg>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Email Hỗ trợ</p>
+                  <p class="mt-0.5 truncate text-sm font-bold text-slate-900">support@talentai.vn</p>
+                </div>
+                <svg class="h-4 w-4 shrink-0 text-slate-400 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+              </div>
+            </a>
+
+            <!-- Hotline Doanh nghiệp (Đẳng cấp hơn) -->
+            <div class="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm">
+              <div class="flex items-start gap-4">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Hotline Doanh nghiệp</p>
+                  <p class="mt-0.5 text-sm font-bold text-slate-900">+84 (0) 28 7300 8899</p>
+                  <p class="mt-1 text-[11px] text-slate-500">Tư vấn tích hợp ATS &amp; Demo trực tiếp</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Support Hours -->
+            <div class="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm">
+              <div class="flex items-start gap-4">
+                <div class="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-amber-500/10 text-amber-600">
+                  <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                </div>
+                <div>
+                  <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Khung giờ làm việc</p>
+                  <p class="mt-0.5 text-sm font-bold text-slate-900">Thứ 2 – Thứ 6: 8:30 AM – 6:30 PM (ICT)</p>
+                  <p class="mt-1 text-[11px] text-slate-500">Phản hồi yêu cầu trong 1 ngày làm việc.</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- Văn phòng Đại diện -->
+            <div class="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm text-xs space-y-2">
+              <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400">Văn phòng TalentAI</p>
+              <div class="space-y-1.5 text-slate-600">
+                <p>📍 <strong>TP. Hồ Chí Minh:</strong> Tầng 18, Bitexco Financial Tower, Quận 1.</p>
+                <p>📍 <strong>Hà Nội:</strong> Tầng 12, Keangnam Landmark 72, Nam Từ Liêm.</p>
+              </div>
+            </div>
+
+            <!-- Social Links Box -->
+            <div class="rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm">
+              <p class="text-[11px] font-bold uppercase tracking-wide text-slate-400 mb-3">Mạng xã hội &bull; Theo dõi chúng tôi</p>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs">
+                <a href="https://linkedin.com" target="_blank" class="p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 font-bold text-slate-700 hover:text-[#2980B9] transition border border-slate-100">LinkedIn</a>
+                <a href="https://x.com/povotra" target="_blank" class="p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 font-bold text-slate-700 hover:text-[#2980B9] transition border border-slate-100">Twitter/X</a>
+                <a href="https://facebook.com" target="_blank" class="p-2.5 rounded-xl bg-slate-50 hover:bg-sky-50 font-bold text-slate-700 hover:text-[#2980B9] transition border border-slate-100">Facebook</a>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- RIGHT COLUMN: INTERACTIVE SMART CONTACT & DEMO FORM -->
+          <div class="lg:col-span-3">
+            <div class="rounded-3xl border border-slate-200/90 bg-white shadow-xl overflow-hidden">
+              
+              <!-- Card Header -->
+              <div class="p-6 sm:p-7 border-b border-slate-100 bg-slate-50/60 flex items-center justify-between">
+                <div>
+                  <h3 class="font-extrabold text-xl text-slate-900">Gửi tin nhắn hoặc Đặt lịch Demo</h3>
+                  <p class="text-xs text-slate-500 mt-0.5">Điền vào form bên dưới, thông tin sẽ được điều phối tới đúng chuyên viên.</p>
+                </div>
+                
+                <!-- Role toggle tab -->
+                <div class="inline-flex bg-slate-200/80 p-1 rounded-xl text-xs font-bold">
+                  <button type="button" onclick="setFormRole('candidate')" id="tabCandidate" class="px-3 py-1.5 rounded-lg bg-white text-[#2980B9] shadow-sm transition">Ứng viên</button>
+                  <button type="button" onclick="setFormRole('enterprise')" id="tabEnterprise" class="px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition">Doanh nghiệp</button>
+                </div>
+              </div>
+
+              <!-- Form Body -->
+              <div class="p-6 sm:p-8">
+                <form onsubmit="handleFormSubmit(event)" id="contactForm" class="space-y-5">
+                  
+                  <!-- Email input -->
+                  <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-700 flex items-center justify-between">
+                      <span>Địa chỉ Email của bạn *</span>
+                      <span class="text-[10px] text-slate-400 font-normal">Chúng tôi sẽ gửi phản hồi qua email này</span>
+                    </label>
+                    <input 
+                      type="email" 
+                      id="inputEmail" 
+                      required 
+                      placeholder="tenban@email.com" 
+                      class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-[#2980B9] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#2980B9]/10"
+                    />
+                  </div>
+
+                  <!-- Enterprise Extra Fields (Company & Size) -->
+                  <div id="enterpriseFields" class="hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-bold text-slate-700">Tên Doanh nghiệp / Tập đoàn *</label>
+                      <input 
+                        type="text" 
+                        id="inputCompany" 
+                        placeholder="VNG Corporation, FPT, MoMo..." 
+                        class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-[#2980B9] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#2980B9]/10"
+                      />
+                    </div>
+                    <div class="space-y-1.5">
+                      <label class="text-xs font-bold text-slate-700">Quy mô nhân sự hàng năm</label>
+                      <select id="inputScale" class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 transition focus:border-[#2980B9] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#2980B9]/10">
+                        <option>Dưới 100 nhân sự</option>
+                        <option>100 - 500 nhân sự</option>
+                        <option>500 - 2,000 nhân sự</option>
+                        <option>Trên 2,000 nhân sự (Enterprise)</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <!-- Subject & Topic Pills -->
+                  <div class="space-y-2">
+                    <label class="text-xs font-bold text-slate-700">Chủ đề cần hỗ trợ *</label>
+                    <input 
+                      type="text" 
+                      id="inputSubject" 
+                      required 
+                      placeholder="Tóm tắt yêu cầu của bạn..." 
+                      class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-[#2980B9] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#2980B9]/10"
+                    />
+
+                    <!-- Quick Topic Pills (Chuẩn Povotra 100%) -->
+                    <div class="flex flex-wrap gap-2 pt-1" id="topicPillsContainer">
+                      <button type="button" onclick="selectTopic(this, 'Tài khoản &amp; Đăng nhập')" class="topic-pill rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-[#2980B9]/50 hover:bg-sky-50 transition">
+                        Tài khoản &amp; Đăng nhập
+                      </button>
+                      <button type="button" onclick="selectTopic(this, 'Thanh toán &amp; Gói lượt')" class="topic-pill rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-[#2980B9]/50 hover:bg-sky-50 transition">
+                        Thanh toán &amp; Gói lượt
+                      </button>
+                      <button type="button" onclick="selectTopic(this, 'Sự cố mic/cam phòng Mock')" class="topic-pill rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-[#2980B9]/50 hover:bg-sky-50 transition">
+                        Sự cố mic/cam phòng Mock
+                      </button>
+                      <button type="button" onclick="selectTopic(this, 'Đặt lịch Demo Doanh nghiệp')" class="topic-pill rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-[#2980B9]/50 hover:bg-sky-50 transition">
+                        Đặt lịch Demo Doanh nghiệp
+                      </button>
+                      <button type="button" onclick="selectTopic(this, 'Đề xuất tính năng mới')" class="topic-pill rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-[#2980B9]/50 hover:bg-sky-50 transition">
+                        Đề xuất tính năng mới
+                      </button>
+                      <button type="button" onclick="selectTopic(this, 'Khác')" class="topic-pill rounded-full border border-slate-200 bg-white px-3 py-1 text-xs font-semibold text-slate-600 hover:border-[#2980B9]/50 hover:bg-sky-50 transition">
+                        Khác
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Message Textarea -->
+                  <div class="space-y-1.5">
+                    <label class="text-xs font-bold text-slate-700">Nội dung chi tiết *</label>
+                    <textarea 
+                      id="inputMessage" 
+                      required 
+                      rows="5" 
+                      placeholder="Mô tả cụ thể vấn đề hoặc kỳ vọng của bạn để chúng tôi hỗ trợ nhanh nhất có thể…" 
+                      class="w-full rounded-xl border border-slate-300 bg-slate-50/50 px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 transition focus:border-[#2980B9] focus:bg-white focus:outline-none focus:ring-4 focus:ring-[#2980B9]/10 resize-none"
+                    ></textarea>
+                  </div>
+
+                  <!-- Submit button -->
+                  <button type="submit" id="submitBtn" class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white py-3.5 px-6 font-bold text-sm sm:text-base shadow-lg shadow-[#2980B9]/25 transition">
+                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z"/><path d="m21.854 2.147-10.94 10.939"/></svg>
+                    <span>Gửi tin nhắn ngay</span>
+                  </button>
+
+                  <!-- Success message alert -->
+                  <div id="formSuccessAlert" class="hidden p-4 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs sm:text-sm font-semibold text-center">
+                    ✓ Cảm ơn bạn! Yêu cầu đã được gửi thành công. Đội ngũ TalentAI sẽ liên hệ lại qua email trong vòng 2 - 4 giờ làm việc.
+                  </div>
+
+                </form>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== 4. WHAT HAPPENS AFTER YOU HIT SEND (CHUẨN 100% POVOTRA 3 BƯỚC) ==================== -->
+    <section class="bg-white px-6 py-16 sm:px-8 lg:px-10 border-b border-slate-200">
+      <div class="mx-auto max-w-6xl">
+        <h2 class="text-2xl font-bold text-slate-900 sm:text-3xl text-center sm:text-left">
+          Điều gì xảy ra sau khi bạn bấm gửi?
+        </h2>
+        <p class="mt-3 max-w-2xl text-sm sm:text-base text-slate-600 text-center sm:text-left">
+          Không có cổng cấp vé số phức tạp hay thời gian chờ đợi vô định. Đây là toàn bộ quy trình tiếp nhận của chúng tôi:
+        </p>
+
+        <ol class="mt-8 grid gap-6 sm:grid-cols-3">
+          
+          <!-- Step 1 -->
+          <li class="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-6 transition-colors hover:border-[#2980B9]/30 hover:bg-white shadow-2xs">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2980B9]/10 text-sm font-bold text-[#2980B9]">
+              1
+            </span>
+            <h3 class="mt-4 text-base font-bold text-slate-900">Tiếp nhận thông tin chi tiết</h3>
+            <p class="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600">
+              Bạn chọn chủ đề, mô tả tình huống và để lại thông tin liên hệ một cách thuận tiện và bảo mật nhất.
+            </p>
+          </li>
+
+          <!-- Step 2 -->
+          <li class="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-6 transition-colors hover:border-[#2980B9]/30 hover:bg-white shadow-2xs">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2980B9]/10 text-sm font-bold text-[#2980B9]">
+              2
+            </span>
+            <h3 class="mt-4 text-base font-bold text-slate-900">Điều phối đến đúng chuyên viên</h3>
+            <p class="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600">
+              Sự cố mic/cam phòng Mock chuyển thẳng đến đội ngũ Kỹ sư WebRTC; thắc mắc thanh toán tới bộ phận Billing; yêu cầu demo tới Chuyên gia giải pháp B2B.
+            </p>
+          </li>
+
+          <!-- Step 3 -->
+          <li class="rounded-2xl border border-slate-200/80 bg-slate-50/60 p-6 transition-colors hover:border-[#2980B9]/30 hover:bg-white shadow-2xs">
+            <span class="flex h-10 w-10 items-center justify-center rounded-xl bg-[#2980B9]/10 text-sm font-bold text-[#2980B9]">
+              3
+            </span>
+            <h3 class="mt-4 text-base font-bold text-slate-900">Phản hồi giải quyết tận gốc</h3>
+            <p class="mt-2 text-xs sm:text-sm leading-relaxed text-slate-600">
+              Chúng tôi gửi email hướng dẫn xử lý hoặc trực tiếp gọi điện thoại hỗ trợ, đảm bảo bạn tiếp tục luyện tập không bị gián đoạn.
+            </p>
+          </li>
+
+        </ol>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ==================== 5. FOOTER (100% POVOTRA EXACT REPLICA) ==================== -->
+  <footer class="border-t border-slate-200 bg-slate-50 text-slate-900">
+    <div class="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-10">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-5">
+        
+        <!-- Column 1 & 2: Brand Info -->
+        <div class="col-span-1 hidden flex-col items-center text-center md:col-span-2 md:flex md:items-start md:text-left">
+          <a class="mb-4 inline-flex items-center gap-3" href="index.html">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white shadow-md">
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" x2="12" y1="19" x2="22"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-xl font-bold tracking-tight text-slate-900">TalentAI</span>
+              <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Hepteract CareerTech Platform</p>
+            </div>
+          </a>
+          <p class="max-w-xs text-sm leading-relaxed text-slate-600 md:max-w-sm">
+            Nền tảng luyện tập phỏng vấn trí tuệ nhân tạo thế hệ mới. Đối thoại giọng nói trực tiếp với AI Avatar, bóc tách CV-JD và nhận báo cáo đánh giá chuẩn STAR để tự tin chinh phục mọi cơ hội nghề nghiệp.
+          </p>
+        </div>
+
+        <!-- Links Columns (Product, Resources, Contact) -->
+        <div class="col-span-1 grid grid-cols-1 gap-8 text-center sm:grid-cols-3 md:col-span-3 md:text-left">
+          
+          <!-- Product -->
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Sản phẩm</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="live_interviews.html">Live Interviews (AI Avatars)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="interview_reports.html">Báo cáo đánh giá (STAR Reports)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="cv_jd_matcher.html">Bóc tách CV &amp; JD, Cover Letters</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="povotra_talentai.html#pricing">Bảng giá gói luyện tập</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="about.html">Về chúng tôi (About Us)</a></li>
+            </ul>
+          </div>
+
+          <!-- Resources -->
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Tài nguyên</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="vi_sao_nen_gia_lap.html">Khoa học Giả lập Phỏng vấn</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="faq.html">Câu hỏi thường gặp (FAQ)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="../candidate/mock_room.html">Demo Tương tác SPA</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="index.html">Attensi Enterprise View</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact & Socials -->
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Kết nối</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900 font-semibold text-[#2980B9]" href="contact.html">Gửi yêu cầu hỗ trợ</a></li>
+              <li>
+                <a target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-slate-900" href="https://x.com/povotra">
+                  X / Twitter
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+              </li>
+              <li>
+                <a target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-slate-900" href="https://linkedin.com">
+                  LinkedIn
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+              </li>
+              <li>
+                <a target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-slate-900" href="https://instagram.com">
+                  Instagram
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="border-t border-slate-200"></div>
+    <div class="mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
+      <div class="flex flex-col items-center gap-4 text-center md:grid md:grid-cols-2 md:items-center md:text-left">
+        <span class="text-sm text-slate-500">
+          Copyright &copy; 2026 TalentAI &bull; Phục vụ tuyển dụng &amp; huấn luyện phỏng vấn công nghệ cao.
+        </span>
+        <div class="flex flex-wrap items-center justify-center gap-4 md:justify-end text-sm text-slate-500">
+          <a class="transition-colors hover:text-slate-900 text-[#2980B9] font-medium" href="privacy.html">Chính sách quyền riêng tư</a>
+          <span class="text-slate-300">&bull;</span>
+          <a class="transition-colors hover:text-slate-900 text-slate-600 hover:text-slate-900 font-medium" href="terms.html">Điều khoản sử dụng</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    let currentRole = 'candidate';
+
+    function setFormRole(role) {
+      currentRole = role;
+      const tabCand = document.getElementById('tabCandidate');
+      const tabEnt = document.getElementById('tabEnterprise');
+      const entFields = document.getElementById('enterpriseFields');
+
+      if (role === 'enterprise') {
+        tabEnt.className = "px-3 py-1.5 rounded-lg bg-white text-[#2980B9] shadow-sm transition";
+        tabCand.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+        entFields.classList.remove('hidden');
+        document.getElementById('inputSubject').value = "Đặt lịch Demo Giải pháp Tuyển dụng Doanh nghiệp";
+      } else {
+        tabCand.className = "px-3 py-1.5 rounded-lg bg-white text-[#2980B9] shadow-sm transition";
+        tabEnt.className = "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+        entFields.classList.add('hidden');
+        document.getElementById('inputSubject').value = "";
+      }
+    }
+
+    function selectTopic(btn, topic) {
+      const pills = document.querySelectorAll('.topic-pill');
+      pills.forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('inputSubject').value = topic;
+    }
+
+    function handleFormSubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const alertBox = document.getElementById('formSuccessAlert');
+
+      btn.disabled = true;
+      btn.innerHTML = `<span class="animate-spin inline-block mr-2">⏳</span> Đang gửi tin nhắn...`;
+
+      setTimeout(() => {
+        btn.innerHTML = `✓ Đã gửi thành công`;
+        btn.className = "w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-600 text-white py-3.5 px-6 font-bold text-sm sm:text-base shadow-lg transition";
+        alertBox.classList.remove('hidden');
+      }, 800);
+    }
+  </script>
+
+</body>
+</html>

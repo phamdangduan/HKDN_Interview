@@ -1,0 +1,67 @@
+# ==========================================
+# TalentAI Git Ignore Configuration
+# ==========================================
+
+# Environment variables & secrets (CRITICAL: Do NOT commit API keys)
+.env
+*.env
+backend-ts/.env
+backend-python/.env
+
+# Node.js / TypeScript
+node_modules/
+backend-ts/node_modules/
+backend-ts/dist/
+dist/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+
+# Python & Virtual Environments
+__pycache__/
+backend-python/__pycache__/
+backend-python/app/__pycache__/
+backend-python/app/*/__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+*.egg-info/
+.installed.cfg
+*.egg
+.pytest_cache/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE & Editor Configurations
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary / Scratch Files
+*.tmp
+*.temp
+scratch/
+tmp/

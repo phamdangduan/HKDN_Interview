@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-900 text-slate-100 selection:bg-sky-500 selection:text-white">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Enterprise HR Portal &bull; Bảng Ma Trận Khảo Hạch AI IT Theo Cấp Bậc | TalentAI</title>
+  <meta name="description" content="Bảng điều khiển tuyển dụng kỹ thuật doanh nghiệp: Tự động phân loại ứng viên theo cấp bậc (Intern, Fresher, Junior), chấm điểm chuẩn STAR và bảo vệ tính trung thực CV bằng AI.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            fptOrange: '#F36F21',
+            fptBlue: '#0054A6',
+            fptGreen: '#00A859',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #334155;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col antialiased">
+
+  <!-- ==================== 1. ENTERPRISE HEADER NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 h-16 border-b border-slate-800 bg-slate-900/90 backdrop-blur px-4 sm:px-8 flex items-center justify-between">
+    
+    <!-- Left: Brand & Portal Tag -->
+    <div class="flex items-center gap-4">
+      <a href="portal.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:scale-105 transition-transform">
+          T
+        </div>
+        <span class="font-bold text-lg text-white group-hover:text-sky-400 transition">TalentAI</span>
+      </a>
+
+      <div class="h-4 w-px bg-slate-700 hidden sm:block"></div>
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-400 hidden sm:flex">
+        <div class="flex items-center gap-1 bg-white px-2 py-0.5 rounded text-[10px] font-black text-slate-800">
+          <span class="text-[#0054A6]">F</span><span class="text-[#F36F21]">P</span><span class="text-[#00A859]">T</span> Software
+        </div>
+        <span>/</span>
+        <span class="text-white font-bold">Quản Trị Chiến Dịch Khảo Hạch Kỹ Thuật AI</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 text-xs font-bold text-slate-300">
+      <a href="portal.html" class="px-3 py-1.5 rounded-lg text-sky-400 bg-slate-800">Bảng Ma Trận Vetting</a>
+      <a href="campaign_creator.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Tạo Đợt Mới</a>
+      <a href="candidate_dossier.html" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white transition">Hồ Sơ Thẩm Định</a>
+    </nav>
+
+    <!-- Right: Quick Campaign Launcher -->
+    <div class="flex items-center gap-3">
+      <a href="campaign_creator.html" class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs shadow-md shadow-[#2980B9]/20 transition">
+        <span>+ Tạo Đợt Vetting Mới</span>
+      </a>
+      <a href="../candidate/dashboard.html" class="text-xs text-slate-400 hover:text-white transition hidden sm:inline" title="Xem góc nhìn Ứng viên">
+        👤 Chuyển Xem Ứng Viên
+      </a>
+    </div>
+
+  </header>
+
+
+  <!-- ==================== 2. MAIN DASHBOARD CONTENT ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Top KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Ứng Viên Đã Nộp CV</span>
+        <p class="text-3xl font-extrabold text-white" id="statTotalCandidates">5</p>
+        <p class="text-[11px] text-slate-400">100% đã hoàn thành bài phỏng vấn AI IT</p>
+      </div>
+
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tỷ Lệ Đạt Vòng 1 (&ge; 80đ)</span>
+        <p class="text-3xl font-extrabold text-emerald-400" id="statPassRate">60.0%</p>
+        <p class="text-[11px] text-emerald-400/80">3 / 5 ứng viên vượt ngưỡng Cut-off</p>
+      </div>
+
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Điểm STAR Trung Bình</span>
+        <p class="text-3xl font-extrabold text-sky-400">76.6 <span class="text-xs text-slate-500 font-normal">/ 100</span></p>
+        <p class="text-[11px] text-slate-400">Đánh giá chuẩn 4 tiêu chí STAR Kỹ Thuật</p>
+      </div>
+
+      <div class="rounded-2xl border border-slate-800 bg-slate-900/80 p-5 shadow-sm space-y-2">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tiết Kiệm Thời Gian HR</span>
+        <p class="text-3xl font-extrabold text-amber-400">-75%</p>
+        <p class="text-[11px] text-slate-400">AI sơ loại tự động trước khi phỏng vấn</p>
+      </div>
+
+    </div>
+
+
+    <!-- Active Campaigns Selector & Leaderboard Matrix -->
+    <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 space-y-6 shadow-xl">
+      
+      <!-- Filter Bar & Campaign Info Header -->
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <div class="flex flex-wrap items-center gap-2 mb-1.5">
+            <span class="text-[10px] font-bold text-sky-400 uppercase tracking-widest bg-sky-950/80 px-2.5 py-0.5 rounded border border-sky-800/60">
+              Active Campaign &bull; Tuyển Dụng FPT Software Q4/2026
+            </span>
+            <span id="portalLevelBadge" class="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-extrabold uppercase">
+              🟢 INTERN
+            </span>
+            <span id="portalTrackBadge" class="px-2.5 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800 text-[10px] font-extrabold uppercase">
+              BACKEND
+            </span>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <h2 class="text-xl font-bold text-white" id="portalRoleHeader">
+              Java Backend Intern &bull; Khối Dự Án Công Nghệ Toàn Cầu
+            </h2>
+            <button type="button" onclick="openCampaignDetailsModal()" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-sky-400 hover:text-white border border-slate-700 text-xs font-bold transition shadow-sm">
+              <span>ℹ️ Xem Chi Tiết Chiến Dịch (JD &amp; Cấu Hình)</span>
+            </button>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Giám khảo phụ trách: <strong>Alex Chen (Senior Java Architect)</strong> &bull; Tiêu chuẩn: STAR Rubric Kỹ Thuật &bull; Ngưỡng Cut-off: <strong class="text-emerald-400" id="portalCutoffDisplay">&ge; 80 điểm</strong>.</p>
+        </div>
+
+        <div class="flex flex-wrap items-center gap-2">
+          <a href="../candidate/apply.html" target="_blank" class="px-3.5 py-2 rounded-xl bg-blue-900/50 hover:bg-blue-800 text-blue-200 border border-blue-700 text-xs font-bold transition flex items-center gap-1.5">
+            <span>📢 Link Bài Đăng Tuyển Dụng FB &nearr;</span>
+          </a>
+          <button type="button" onclick="exportReport()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-xs font-bold text-white transition shadow-sm flex items-center gap-1.5">
+            <span>📊 Xuất Báo Cáo Excel/PDF</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Tab Filter Selector: Status & Level Combined -->
+      <div class="flex flex-wrap items-center justify-between gap-3">
+        
+        <!-- Left: Status Filters & Level Filters -->
+        <div class="flex flex-wrap items-center gap-3">
+          
+          <!-- Status Group -->
+          <div class="flex items-center gap-1.5 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs font-bold">
+            <button type="button" onclick="filterStatus('all')" id="tabAll" class="px-3.5 py-1.5 rounded-xl bg-sky-600 text-white transition shadow text-xs">
+              Tất Cả (5)
+            </button>
+            <button type="button" onclick="filterStatus('passed')" id="tabPassed" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition text-xs">
+              ⭐ Đạt Cut-off (3)
+            </button>
+            <button type="button" onclick="filterStatus('failed')" id="tabFailed" class="px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition text-xs">
+              Dưới Ngưỡng (2)
+            </button>
+          </div>
+
+          <!-- Level Filter Group -->
+          <div class="flex items-center gap-1 bg-slate-950 p-1.5 rounded-2xl border border-slate-800 text-xs font-bold">
+            <span class="text-slate-500 px-2 text-[10px] uppercase tracking-wider hidden sm:inline">Cấp bậc:</span>
+            <button type="button" onclick="filterLevel('all')" id="lvlAll" class="px-3 py-1.5 rounded-xl bg-slate-800 text-white transition text-xs font-bold">
+              Tất cả
+            </button>
+            <button type="button" onclick="filterLevel('intern')" id="lvlIntern" class="px-3 py-1.5 rounded-xl text-slate-400 hover:text-emerald-400 transition text-xs font-bold">
+              🟢 Intern (3)
+            </button>
+            <button type="button" onclick="filterLevel('fresher')" id="lvlFresher" class="px-3 py-1.5 rounded-xl text-slate-400 hover:text-sky-400 transition text-xs font-bold">
+              🔵 Fresher (2)
+            </button>
+            <button type="button" onclick="filterLevel('junior')" id="lvlJunior" class="px-3 py-1.5 rounded-xl text-slate-400 hover:text-purple-400 transition text-xs font-bold">
+              🟣 Junior (0)
+            </button>
+          </div>
+
+        </div>
+
+        <!-- Right: Search -->
+        <div class="relative">
+          <input 
+            type="search" 
+            id="searchInput" 
+            oninput="searchCandidates(this.value)"
+            placeholder="Tìm theo tên ứng viên, công nghệ…" 
+            class="rounded-xl border border-slate-700 bg-slate-800/80 px-3.5 py-2 text-xs text-white placeholder:text-slate-500 focus:outline-none focus:border-sky-400 w-64"
+          />
+        </div>
+      </div>
+
+      <!-- Candidate Leaderboard Matrix Table -->
+      <div class="overflow-x-auto custom-scrollbar">
+        <table class="w-full text-left text-xs min-w-[850px]">
+          <thead>
+            <tr class="border-b border-slate-800 text-slate-400 uppercase text-[10px] tracking-wider font-bold">
+              <th class="py-3 px-4">Ứng Viên</th>
+              <th class="py-3 px-3">Cấp Bậc</th>
+              <th class="py-3 px-3">Độ Khớp CV (ATS)</th>
+              <th class="py-3 px-3">Điểm STAR (Tổng)</th>
+              <th class="py-3 px-3">Kháng Hỏi Xoáy (Probing)</th>
+              <th class="py-3 px-3">Đánh Giá AI Lọc V1</th>
+              <th class="py-3 px-4">Trạng Thái HR</th>
+              <th class="py-3 px-4 text-right">Hành Động</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-800/60 font-medium text-slate-300" id="candidateTableBody">
+            
+            <!-- Candidate 1: Nguyễn Văn An (Intern - Passed - Top 1) -->
+            <tr class="hover:bg-slate-800/40 transition candidate-row" data-status="passed" data-level="intern" id="row-cand-1">
+              <td class="py-4 px-4 font-bold text-white">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold flex items-center justify-center border border-emerald-500/40 text-xs">
+                    NA
+                  </div>
+                  <div>
+                    <span class="text-sm text-white">Nguyễn Văn An</span>
+                    <p class="text-[10px] text-slate-400 font-normal">ĐH Bách Khoa Hà Nội &bull; GPA 3.6 &bull; Java Spring Boot</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-extrabold">
+                  🟢 Intern
+                </span>
+              </td>
+              <td class="py-4 px-3 font-bold text-emerald-400 text-sm">92%</td>
+              <td class="py-4 px-3 font-extrabold text-white text-sm">
+                88 <span class="text-[10px] text-slate-500 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-3 font-bold text-emerald-400">90% (Vượt chuẩn)</td>
+              <td class="py-4 px-3">
+                <span class="bg-emerald-950 text-emerald-400 font-bold px-2.5 py-1 rounded-full border border-emerald-800/80 text-[10px] inline-flex items-center gap-1">
+                  ⭐ Strong Hire (&ge; 80đ)
+                </span>
+              </td>
+              <td class="py-4 px-4">
+                <span class="text-amber-400 text-[11px] font-bold status-badge" id="status-cand-1">
+                  ⏳ Đạt V1 &bull; Chờ gửi email
+                </span>
+              </td>
+              <td class="py-4 px-4 text-right space-x-2">
+                <button type="button" onclick="openEmailModal('Nguyễn Văn An', 'nguyenvanan.it@gmail.com', 'cand-1', 88, true)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition shadow-sm">
+                  ✉️ Gửi Email Mời Vòng 2
+                </button>
+                <a href="candidate_dossier.html" class="font-bold text-sky-400 hover:underline">Hồ sơ &rarr;</a>
+              </td>
+            </tr>
+
+            <!-- Candidate 2: Trần Minh Đức (Fresher - Passed) -->
+            <tr class="hover:bg-slate-800/40 transition candidate-row" data-status="passed" data-level="fresher" id="row-cand-2">
+              <td class="py-4 px-4 font-bold text-white">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-sky-500/20 text-sky-400 font-extrabold flex items-center justify-center border border-sky-500/40 text-xs">
+                    TĐ
+                  </div>
+                  <div>
+                    <span class="text-sm text-white">Trần Minh Đức</span>
+                    <p class="text-[10px] text-slate-400 font-normal">FPT University &bull; Kỹ thuật phần mềm &bull; Microservices</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="px-2 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800 text-[10px] font-extrabold">
+                  🔵 Fresher
+                </span>
+              </td>
+              <td class="py-4 px-3 font-bold text-sky-400 text-sm">88%</td>
+              <td class="py-4 px-3 font-extrabold text-white text-sm">
+                84 <span class="text-[10px] text-slate-500 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-3 font-bold text-sky-400">82% (Khá tốt)</td>
+              <td class="py-4 px-3">
+                <span class="bg-sky-950 text-sky-400 font-bold px-2.5 py-1 rounded-full border border-sky-800/80 text-[10px] inline-flex items-center gap-1">
+                  ✓ Pass Vòng 1 (&ge; 80đ)
+                </span>
+              </td>
+              <td class="py-4 px-4">
+                <span class="text-amber-400 text-[11px] font-bold status-badge" id="status-cand-2">
+                  ⏳ Đạt V1 &bull; Chờ gửi email
+                </span>
+              </td>
+              <td class="py-4 px-4 text-right space-x-2">
+                <button type="button" onclick="openEmailModal('Trần Minh Đức', 'ductm.se@fpt.edu.vn', 'cand-2', 84, true)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition shadow-sm">
+                  ✉️ Gửi Email Mời Vòng 2
+                </button>
+                <a href="candidate_dossier.html" class="font-bold text-sky-400 hover:underline">Hồ sơ &rarr;</a>
+              </td>
+            </tr>
+
+            <!-- Candidate 3: Lê Hoàng Nam (Intern - Passed) -->
+            <tr class="hover:bg-slate-800/40 transition candidate-row" data-status="passed" data-level="intern" id="row-cand-3">
+              <td class="py-4 px-4 font-bold text-white">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-sky-500/20 text-sky-400 font-extrabold flex items-center justify-center border border-sky-500/40 text-xs">
+                    LN
+                  </div>
+                  <div>
+                    <span class="text-sm text-white">Lê Hoàng Nam</span>
+                    <p class="text-[10px] text-slate-400 font-normal">ĐH Công Nghệ (VNU) &bull; Đồ án Thương mại điện tử Java</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-extrabold">
+                  🟢 Intern
+                </span>
+              </td>
+              <td class="py-4 px-3 font-bold text-sky-400 text-sm">82%</td>
+              <td class="py-4 px-3 font-extrabold text-white text-sm">
+                81 <span class="text-[10px] text-slate-500 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-3 font-bold text-sky-400">78% (Đạt chuẩn)</td>
+              <td class="py-4 px-3">
+                <span class="bg-sky-950 text-sky-400 font-bold px-2.5 py-1 rounded-full border border-sky-800/80 text-[10px] inline-flex items-center gap-1">
+                  ✓ Pass Vòng 1 (&ge; 80đ)
+                </span>
+              </td>
+              <td class="py-4 px-4">
+                <span class="text-amber-400 text-[11px] font-bold status-badge" id="status-cand-3">
+                  ⏳ Đạt V1 &bull; Chờ gửi email
+                </span>
+              </td>
+              <td class="py-4 px-4 text-right space-x-2">
+                <button type="button" onclick="openEmailModal('Lê Hoàng Nam', 'nam.lehoang.uet@gmail.com', 'cand-3', 81, true)" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-[11px] transition shadow-sm">
+                  ✉️ Gửi Email Mời Vòng 2
+                </button>
+                <a href="candidate_dossier.html" class="font-bold text-sky-400 hover:underline">Hồ sơ &rarr;</a>
+              </td>
+            </tr>
+
+            <!-- Candidate 4: Phạm Thị Quỳnh (Intern - Failed Cut-off) -->
+            <tr class="hover:bg-slate-800/40 transition candidate-row" data-status="failed" data-level="intern" id="row-cand-4">
+              <td class="py-4 px-4 font-bold text-white">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-rose-500/20 text-rose-400 font-extrabold flex items-center justify-center border border-rose-500/40 text-xs">
+                    PQ
+                  </div>
+                  <div>
+                    <span class="text-sm text-slate-200">Phạm Thị Quỳnh</span>
+                    <p class="text-[10px] text-slate-400 font-normal">Học viện PTIT &bull; Chưa nhiều kinh nghiệm Spring Boot</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-extrabold">
+                  🟢 Intern
+                </span>
+              </td>
+              <td class="py-4 px-3 font-bold text-slate-400 text-sm">70%</td>
+              <td class="py-4 px-3 font-extrabold text-rose-400 text-sm">
+                68 <span class="text-[10px] text-slate-500 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-3 font-bold text-amber-400">54% (Lúng túng đa luồng)</td>
+              <td class="py-4 px-3">
+                <span class="bg-rose-950 text-rose-400 font-bold px-2.5 py-1 rounded-full border border-rose-800/80 text-[10px]">
+                  ✕ Chưa Đạt Cut-off (&lt; 80đ)
+                </span>
+              </td>
+              <td class="py-4 px-4">
+                <span class="text-slate-400 text-[11px] font-bold status-badge" id="status-cand-4">
+                  Chờ gửi phản hồi
+                </span>
+              </td>
+              <td class="py-4 px-4 text-right space-x-2">
+                <button type="button" onclick="openEmailModal('Phạm Thị Quỳnh', 'quynh.ptit@gmail.com', 'cand-4', 68, false)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] transition border border-slate-700">
+                  ✉️ Gửi Email Góp Ý
+                </button>
+                <a href="candidate_dossier.html" class="font-bold text-slate-400 hover:underline">Hồ sơ &rarr;</a>
+              </td>
+            </tr>
+
+            <!-- Candidate 5: Vũ Đức Thắng (Fresher - Failed Cut-off) -->
+            <tr class="hover:bg-slate-800/40 transition candidate-row" data-status="failed" data-level="fresher" id="row-cand-5">
+              <td class="py-4 px-4 font-bold text-white">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-full bg-rose-500/20 text-rose-400 font-extrabold flex items-center justify-center border border-rose-500/40 text-xs">
+                    VT
+                  </div>
+                  <div>
+                    <span class="text-sm text-slate-200">Vũ Đức Thắng</span>
+                    <p class="text-[10px] text-slate-400 font-normal">ĐH Khoa Học Tự Nhiên &bull; Trái ngành tự học Java Backend</p>
+                  </div>
+                </div>
+              </td>
+              <td class="py-4 px-3">
+                <span class="px-2 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800 text-[10px] font-extrabold">
+                  🔵 Fresher
+                </span>
+              </td>
+              <td class="py-4 px-3 font-bold text-slate-400 text-sm">65%</td>
+              <td class="py-4 px-3 font-extrabold text-rose-400 text-sm">
+                62 <span class="text-[10px] text-slate-500 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-3 font-bold text-rose-400">48% (Chưa nắm ACID)</td>
+              <td class="py-4 px-3">
+                <span class="bg-rose-950 text-rose-400 font-bold px-2.5 py-1 rounded-full border border-rose-800/80 text-[10px]">
+                  ✕ Chưa Đạt Cut-off (&lt; 80đ)
+                </span>
+              </td>
+              <td class="py-4 px-4">
+                <span class="text-slate-400 text-[11px] font-bold status-badge" id="status-cand-5">
+                  Chờ gửi phản hồi
+                </span>
+              </td>
+              <td class="py-4 px-4 text-right space-x-2">
+                <button type="button" onclick="openEmailModal('Vũ Đức Thắng', 'thang.vuduc@gmail.com', 'cand-5', 62, false)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-[11px] transition border border-slate-700">
+                  ✉️ Gửi Email Góp Ý
+                </button>
+                <a href="candidate_dossier.html" class="font-bold text-slate-400 hover:underline">Hồ sơ &rarr;</a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ==================== CAMPAIGN DETAILS MODAL ==================== -->
+  <div id="campaignDetailsModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-slate-700 shadow-2xl space-y-6 text-left animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-start justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-sky-950 text-sky-400 text-[10px] font-extrabold uppercase tracking-wider border border-sky-800">
+            Chi Tiết Chiến Dịch IT Tuyển Dụng
+          </span>
+          <h3 class="text-xl font-extrabold text-white mt-1.5" id="detailModalTitle">
+            Java Backend Intern &bull; Khối Dự Án Công Nghệ Toàn Cầu
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Mã chiến dịch: <span class="font-mono text-sky-400">#CAMP-FPT-9042</span> &bull; Trạng thái: <strong class="text-emerald-400">Đang Mở Tuyển</strong></p>
+        </div>
+        <button type="button" onclick="closeCampaignDetailsModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center font-bold text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Config Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <span class="text-slate-500 uppercase font-bold text-[10px] block">Thang Điểm Đạt Chuẩn (Cut-off):</span>
+          <p class="text-emerald-400 font-extrabold text-sm" id="detailModalCutOff">&ge; 80 / 100 Điểm STAR</p>
+          <p class="text-[11px] text-slate-400">Tự động duyệt vào Vòng 2</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <span class="text-slate-500 uppercase font-bold text-[10px] block">Mức Độ Hỏi Xoáy Đối Kháng:</span>
+          <p class="text-amber-400 font-bold text-sm" id="detailModalProbing">Mức 4: Gắt gao</p>
+          <p class="text-[11px] text-slate-400">AI xoáy sâu vào các lỗi concurrency</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <span class="text-slate-500 uppercase font-bold text-[10px] block flex items-center gap-1"><span>📍</span> Địa Điểm Làm Việc:</span>
+          <p class="text-white font-bold text-xs" id="detailModalAddress">Tòa nhà F-Ville 1 &amp; 2, Khu CNC Hòa Lạc, Hà Nội</p>
+          <p class="text-[11px] text-slate-400">🚌 Có xe bus FPT đưa đón 2 chiều khắp các quận</p>
+        </div>
+        <div class="p-3.5 rounded-xl bg-slate-950 border border-slate-800 space-y-1">
+          <span class="text-slate-500 uppercase font-bold text-[10px] block flex items-center gap-1"><span>🎁</span> Chu Cấp &amp; Trợ Cấp Kỹ Sư:</span>
+          <p class="text-emerald-400 font-bold text-xs" id="detailModalStipend">6.000.000 - 9.000.000 VNĐ / tháng</p>
+          <p class="text-[11px] text-slate-300" id="detailModalHardware">🍱 Cơm trưa Canteen &bull; 💻 Cấp Laptop &amp; Màn hình</p>
+        </div>
+      </div>
+
+      <!-- Job Description Full Box -->
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2 text-xs">
+        <span class="text-slate-400 font-bold uppercase text-[10px] block">Bản Mô Tả Công Việc Kỹ Thuật (Job Description - JD):</span>
+        <div class="p-3.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 leading-relaxed font-mono whitespace-pre-wrap max-h-48 overflow-y-auto" id="detailModalJD">Tuyển dụng Thực tập sinh Lập trình Java Backend (Java Intern):
+- Nắm vững kiến thức nền tảng Java Core (OOP, Collections Framework, Exception Handling, I/O).
+- Có đồ án hoặc hiểu biết về Spring Boot 3, xây dựng RESTful API và kết nối MySQL / PostgreSQL qua Spring Data JPA.
+- Thành thạo công cụ quản lý mã nguồn Git / GitHub, biết viết Unit Test cơ bản bằng JUnit 5.
+- Tinh thần chủ động học hỏi, đam mê giải quyết vấn đề kỹ thuật và tư duy cấu trúc chuẩn STAR khi phân tích lỗi code.</div>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800 text-xs">
+        <a href="campaign_creator.html" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold transition">
+          ⚙️ Chỉnh Sửa Hoặc Tạo Đợt Mới
+        </a>
+        <button type="button" onclick="closeCampaignDetailsModal()" class="px-5 py-2 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold transition">
+          Đóng
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== EMAIL DISPATCHER MODAL ==================== -->
+  <div id="emailDispatcherModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-slate-900 rounded-3xl max-w-xl w-full p-6 sm:p-8 border border-slate-700 shadow-2xl space-y-5 text-left animate-in fade-in zoom-in-95 duration-200">
+      
+      <div class="flex items-start justify-between pb-3 border-b border-slate-800">
+        <div>
+          <span class="px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-extrabold uppercase tracking-wider border border-emerald-800">
+            Hệ Thống Gửi Email Tự Động
+          </span>
+          <h3 class="text-lg font-extrabold text-white mt-1">Gửi Thông Báo Khảo Hạch IT Cho Ứng Viên</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Ứng viên: <strong class="text-white" id="emailCandidateName">Nguyễn Văn An</strong> (<span id="emailCandidateAddr">nguyenvanan.it@gmail.com</span>)</p>
+        </div>
+        <button type="button" onclick="closeEmailModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center font-bold text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Template Select -->
+      <div class="space-y-1.5 text-xs">
+        <label class="font-bold text-slate-300">Mẫu Email Hệ Thống:</label>
+        <select id="emailTemplateSelect" onchange="onTemplateChange(this.value)" class="w-full h-10 rounded-xl border border-slate-700 bg-slate-800 px-3 text-xs text-white focus:outline-none focus:border-sky-400">
+          <option value="pass">⭐ Chúc Mừng Đạt Vòng 1 &bull; Mời Phỏng Vấn Kỹ Thuật Vòng 2</option>
+          <option value="reject">❌ Thông Báo Chưa Đạt &bull; Kèm Góp Ý STAR &amp; Lưu Talent Pool</option>
+          <option value="reminder">⏳ Nhắc Nhở Tham Gia Phỏng Vấn AI</option>
+        </select>
+      </div>
+
+      <!-- Subject Input -->
+      <div class="space-y-1.5 text-xs">
+        <label class="font-bold text-slate-300">Tiêu Đề Email:</label>
+        <input type="text" id="emailSubject" class="w-full h-10 rounded-xl border border-slate-700 bg-slate-800 px-3 text-xs text-white focus:outline-none focus:border-sky-400 font-semibold" />
+      </div>
+
+      <!-- Body Input -->
+      <div class="space-y-1.5 text-xs">
+        <label class="font-bold text-slate-300">Nội Dung Thư:</label>
+        <textarea id="emailBody" rows="7" class="w-full rounded-xl border border-slate-700 bg-slate-800 p-3 text-xs text-slate-200 focus:outline-none focus:border-sky-400 leading-relaxed font-sans"></textarea>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+        <button type="button" onclick="closeEmailModal()" class="px-4 py-2 rounded-xl border border-slate-700 text-slate-400 hover:text-white transition">
+          Hủy bỏ
+        </button>
+        <button type="button" id="sendEmailBtn" onclick="sendEmailToCandidate()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow-md transition flex items-center gap-1.5">
+          <span>🚀 Gửi Email Cho Ứng Viên Ngay</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="mt-auto border-t border-slate-800/80 bg-slate-900/40 py-6 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2">
+        <div class="w-6 h-6 rounded-md bg-[#2980B9] text-white font-bold text-xs flex items-center justify-center">T</div>
+        <span class="font-semibold text-slate-400">TalentAI Assessment Engine &bull; IT Vetting Matrix</span>
+      </div>
+      <p>&copy; 2026 FPT Software &bull; Bảo mật dữ liệu ứng viên kỹ thuật theo chuẩn ISO/IEC 27001.</p>
+    </div>
+  </footer>
+
+
+  <!-- ==================== SCRIPT LOGIC ==================== -->
+  <script>
+    let activeCandidateId = null;
+    let activeCandidateName = "";
+    let activeCandidateEmail = "";
+    let activeScore = 80;
+
+    let currentStatusFilter = 'all';
+    let currentLevelFilter = 'all';
+
+    function filterStatus(type) {
+      currentStatusFilter = type;
+
+      const tabAll = document.getElementById('tabAll');
+      const tabPassed = document.getElementById('tabPassed');
+      const tabFailed = document.getElementById('tabFailed');
+
+      [tabAll, tabPassed, tabFailed].forEach(t => {
+        t.className = "px-3.5 py-1.5 rounded-xl text-slate-400 hover:text-white transition text-xs";
+      });
+
+      if (type === 'all') {
+        tabAll.className = "px-3.5 py-1.5 rounded-xl bg-sky-600 text-white transition shadow text-xs";
+      } else if (type === 'passed') {
+        tabPassed.className = "px-3.5 py-1.5 rounded-xl bg-emerald-600 text-white transition shadow text-xs";
+      } else if (type === 'failed') {
+        tabFailed.className = "px-3.5 py-1.5 rounded-xl bg-rose-600 text-white transition shadow text-xs";
+      }
+
+      applyCombinedFilters();
+    }
+
+    function filterLevel(lvl) {
+      currentLevelFilter = lvl;
+
+      const lvlAll = document.getElementById('lvlAll');
+      const lvlIntern = document.getElementById('lvlIntern');
+      const lvlFresher = document.getElementById('lvlFresher');
+      const lvlJunior = document.getElementById('lvlJunior');
+
+      [lvlAll, lvlIntern, lvlFresher, lvlJunior].forEach(b => {
+        if (!b) return;
+        b.className = "px-3 py-1.5 rounded-xl text-slate-400 hover:text-white transition text-xs font-bold";
+      });
+
+      if (lvl === 'all' && lvlAll) lvlAll.className = "px-3 py-1.5 rounded-xl bg-slate-800 text-white transition text-xs font-bold";
+      if (lvl === 'intern' && lvlIntern) lvlIntern.className = "px-3 py-1.5 rounded-xl bg-emerald-600 text-white transition text-xs font-bold";
+      if (lvl === 'fresher' && lvlFresher) lvlFresher.className = "px-3 py-1.5 rounded-xl bg-sky-600 text-white transition text-xs font-bold";
+      if (lvl === 'junior' && lvlJunior) lvlJunior.className = "px-3 py-1.5 rounded-xl bg-purple-600 text-white transition text-xs font-bold";
+
+      applyCombinedFilters();
+    }
+
+    function applyCombinedFilters() {
+      const rows = document.querySelectorAll('.candidate-row');
+      rows.forEach(r => {
+        const status = r.getAttribute('data-status');
+        const level = r.getAttribute('data-level');
+
+        const matchStatus = (currentStatusFilter === 'all') || (status === currentStatusFilter);
+        const matchLevel = (currentLevelFilter === 'all') || (level === currentLevelFilter);
+
+        if (matchStatus && matchLevel) {
+          r.classList.remove('hidden');
+        } else {
+          r.classList.add('hidden');
+        }
+      });
+    }
+
+    // Search candidates by name
+    function searchCandidates(query) {
+      const q = query.toLowerCase().trim();
+      const rows = document.querySelectorAll('.candidate-row');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        if (text.includes(q)) {
+          r.classList.remove('hidden');
+        } else {
+          r.classList.add('hidden');
+        }
+      });
+    }
+
+    // Email Templates Generator
+    function getTemplateContent(type, name, score) {
+      if (type === 'pass') {
+        return {
+          subject: `[FPT Software] Chúc mừng bạn vượt qua Vòng Khảo Hạch AI - Thư mời Phỏng vấn Vòng 2 (Java Backend Intern)`,
+          body: `Thân gửi bạn ${name},\n\nHội Đồng Tuyển Dụng FPT Software xin chúc mừng bạn đã xuất sắc hoàn thành Vòng Khảo Hạch Kỹ Thuật AI với số điểm STAR: ${score}/100 (Vượt ngưỡng Cut-off của chương trình).\n\nChúng tôi trân trọng mời bạn tham gia Vòng 2 - Phỏng vấn kỹ thuật và định hướng dự án trực tiếp cùng Giám đốc khối và Tech Lead:\n- Thời gian: 14:00 - Thứ Sáu, ngày 09/10/2026\n- Hình thức: Trực tiếp tại Tòa nhà F-Ville Hòa Lạc (có xe đưa đón) hoặc qua Microsoft Teams\n- Thời lượng: 45 phút\n\nVui lòng phản hồi email này trước 17:00 ngày mai để xác nhận sự có mặt của bạn.\n\nTrân trọng,\nBan Tuyển Dụng FPT Software\nHotline: (+84) 24 7300 7300`
+        };
+      } else if (type === 'reject') {
+        return {
+          subject: `[FPT Software] Kết quả Vòng Khảo Hạch Kỹ Thuật AI - Vị trí Java Backend Intern`,
+          body: `Thân gửi bạn ${name},\n\nCảm ơn bạn đã dành thời gian tham gia vòng khảo hạch phỏng vấn AI cho vị trí Java Backend Intern tại FPT Software. Điểm STAR tổng kết của bạn là: ${score}/100 điểm.\n\nMặc dù hồ sơ và phần thể hiện của bạn rất tiềm năng, tuy nhiên điểm số lần này chưa đạt ngưỡng chuẩn Cut-off của đợt tuyển dụng. Chúng tôi đã đính kèm Báo cáo Thẩm Định STAR từ Giám khảo AI để bạn theo dõi các điểm cần rèn luyện thêm (như xử lý Exception, tối ưu truy vấn MySQL).\n\nHồ sơ của bạn đã được lưu vào hệ thống Talent Pool để ưu tiên xem xét trong các đợt tiếp theo.\n\nChúc bạn luôn giữ vững đam mê công nghệ!\n\nTrân trọng,\nBan Tuyển Dụng FPT Software`
+        };
+      } else {
+        return {
+          subject: `[FPT Software] Nhắc nhở: Lịch phỏng vấn kỹ thuật AI vị trí Java Backend Intern`,
+          body: `Thân gửi bạn ${name},\n\nHệ thống ghi nhận bạn đã đăng ký ứng tuyển thành công vị trí Java Backend Intern tại FPT Software nhưng chưa hoàn tất bài phỏng vấn 1-1 với Giám khảo AI Alex Chen.\n\nHạn chót tham gia là 23:59 ngày 15/10/2026. Bạn có thể truy cập đường link trong thư mời để vào phòng thi bất cứ lúc nào.\n\nTrân trọng,\nBan Tuyển Dụng FPT Software`
+        };
+      }
+    }
+
+    // Open Email Modal
+    function openEmailModal(name, email, candId, score, isPassed) {
+      activeCandidateId = candId;
+      activeCandidateName = name;
+      activeCandidateEmail = email;
+      activeScore = score;
+
+      document.getElementById('emailCandidateName').innerText = name;
+      document.getElementById('emailCandidateAddr').innerText = email;
+
+      const defaultTemplate = isPassed ? 'pass' : 'reject';
+      document.getElementById('emailTemplateSelect').value = defaultTemplate;
+      
+      const tpl = getTemplateContent(defaultTemplate, name, score);
+      document.getElementById('emailSubject').value = tpl.subject;
+      document.getElementById('emailBody').value = tpl.body.replace(/\\n/g, '\n');
+
+      document.getElementById('emailDispatcherModal').classList.remove('hidden');
+    }
+
+    function onTemplateChange(val) {
+      const tpl = getTemplateContent(val, activeCandidateName, activeScore);
+      document.getElementById('emailSubject').value = tpl.subject;
+      document.getElementById('emailBody').value = tpl.body.replace(/\\n/g, '\n');
+    }
+
+    function closeEmailModal() {
+      document.getElementById('emailDispatcherModal').classList.add('hidden');
+    }
+
+    // Send Email Handler
+    function sendEmailToCandidate() {
+      const btn = document.getElementById('sendEmailBtn');
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        Đang gửi qua máy chủ SMTP FPT...
+      `;
+
+      setTimeout(() => {
+        btn.disabled = false;
+        btn.innerHTML = `<span>🚀 Gửi Email Cho Ứng Viên Ngay</span>`;
+        closeEmailModal();
+
+        // Update status badge on candidate row
+        if (activeCandidateId) {
+          const badge = document.getElementById('status-' + activeCandidateId);
+          if (badge) {
+            badge.className = "text-emerald-400 text-[11px] font-bold";
+            badge.innerHTML = "✓ Đã gửi thư mời Vòng 2";
+          }
+        }
+
+        alert(`✓ ĐÃ GỬI EMAIL THÀNH CÔNG!\nHệ thống đã gửi thông báo đến ứng viên ${activeCandidateName} (${activeCandidateEmail}).`);
+      }, 1000);
+    }
+
+    function exportReport() {
+      alert("Đang chuẩn bị xuất tệp Báo cáo Thẩm Định Khảo Hạch Kỹ Thuật AI (Excel & PDF)... Tệp sẽ tải về trong giây lát!");
+    }
+
+    // Auto-sync campaign info from localStorage
+    function loadSavedCampaignInfo() {
+      const saved = localStorage.getItem('saved_campaign');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          if (data.role) {
+            const fullTitle = data.role + (data.department ? " • " + data.department : "");
+            const headerEl = document.getElementById('portalRoleHeader');
+            if (headerEl) headerEl.innerText = fullTitle;
+            const modalTitleEl = document.getElementById('detailModalTitle');
+            if (modalTitleEl) modalTitleEl.innerText = fullTitle;
+          }
+          if (data.target_level) {
+            const lvlBadge = document.getElementById('portalLevelBadge');
+            if (lvlBadge) {
+              lvlBadge.innerText = data.target_level.toUpperCase();
+              lvlBadge.className = (data.target_level === 'intern') ? "px-2.5 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-[10px] font-extrabold uppercase"
+                : (data.target_level === 'fresher') ? "px-2.5 py-0.5 rounded-full bg-sky-950 text-sky-400 border border-sky-800 text-[10px] font-extrabold uppercase"
+                : "px-2.5 py-0.5 rounded-full bg-purple-950 text-purple-300 border border-purple-800 text-[10px] font-extrabold uppercase";
+            }
+          }
+          if (data.track) {
+            const trackBadge = document.getElementById('portalTrackBadge');
+            if (trackBadge) {
+              trackBadge.innerText = data.track.toUpperCase();
+            }
+          }
+          if (data.jd && document.getElementById('detailModalJD')) {
+            document.getElementById('detailModalJD').innerText = data.jd;
+          }
+          if (data.cutoff) {
+            const cutoffStr = `&ge; ${data.cutoff} điểm`;
+            if (document.getElementById('portalCutoffDisplay')) document.getElementById('portalCutoffDisplay').innerHTML = cutoffStr;
+            if (document.getElementById('detailModalCutOff')) document.getElementById('detailModalCutOff').innerHTML = `&ge; ${data.cutoff} / 100 Điểm STAR`;
+          }
+          if (data.probing && document.getElementById('detailModalProbing')) {
+            document.getElementById('detailModalProbing').innerText = data.probing;
+          }
+          if (data.address && document.getElementById('detailModalAddress')) {
+            document.getElementById('detailModalAddress').innerText = data.address;
+          }
+          if (data.stipend && document.getElementById('detailModalStipend')) {
+            document.getElementById('detailModalStipend').innerText = data.stipend;
+          }
+          if (data.hardware && document.getElementById('detailModalHardware')) {
+            document.getElementById('detailModalHardware').innerText = data.hardware;
+          }
+        } catch(e) {}
+      }
+    }
+
+    function openCampaignDetailsModal() {
+      loadSavedCampaignInfo();
+      document.getElementById('campaignDetailsModal').classList.remove('hidden');
+    }
+
+    function closeCampaignDetailsModal() {
+      document.getElementById('campaignDetailsModal').classList.add('hidden');
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      loadSavedCampaignInfo();
+    });
+  </script>
+
+</body>
+</html>

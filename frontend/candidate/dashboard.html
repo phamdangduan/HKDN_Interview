@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 selection:bg-sky-200 selection:text-slate-900">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Candidate Hub &bull; Bảng Điều Khiển Luyện Phỏng Vấn | TalentAI</title>
+  <meta name="description" content="Trung tâm quản lý luyện tập phỏng vấn AI của ứng viên: Theo dõi số dư lượt mock, tiến độ tăng trưởng điểm STAR qua các tuần và vào phòng phỏng vấn trực tiếp.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-[#F8FAFC] min-h-screen flex flex-col">
+
+  <!-- ==================== 1. IN-APP HEADER NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 h-16 border-b border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-8 flex items-center justify-between">
+    
+    <!-- Left: Brand & Dashboard Tag -->
+    <div class="flex items-center gap-4">
+      <a href="../public/index.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:scale-105 transition-transform">
+          T
+        </div>
+        <span class="font-bold text-lg text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+      </a>
+
+      <div class="h-4 w-px bg-slate-200 hidden sm:block"></div>
+      <span class="text-xs font-bold text-slate-500 uppercase tracking-wider hidden sm:inline">Candidate Hub</span>
+    </div>
+
+    <!-- Center Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+      <a href="dashboard.html" class="px-3 py-1.5 rounded-lg text-[#2980B9] bg-sky-50">Tổng quan</a>
+      <a href="setup.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tạo phiên mới</a>
+      <a href="report_detail.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Báo cáo STAR</a>
+      <a href="cv_studio.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Kho CV &amp; Thư</a>
+      <a href="settings.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Cài đặt &amp; Gói</a>
+    </nav>
+
+    <!-- Right: Credits Counter & User Profile -->
+    <div class="flex items-center gap-3">
+      
+      <!-- Session Packs Remaining Badge -->
+      <div class="flex items-center gap-2 bg-sky-50 border border-sky-100 px-3 py-1.5 rounded-xl">
+        <span class="w-2 h-2 rounded-full bg-[#2980B9] animate-pulse"></span>
+        <span class="text-xs font-bold text-slate-700">Còn <strong class="text-[#2980B9]">4</strong> lượt Mock</span>
+        <a href="settings.html#billing" class="text-[10px] font-bold text-[#2980B9] hover:underline ml-1">+ Nạp thêm</a>
+      </div>
+
+      <!-- User Avatar Profile Menu -->
+      <a href="settings.html" class="flex items-center gap-2 pl-2 border-l border-slate-200 group">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] text-white font-bold text-xs flex items-center justify-center shadow-sm group-hover:ring-2 group-hover:ring-[#2980B9]/30 transition">
+          NM
+        </div>
+        <div class="hidden sm:block text-left text-xs">
+          <p class="font-bold text-slate-900 leading-none group-hover:text-[#2980B9] transition">Nguyễn Minh</p>
+          <p class="text-[10px] text-slate-500 mt-0.5">Java Intern Track</p>
+        </div>
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- ==================== 2. MAIN DASHBOARD CONTENT ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Top Welcome Banner & 1-Click Launch -->
+    <div class="rounded-3xl bg-gradient-to-r from-[#0F2F45] to-[#1F6B9E] p-6 sm:p-8 text-white shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-6 relative overflow-hidden">
+      <div class="absolute -right-10 -bottom-10 w-64 h-64 rounded-full bg-sky-400/10 blur-3xl pointer-events-none"></div>
+
+      <div class="space-y-2 max-w-xl">
+        <span class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-sky-300 bg-white/10 px-3 py-1 rounded-full">
+          🚀 Sẵn sàng cho vòng phỏng vấn tiếp theo
+        </span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">
+          Chào bạn, Nguyễn Văn Minh!
+        </h1>
+        <p class="text-xs sm:text-sm text-sky-100/90 leading-relaxed">
+          Bạn đã hoàn thành <strong>6 buổi phỏng vấn giả lập</strong>. Điểm cấu trúc STAR của bạn đã tăng <strong>+14%</strong> sau khi luyện tập trả lời câu hỏi chuyên môn Java Core &amp; Spring Boot cùng Giám khảo Kỹ thuật Alex Chen.
+        </p>
+
+        <!-- Thông tin cấu hình ngữ cảnh đang lưu (Context Presets) -->
+        <div class="pt-2 flex flex-wrap items-center gap-2 text-xs text-sky-100">
+          <span class="inline-flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-lg border border-white/10 font-medium">
+            🎯 Vị trí: <strong class="text-white">Java Backend Intern (FPT Software)</strong>
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-lg border border-white/10 font-medium">
+            📄 CV: <strong class="text-white">CV_NguyenVanMinh_JavaIntern.pdf</strong>
+          </span>
+          <span class="inline-flex items-center gap-1.5 bg-black/25 px-2.5 py-1 rounded-lg border border-white/10 font-medium">
+            🤖 Giám khảo: <strong class="text-amber-300">Alex Chen (Java Core &amp; OOP)</strong>
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 shrink-0">
+        <!-- Nút chính: Bắt buộc qua Wizard 4 bước nếu tạo mới -->
+        <a href="setup.html" class="inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-white text-[#1F6B9E] hover:bg-slate-100 font-extrabold text-sm shadow-xl transition hover:scale-105">
+          <svg class="w-4 h-4 text-[#1F6B9E]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          <span>+ Bắt đầu Phỏng vấn Mới (4 bước)</span>
+        </a>
+
+        <!-- Nút phụ: Mở Modal xem lại thông tin cấu hình trước khi vào phòng -->
+        <button type="button" onclick="openPreflightModal()" class="inline-flex items-center justify-center gap-2 px-5 py-3.5 rounded-xl bg-sky-950/60 hover:bg-sky-900 border border-sky-400/30 text-white font-bold text-sm transition shadow-sm">
+          <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>⚡ Luyện tiếp Phiên gần nhất (#SESS-9042)</span>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- 3 Metrics KPI Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+      
+      <!-- Card 1: STAR Average Score -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Điểm STAR Trung Bình</span>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold">+6 điểm tuần này</span>
+        </div>
+        <div class="text-3xl font-extrabold text-slate-900">
+          84 <span class="text-sm font-normal text-slate-400">/ 100</span>
+        </div>
+        <p class="text-xs text-slate-500">Thuộc <strong>Top 15% ứng viên</strong> có câu trả lời sắc bén nhất.</p>
+      </div>
+
+      <!-- Card 2: Sessions Completed & Remaining -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Số Lượt Phỏng Vấn</span>
+          <a href="settings.html#billing" class="text-xs font-bold text-[#2980B9] hover:underline">+ Mua thêm</a>
+        </div>
+        <div class="text-3xl font-extrabold text-[#2980B9]">
+          4 <span class="text-sm font-normal text-slate-400">lượt còn lại</span>
+        </div>
+        <p class="text-xs text-slate-500">Đã sử dụng <strong>6 / 10 lượt</strong> trong gói Session Pack.</p>
+      </div>
+
+      <!-- Card 3: Probing Defense Score -->
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm space-y-2">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Phản Xạ Câu Hỏi Kỹ Thuật (Tech Defense)</span>
+          <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">Cần vững Spring Transaction</span>
+        </div>
+        <div class="text-3xl font-extrabold text-slate-900">
+          76% <span class="text-sm font-normal text-slate-400">tự tin</span>
+        </div>
+        <p class="text-xs text-slate-500">Tỷ lệ trả lời chính xác các câu hỏi Java Core, OOP &amp; MySQL.</p>
+      </div>
+
+    </div>
+
+
+    <!-- 2 Column Layout: Skill Progression & Quick Actions -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Col 1 & 2: 5 Competencies Progress Bars -->
+      <div class="lg:col-span-2 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-900">Ma Trận 5 Năng Lực Cốt Lõi (STAR Competency Matrix)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">Được tổng hợp từ 6 phiên phỏng vấn gần nhất của bạn.</p>
+          </div>
+          <span class="text-xs font-bold text-[#2980B9] bg-sky-50 px-3 py-1 rounded-lg">Cập nhật hôm nay</span>
+        </div>
+
+        <div class="space-y-4">
+          
+          <!-- Skill 1 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-800">1. Tư duy Giải quyết Vấn đề (Problem Solving)</span>
+              <span class="text-emerald-600">85% &bull; Xuất sắc</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-emerald-500 rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <!-- Skill 2 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-800">2. Giao tiếp Cấu trúc (Structured Communication)</span>
+              <span class="text-[#2980B9]">85% &bull; Tốt</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-[#2980B9] rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+
+          <!-- Skill 3 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-800">3. Chuyên môn Kỹ thuật (Technical Depth / Architecture)</span>
+              <span class="text-[#2980B9]">88% &bull; Rất tốt</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-[#2980B9] rounded-full" style="width: 88%"></div>
+            </div>
+          </div>
+
+          <!-- Skill 4 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-800">4. Kỹ năng Clean Code &amp; Unit Test (JUnit 5)</span>
+              <span class="text-amber-600">78% &bull; Khá</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full" style="width: 78%"></div>
+            </div>
+          </div>
+
+          <!-- Skill 5 -->
+          <div class="space-y-1.5">
+            <div class="flex justify-between text-xs font-bold">
+              <span class="text-slate-800">5. Phản xạ Xử lý Bug &amp; Live Coding (Troubleshooting)</span>
+              <span class="text-amber-600">76% &bull; Cần rèn luyện thêm</span>
+            </div>
+            <div class="w-full h-2.5 rounded-full bg-slate-100 overflow-hidden">
+              <div class="h-full bg-amber-500 rounded-full" style="width: 76%"></div>
+            </div>
+          </div>
+
+        </div>
+
+        <div class="pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+          <span>Khuyến nghị tiếp theo: Tập trung rèn luyện các câu hỏi về Spring Bean Lifecycle và tối ưu truy vấn SQL cùng Giám khảo Alex Chen.</span>
+          <a href="setup.html" class="font-bold text-[#2980B9] hover:underline">Luyện ngay &rarr;</a>
+        </div>
+      </div>
+
+      <!-- Col 3: Quick Tool Cards -->
+      <div class="space-y-5">
+        
+        <div class="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm space-y-4">
+          <h3 class="font-extrabold text-sm text-slate-900">Công Cụ Hỗ Trợ Ứng Viên</h3>
+          
+          <div class="space-y-3">
+            <a href="cv_studio.html" class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-[#2980B9] hover:bg-sky-50/50 transition group">
+              <div class="w-10 h-10 rounded-xl bg-sky-100 text-[#2980B9] flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
+                📄
+              </div>
+              <div>
+                <p class="font-bold text-xs text-slate-900 group-hover:text-[#2980B9] transition">CV &amp; Cover Letter Studio</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">So khớp khoảng trống CV &amp; tạo thư ATS</p>
+              </div>
+            </a>
+
+            <a href="setup.html" class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-[#2980B9] hover:bg-sky-50/50 transition group">
+              <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
+                🎯
+              </div>
+              <div>
+                <p class="font-bold text-xs text-slate-900 group-hover:text-[#2980B9] transition">Pre-flight Hardware Check</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Kiểm tra mic, webcam &amp; latency WebRTC</p>
+              </div>
+            </a>
+
+            <a href="settings.html" class="flex items-center gap-3 p-3 rounded-xl border border-slate-200 hover:border-[#2980B9] hover:bg-sky-50/50 transition group">
+              <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold text-xs shrink-0 group-hover:scale-105 transition-transform">
+                💳
+              </div>
+              <div>
+                <p class="font-bold text-xs text-slate-900 group-hover:text-[#2980B9] transition">Quản lý Credit &amp; Quyền Riêng tư</p>
+                <p class="text-[11px] text-slate-500 mt-0.5">Nạp thêm phiên &bull; Quyền xoá dữ liệu tức thì</p>
+              </div>
+            </a>
+          </div>
+        </div>
+
+        <!-- Target Company Reminder -->
+        <div class="bg-gradient-to-br from-slate-900 to-[#0F2F45] text-white rounded-3xl p-6 shadow-sm space-y-3">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-sky-300">Mục tiêu hiện tại</span>
+          <h4 class="font-extrabold text-base text-white">FPT Software &bull; Java Backend Intern</h4>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Bạn đã vượt qua 3/5 bài test mô phỏng vị trí này. Hãy hoàn tất 2 phiên nữa để nhận huy hiệu <strong>Interview Ready</strong>.
+          </p>
+          <a href="setup.html" class="inline-block text-xs font-bold text-[#2980B9] bg-white hover:bg-slate-100 px-4 py-2 rounded-xl transition w-full text-center">
+            Tiếp tục luyện tập &rarr;
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- ==================== RECENT SESSIONS TABLE ==================== -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-5">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900">Lịch Sử Các Buổi Phỏng Vấn Gần Nhất</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Bấm vào bất kỳ phiên nào để xem chi tiết báo cáo STAR và nghe lại âm thanh.</p>
+        </div>
+        <a href="history.html" class="text-xs font-bold text-[#2980B9] hover:underline">
+          Xem tất cả 6 phiên &rarr;
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs">
+          <thead>
+            <tr class="border-b border-slate-200 text-slate-400 font-bold uppercase">
+              <th class="py-3 px-4">Mã Phiên</th>
+              <th class="py-3 px-4">Vị trí &amp; Công ty</th>
+              <th class="py-3 px-4">Giám khảo AI</th>
+              <th class="py-3 px-4">Thời lượng</th>
+              <th class="py-3 px-4">Điểm STAR</th>
+              <th class="py-3 px-4 text-right">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            
+            <!-- Row 1: Latest Session -->
+            <tr class="hover:bg-sky-50/50 transition">
+              <td class="py-4 px-4 font-mono font-bold text-[#2980B9]">
+                #SESS-9042
+                <span class="inline-block ml-1 px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">Mới nhất</span>
+              </td>
+              <td class="py-4 px-4">
+                <p class="font-bold text-slate-900">Java Backend Intern</p>
+                <p class="text-[10px] text-slate-500">FPT Software (Global Tech)</p>
+              </td>
+              <td class="py-4 px-4">
+                <span class="font-semibold text-slate-800">Alex Chen</span>
+                <span class="text-[10px] text-emerald-700 block">Java Core &amp; Spring Boot</span>
+              </td>
+              <td class="py-4 px-4 font-mono">28m 15s</td>
+              <td class="py-4 px-4 font-extrabold text-[#2980B9] text-sm">
+                84 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-4 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs transition shadow-sm">
+                  <span>Xem Chi tiết &rarr;</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 2 -->
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-4 px-4 font-mono font-bold text-slate-700">#SESS-8921</td>
+              <td class="py-4 px-4">
+                <p class="font-bold text-slate-900">Head of Product</p>
+                <p class="text-[10px] text-slate-500">Shopee Financial</p>
+              </td>
+              <td class="py-4 px-4">
+                <span class="font-semibold text-slate-800">Sarah Jenkins</span>
+                <span class="text-[10px] text-rose-700 block">Văn hoá &amp; Hành vi</span>
+              </td>
+              <td class="py-4 px-4 font-mono">31m 00s</td>
+              <td class="py-4 px-4 font-extrabold text-slate-900 text-sm">
+                81 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-4 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem lại</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 3 -->
+            <tr class="hover:bg-slate-50 transition">
+              <td class="py-4 px-4 font-mono font-bold text-slate-700">#SESS-8810</td>
+              <td class="py-4 px-4">
+                <p class="font-bold text-slate-900">Junior Backend Engineer</p>
+                <p class="text-[10px] text-slate-500">VNG Corporation</p>
+              </td>
+              <td class="py-4 px-4">
+                <span class="font-semibold text-slate-800">Alex Chen</span>
+                <span class="text-[10px] text-emerald-700 block">System Design</span>
+              </td>
+              <td class="py-4 px-4 font-mono">25m 40s</td>
+              <td class="py-4 px-4 font-extrabold text-slate-900 text-sm">
+                78 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+              </td>
+              <td class="py-4 px-4 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem lại</span>
+                </a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ==================== PRE-FLIGHT REVIEW MODAL (XÁC NHẬN THÔNG TIN TRƯỚC KHI VÀO PHÒNG LIVE) ==================== -->
+  <div id="preflightModal" class="fixed inset-0 z-50 hidden bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-slate-200 shadow-2xl space-y-6 relative animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Close Button -->
+      <button type="button" onclick="closePreflightModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 hover:text-slate-800 flex items-center justify-center font-bold text-sm transition">
+        ✕
+      </button>
+
+      <!-- Modal Header -->
+      <div class="space-y-1">
+        <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 text-[#2980B9] text-[11px] font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-[#2980B9] animate-pulse"></span>
+          Kiểm tra thông tin trước giờ G (Pre-flight Review)
+        </div>
+        <h3 class="text-xl sm:text-2xl font-extrabold text-slate-900 tracking-tight">
+          Xác Nhận Ngữ Cảnh Buổi Phỏng Vấn AI
+        </h3>
+        <p class="text-xs sm:text-sm text-slate-500">
+          AI Avatar sẽ dựa chính xác vào bản mô tả công việc (JD) và CV đính kèm dưới đây để sinh câu hỏi xoáy theo thời gian thực.
+        </p>
+      </div>
+
+      <!-- Config Cards Grid -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        
+        <!-- Box 1: Position & Company -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">1. Vị trí &amp; Mục tiêu</span>
+          <p class="font-extrabold text-slate-900 text-sm">Java Backend Intern</p>
+          <p class="text-xs text-[#2980B9] font-semibold">FPT Software &bull; Khối Dự Án Phần Mềm</p>
+          <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold mt-1">
+            Đã nạp JD Thực tập sinh Java
+          </span>
+        </div>
+
+        <!-- Box 2: CV Attached -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">2. Hồ sơ đối chiếu</span>
+          <p class="font-extrabold text-slate-900 text-sm truncate">CV_NguyenVanMinh_JavaIntern.pdf</p>
+          <p class="text-xs text-slate-600">Độ khớp kỹ năng JD: <strong class="text-emerald-600">85%</strong></p>
+          <span class="inline-block px-2 py-0.5 rounded bg-sky-100 text-[#2980B9] text-[10px] font-bold mt-1">
+            Bóc tách Java Core, Spring Boot, MySQL
+          </span>
+        </div>
+
+        <!-- Box 3: AI Interviewer Persona -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">3. Giám khảo AI phụ trách</span>
+          <div class="flex items-center gap-2">
+            <span class="w-6 h-6 rounded-full bg-slate-800 text-amber-400 font-bold text-xs flex items-center justify-center">DM</span>
+            <p class="font-extrabold text-slate-900 text-sm">Alex Chen</p>
+          </div>
+          <p class="text-xs text-amber-700 font-medium">Java Core &amp; Spring Boot &bull; Mức áp lực: 3/5 (Kỹ thuật thực tế)</p>
+        </div>
+
+        <!-- Box 4: Hardware & WebRTC -->
+        <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-1.5">
+          <span class="text-[10px] font-bold uppercase tracking-wider text-slate-400">4. Thiết bị &amp; Đường truyền</span>
+          <div class="flex items-center gap-2 text-xs font-semibold text-emerald-600">
+            <span>● Cam 1080p</span>
+            <span>● Mic Khử ồn</span>
+          </div>
+          <p class="text-xs text-slate-600 font-mono">Độ trễ WebRTC: <strong class="text-emerald-600">42ms</strong></p>
+          <span class="inline-block px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold mt-1">
+            Đường truyền hoàn hảo
+          </span>
+        </div>
+
+      </div>
+
+      <!-- Notice Alert -->
+      <div class="p-3.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-900 text-xs flex items-start gap-2.5">
+        <span class="text-base shrink-0">💡</span>
+        <p class="leading-relaxed">
+          Nếu bạn muốn ứng tuyển <strong>vị trí khác</strong> hoặc muốn tải lên <strong>bản CV mới</strong>, vui lòng bấm <strong>"Đổi Cấu Hình Khác"</strong> để qua quy trình thiết lập 4 bước chuẩn hóa.
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-between gap-3 pt-2">
+        <a href="setup.html" class="w-full sm:w-auto px-5 py-3 rounded-xl border border-slate-300 text-slate-700 hover:bg-slate-100 font-bold text-xs text-center transition">
+          ⚙️ Đổi Cấu Hình Khác (Vào Wizard 4 bước)
+        </a>
+
+        <a href="mock_room.html" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-extrabold text-sm shadow-lg shadow-[#2980B9]/25 transition hover:scale-105">
+          <span>Đã Đúng Thông Tin &bull; Vào Phòng Live Ngay &rarr;</span>
+        </a>
+      </div>
+
+    </div>
+  </div>
+
+  <script>
+    function openPreflightModal() {
+      const modal = document.getElementById('preflightModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+      }
+    }
+
+    function closePreflightModal() {
+      const modal = document.getElementById('preflightModal');
+      if (modal) {
+        modal.classList.add('hidden');
+      }
+    }
+
+    // Close on click backdrop
+    document.addEventListener('click', function(e) {
+      const modal = document.getElementById('preflightModal');
+      if (modal && e.target === modal) {
+        closePreflightModal();
+      }
+    });
+
+    // Close on Esc key
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closePreflightModal();
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 selection:bg-sky-200 selection:text-slate-900">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CV &amp; Cover Letter Studio &bull; So Khớp ATS Kỹ Thuật Theo Cấp Bậc | TalentAI</title>
+  <meta name="description" content="Kho quản lý CV IT, phân tích khoảng trống năng lực kỹ thuật với JD theo cấp bậc (Intern, Fresher, Junior) và trình sinh thư ứng tuyển chuẩn ATS tự động bằng AI.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-[#F8FAFC] min-h-screen flex flex-col">
+
+  <!-- ==================== 1. IN-APP HEADER NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 h-16 border-b border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-8 flex items-center justify-between">
+    
+    <!-- Left: Brand & Breadcrumb -->
+    <div class="flex items-center gap-4">
+      <a href="dashboard.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:scale-105 transition-transform">
+          T
+        </div>
+        <span class="font-bold text-lg text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+      </a>
+
+      <div class="h-4 w-px bg-slate-200 hidden sm:block"></div>
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 hidden sm:flex">
+        <a href="dashboard.html" class="hover:text-[#2980B9] transition">Candidate Hub</a>
+        <span>/</span>
+        <span class="text-slate-800 font-bold">CV &amp; Cover Letter Studio (IT Tracks)</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+      <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tổng quan</a>
+      <a href="setup.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tạo phiên mới</a>
+      <a href="report_detail.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Báo cáo STAR</a>
+      <a href="drill_room.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Quick Drill</a>
+      <a href="cv_studio.html" class="px-3 py-1.5 rounded-lg text-[#2980B9] bg-sky-50 font-bold">Kho CV &amp; Thư</a>
+      <a href="settings.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Cài đặt &amp; Gói</a>
+    </nav>
+
+    <!-- Right: Credits Counter & User Profile -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-2 bg-sky-50 border border-sky-100 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700">
+        <span class="w-2 h-2 rounded-full bg-[#2980B9]"></span>
+        <span>Còn <strong class="text-[#2980B9]">4</strong> lượt Mock</span>
+      </div>
+
+      <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] text-white font-bold text-xs flex items-center justify-center shadow-sm">
+        NM
+      </div>
+    </div>
+
+  </header>
+
+  <!-- ==================== 2. MAIN CV STUDIO CONTAINER ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Top Studio Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2">
+          <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">IT CV &amp; Cover Letter Studio</h1>
+          <span class="px-2.5 py-0.5 rounded-full bg-sky-100 text-[#2980B9] text-xs font-bold border border-sky-200">
+            Level-Calibrated
+          </span>
+        </div>
+        <p class="text-sm text-slate-500 mt-1">
+          Bóc tách lỗ hổng ngữ nghĩa với hệ thống lọc ATS tuyển dụng IT và tự động tạo thư ứng tuyển thuyết phục từng cấp bậc.
+        </p>
+      </div>
+
+      <!-- Level Selector Tabs -->
+      <div class="flex items-center gap-1.5 bg-white p-1.5 rounded-2xl border border-slate-200 shadow-sm text-xs font-bold">
+        <span class="text-slate-400 px-2 text-[11px] uppercase tracking-wider hidden sm:inline">Cấp bậc:</span>
+        <button type="button" onclick="selectStudioLevel('intern')" id="tab-lvl-intern" class="px-3.5 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow text-xs">
+          🟢 Intern
+        </button>
+        <button type="button" onclick="selectStudioLevel('fresher')" id="tab-lvl-fresher" class="px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold transition text-xs">
+          🔵 Fresher
+        </button>
+        <button type="button" onclick="selectStudioLevel('junior')" id="tab-lvl-junior" class="px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold transition text-xs">
+          🟣 Junior
+        </button>
+      </div>
+    </div>
+
+    <!-- 2 Column Layout: CV Selector & ATS Heatmap Left, Cover Letter Generator Right -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Left Column (5 Cols): CV Version Management & Gap Analysis -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Saved CVs Card -->
+        <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-sm text-slate-900">Hồ Sơ Của Bạn (3 Cấp bậc Mẫu)</h3>
+            <span class="text-[11px] text-slate-400 font-medium">Bấm để nạp</span>
+          </div>
+
+          <div class="space-y-2.5">
+            
+            <!-- CV 1: Intern -->
+            <div onclick="selectStudioLevel('intern')" id="cardCvIntern" class="p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/40 flex items-center justify-between cursor-pointer transition">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-emerald-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  PDF
+                </div>
+                <div>
+                  <p class="font-bold text-xs text-slate-900">CV_NguyenVanMinh_JavaIntern.pdf</p>
+                  <p class="text-[10px] text-slate-500">Mục tiêu: Thực tập sinh &bull; Căn bản OOP &amp; Git</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-emerald-600 status-pill">Đang xem</span>
+            </div>
+
+            <!-- CV 2: Fresher -->
+            <div onclick="selectStudioLevel('fresher')" id="cardCvFresher" class="p-3.5 rounded-2xl border border-slate-200 hover:border-sky-300 bg-white flex items-center justify-between cursor-pointer transition">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-sky-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  PDF
+                </div>
+                <div>
+                  <p class="font-bold text-xs text-slate-900">CV_NguyenVanMinh_JavaFresher.pdf</p>
+                  <p class="text-[10px] text-slate-500">Mục tiêu: Fresher Web API &bull; Spring Boot &amp; MySQL</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-slate-400 status-pill">Chọn</span>
+            </div>
+
+            <!-- CV 3: Junior -->
+            <div onclick="selectStudioLevel('junior')" id="cardCvJunior" class="p-3.5 rounded-2xl border border-slate-200 hover:border-purple-300 bg-white flex items-center justify-between cursor-pointer transition">
+              <div class="flex items-center gap-3">
+                <div class="w-9 h-9 rounded-xl bg-purple-600 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                  PDF
+                </div>
+                <div>
+                  <p class="font-bold text-xs text-slate-900">CV_NguyenVanMinh_Junior2Y.pdf</p>
+                  <p class="text-[10px] text-slate-500">Mục tiêu: Junior Backend &bull; Concurrency &amp; Microservices</p>
+                </div>
+              </div>
+              <span class="text-xs font-bold text-slate-400 status-pill">Chọn</span>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- ATS Semantic Gap Heatmap -->
+        <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-4">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-sm text-slate-900">Bản Đồ Lỗ Hổng ATS (So Khớp JD)</h3>
+            <span class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs" id="atsScoreBadge">
+              86% Phù Hợp
+            </span>
+          </div>
+
+          <p class="text-xs text-slate-500" id="atsJdTarget">
+            Đối chiếu với JD: <strong>Java Backend Intern @ FPT Software</strong>.
+          </p>
+
+          <!-- Gaps Found -->
+          <div class="space-y-3 pt-1">
+            <div class="space-y-1.5">
+              <span class="text-xs font-bold text-rose-700 flex items-center gap-1.5">
+                <span>⚠️</span> <span id="gapsCountLabel">3 Khoảng trống then chốt cần bù đắp trong phỏng vấn:</span>
+              </span>
+              <ul class="text-xs text-slate-600 space-y-1.5 pl-4 list-disc" id="gapsList">
+                <li><strong class="text-slate-900">Kinh nghiệm Production:</strong> CV chủ yếu là đồ án môn học &amp; dự án cá nhân, chưa có kinh nghiệm môi trường thực tế (Real-traffic).</li>
+                <li><strong class="text-slate-900">Tối ưu Database (Indexing &amp; JPA):</strong> Thiếu từ khoá về đánh chỉ mục Index trong MySQL và xử lý N+1 Query trong Spring Data JPA.</li>
+                <li><strong class="text-slate-900">Container &amp; CI/CD:</strong> Chưa có từ khóa đóng gói Docker và triển khai ứng dụng Spring Boot lên Linux/Cloud.</li>
+              </ul>
+            </div>
+
+            <div class="space-y-1.5 pt-2 border-t border-slate-100">
+              <span class="text-xs font-bold text-emerald-700 flex items-center gap-1.5">
+                <span>✓</span> Kỹ năng kỹ thuật khớp hoàn hảo với JD:
+              </span>
+              <div class="flex flex-wrap gap-1.5 pt-1" id="matchedSkillsList">
+                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-200">Java 17 Core (OOP, Collections)</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-200">Spring Boot 3 REST API</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-200">MySQL &amp; Spring Data JPA</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-200">Git &amp; GitHub Workflow</span>
+                <span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-200">JUnit 5 Unit Test</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Mock Action -->
+          <div class="pt-2">
+            <a href="setup.html" class="block w-full py-2.5 text-center rounded-xl bg-sky-50 text-[#2980B9] hover:bg-sky-100 font-bold text-xs transition">
+              Luyện phỏng vấn để bảo vệ các lỗ hổng này &rarr;
+            </a>
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Right Column (7 Cols): AI Cover Letter Generator Studio -->
+      <div class="lg:col-span-7 bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+        
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
+          <div>
+            <h2 class="text-lg font-extrabold text-slate-900">Trình Sinh Thư Ứng Tuyển IT Chuẩn ATS (Cover Letter)</h2>
+            <p class="text-xs text-slate-500 mt-0.5" id="coverLetterSubtext">Tự động lồng ghép thành tích kỹ thuật và câu chuyện STAR từ các buổi mock.</p>
+          </div>
+
+          <!-- Tone Selector -->
+          <div class="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
+            <button class="px-2.5 py-1 rounded-lg bg-white text-[#2980B9] shadow-sm font-bold">Kỹ thuật</button>
+            <button class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">Táo bạo</button>
+            <button class="px-2.5 py-1 rounded-lg text-slate-600 hover:text-slate-900">Khiêm tốn</button>
+          </div>
+        </div>
+
+        <!-- Editable Cover Letter Text Area -->
+        <div class="space-y-2">
+          <div class="flex items-center justify-between text-xs text-slate-500">
+            <span>Bản thảo sinh bởi TalentAI IT Engine v2.4</span>
+            <span class="text-emerald-600 font-bold" id="atsKeywordsVerified">✓ Đã tối ưu từ khoá ATS: Java Intern Track</span>
+          </div>
+
+          <textarea 
+            id="coverLetterContent" 
+            rows="16" 
+            class="w-full rounded-2xl border border-slate-200 bg-slate-50/50 p-5 text-xs sm:text-sm text-slate-800 font-sans leading-relaxed focus:bg-white focus:border-[#2980B9] focus:outline-none focus:ring-4 focus:ring-[#2980B9]/10 transition"
+          ></textarea>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="flex flex-wrap items-center justify-between gap-3 pt-4 border-t border-slate-100">
+          <button type="button" onclick="regenerateCoverLetter()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs transition">
+            <span>🔄 Viết lại với góc nhìn khác</span>
+          </button>
+
+          <div class="flex items-center gap-2">
+            <button type="button" onclick="copyCoverLetter()" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs transition">
+              <span>📋 Sao chép văn bản</span>
+            </button>
+            <button type="button" onclick="alert('Đang xuất tệp thư ứng tuyển PDF chuẩn ATS theo cấp bậc...')" class="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs shadow-md shadow-[#2980B9]/20 transition">
+              <span>Tải PDF &amp; Word (.docx)</span>
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+  </main>
+
+  <script>
+    let activeLevel = 'intern';
+
+    const studioData = {
+      intern: {
+        score: "86% Phù Hợp",
+        scoreClass: "px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-extrabold text-xs",
+        jdTarget: "Đối chiếu với JD: <strong>Java Backend Intern @ FPT Software</strong>.",
+        atsVerified: "✓ Đã tối ưu từ khoá ATS: Java Intern (FPT Software)",
+        gaps: [
+          { bold: "Kinh nghiệm Production:", text: "CV chủ yếu là đồ án môn học & dự án cá nhân, chưa có kinh nghiệm môi trường thực tế (Real-traffic)." },
+          { bold: "Tối ưu Database (Indexing & JPA):", text: "Thiếu từ khoá về đánh chỉ mục Index trong MySQL và xử lý N+1 Query trong Spring Data JPA." },
+          { bold: "Container & CI/CD:", text: "Chưa có từ khóa đóng gói Docker và triển khai ứng dụng Spring Boot lên Linux/Cloud." }
+        ],
+        skills: ["Java 17 Core (OOP, Collections)", "Spring Boot 3 REST API", "MySQL & Spring Data JPA", "Git & GitHub Workflow", "JUnit 5 Unit Test"],
+        coverLetter: `Kính gửi Ban Tuyển dụng Khối Công nghệ & Đội ngũ Kỹ thuật FPT Software,
+
+Tôi viết thư này để bày tỏ nguyện vọng ứng tuyển vào vị trí Thực tập sinh Lập trình Java (Java Backend Intern) tại FPT Software.
+
+Là sinh viên năm cuối chuyên ngành Công nghệ Thông tin, tôi đã chủ động xây dựng nền tảng tư duy vững chắc về Lập trình hướng đối tượng (OOP), Cấu trúc dữ liệu & Giải thuật và phát triển Web API với hệ sinh thái Java / Spring Boot. Tôi đặc biệt ấn tượng với các dự án chuyển đổi số quy mô lớn mà FPT Software đang triển khai cho các khách hàng công nghệ toàn cầu.
+
+Trong đồ án gần nhất xây dựng Hệ thống Bán hàng trực tuyến (E-Commerce REST API) sử dụng Java 17 và Spring Boot 3, tôi trực tiếp thiết kế cơ sở dữ liệu MySQL gồm 12 bảng, phân quyền bảo mật Spring Security với JWT token và viết bộ Unit Test đạt độ phủ code 80% bằng JUnit 5. Khi hệ thống gặp hiện tượng phản hồi chậm khi tìm kiếm danh mục sản phẩm, tôi đã áp dụng cấu trúc DTO, phân trang Pagination và đánh chỉ mục (Index) trên các trường truy vấn chính, qua đó tối ưu thời gian phản hồi API từ 850ms xuống còn 95ms.
+
+Mặc dù ở giai đoạn thực tập sinh, tôi chưa có nhiều năm kinh nghiệm thực chiến trên các hệ thống production lớn, nhưng tôi có thế mạnh về tư duy lập trình bài bản, khả năng đọc hiểu tài liệu tiếng Anh tốt và tinh thần sẵn sàng học hỏi công nghệ mới. Tôi đã chuẩn bị kỹ lưỡng để có thể nhanh chóng hòa nhập vào quy trình Agile/Scrum của dự án và học hỏi từ các Senior Mentor tại FPT Software.
+
+Tôi rất mong có cơ hội được tham gia buổi phỏng vấn trực tiếp để trình bày sâu hơn về năng lực cũng như demo sản phẩm thực tế mà tôi đã xây dựng.
+
+Xin chân thành cảm ơn Quý công ty đã dành thời gian xem xét hồ sơ của tôi!
+
+Trân trọng,
+Nguyễn Văn Minh
+Số điện thoại: (+84) 912 345 678
+Email: minh.nguyen.it.dev@gmail.com
+GitHub: github.com/minh-nguyen-dev`
+      },
+      fresher: {
+        score: "89% Phù Hợp",
+        scoreClass: "px-2.5 py-1 rounded-full bg-sky-100 text-sky-800 font-extrabold text-xs",
+        jdTarget: "Đối chiếu với JD: <strong>Java Backend Fresher (< 1 năm) @ Viettel Solutions</strong>.",
+        atsVerified: "✓ Đã tối ưu từ khoá ATS: Java Fresher (REST API & MySQL)",
+        gaps: [
+          { bold: "Caching & Message Queue:", text: "Chưa thể hiện rõ kinh nghiệm tích hợp Redis cache và Kafka/RabbitMQ vào pipeline xử lý." },
+          { bold: "Integration Testing:", text: "Có JUnit 5 nhưng chưa nêu rõ Mockito và Testcontainers để kiểm thử toàn diện integration." },
+          { bold: "Tải đồng thời (Concurrency):", text: "Chưa có số liệu đo lường RPS (Requests Per Second) và xử lý race condition." }
+        ],
+        skills: ["Java 17 & Spring Boot 3", "RESTful API Best Practices", "Spring Security + OAuth2/JWT", "MySQL Index Tuning", "Docker Containerization", "Maven/Gradle Build"],
+        coverLetter: `Kính gửi Ban Lãnh đạo Khối Kỹ thuật & Phòng Nhân sự Viettel Solutions,
+
+Tôi viết thư này để bày tỏ mong muốn được cống hiến tại vị trí Kỹ sư Phần mềm Java Fresher (Java Backend Engineer) tại Viettel Solutions.
+
+Sau khi tốt nghiệp loại Giỏi chuyên ngành Kỹ thuật Phần mềm và có hơn 9 tháng tham gia phát triển dự án thực tế, tôi đã trang bị cho mình nền tảng vững vàng về phát triển backend hướng dịch vụ với Java 17, Spring Boot 3 và kiến trúc REST API.
+
+Tại dự án Quản lý Đơn hàng & Kho vận gần nhất, tôi phụ trách xây dựng 8 microservices cốt lõi, tối ưu hoá các truy vấn JPA phức tạp, ngăn chặn triệt để vấn đề N+1 Query và áp dụng cơ chế Redis Caching giúp giảm 65% tải đọc lên cơ sở dữ liệu MySQL chính. Bên cạnh đó, tôi cũng chủ động viết hơn 150 test cases với JUnit 5 & Mockito, đồng thời xây dựng quy trình CI/CD tự động build Docker image và deploy lên Kubernetes cluster của môi trường Staging.
+
+Với sự tận tâm, kỷ luật cao và tư duy hướng tới chất lượng mã nguồn sạch (Clean Code & SOLID), tôi tin rằng mình sẽ nhanh chóng đóng góp vào các dự án trọng điểm quốc gia của Viettel Solutions.
+
+Tôi rất mong có dịp được trao đổi trực tiếp cùng các anh chị Technical Lead để trình bày chi tiết hơn về các giải pháp kỹ thuật tôi từng triển khai.
+
+Trân trọng,
+Nguyễn Văn Minh
+Số điện thoại: (+84) 912 345 678
+Email: minh.nguyen.it.dev@gmail.com
+LinkedIn: linkedin.com/in/minh-nguyen-dev`
+      },
+      junior: {
+        score: "92% Phù Hợp",
+        scoreClass: "px-2.5 py-1 rounded-full bg-purple-100 text-purple-800 font-extrabold text-xs",
+        jdTarget: "Đối chiếu với JD: <strong>Junior Backend Engineer (2 Năm) @ VNG Corporation</strong>.",
+        atsVerified: "✓ Đã tối ưu từ khoá ATS: Junior Backend (High Concurrency & Microservices)",
+        gaps: [
+          { bold: "Distributed Tracing & APM:", text: "Thiếu công cụ OpenTelemetry / Jaeger để giám sát độ trễ vi dịch vụ phân tán." },
+          { bold: "Database Sharding & Partitioning:", text: "Kinh nghiệm scale database lớn trên 50 triệu bản ghi chưa được làm rõ trong CV." }
+        ],
+        skills: ["Microservices Architecture", "Distributed Locking (Redis/Zookeeper)", "Apache Kafka Event Streaming", "PostgreSQL / MySQL Performance Tuning", "Docker & Kubernetes Deployment", "CI/CD GitLab Pipeline", "High Availability & Fault Tolerance"],
+        coverLetter: `Kính gửi Ban Giám đốc Kỹ thuật & Đội ngũ Tuyển dụng VNG Corporation,
+
+Tôi viết thư này để ứng tuyển vào vị trí Junior Backend Engineer (Java / Distributed Systems) tại VNG Corporation.
+
+Với hơn 2 năm kinh nghiệm thực chiến phát triển các hệ thống backend chịu tải cao (High Concurrency) trong ngành Fintech và E-Commerce, tôi chuyên sâu về thiết kế microservices, tối ưu hoá hiệu năng database và xử lý luồng dữ liệu thời gian thực.
+
+Tại công việc gần nhất, tôi giữ vai trò Key Backend Developer phụ trách Module Thanh toán & Khuyến mãi:
+1. Thiết kế và triển khai giải pháp chống Over-selling cho các chiến dịch Flash Sale đạt đỉnh 1.800 RPS bằng việc kết hợp Redis Atomic Lua Script và Kafka Message Queue, đảm bảo dữ liệu tồn kho chính xác tuyệt đối mà không gây nghẽn kết nối database.
+2. Tái cấu trúc cơ sở dữ liệu PostgreSQL, phân vùng (Partitioning) bảng lịch sử giao dịch và đánh chỉ mục B-Tree / Partial Index, rút ngắn thời gian truy vấn trung bình từ 1.2s xuống dưới 35ms.
+3. Tham gia trực chiến xử lý sự cố (On-call), thiết lập cảnh báo Prometheus/Grafana và viết tài liệu kỹ thuật chuẩn hoá cho toàn đội ngũ.
+
+Tôi rất ấn tượng với văn hóa kỹ thuật cởi mở và quy mô phục vụ hàng triệu người dùng đồng thời của VNG. Tôi tin rằng bề dày kinh nghiệm giải quyết các bài toán hóc búa về concurrency và microservices của tôi sẽ mang lại giá trị thiết thực cho team.
+
+Rất mong có cơ hội được tham gia phỏng vấn kỹ thuật cùng ban giám khảo!
+
+Trân trọng,
+Nguyễn Văn Minh
+Số điện thoại: (+84) 912 345 678
+Email: minh.nguyen.it.dev@gmail.com
+GitHub: github.com/minh-nguyen-dev`
+      }
+    };
+
+    function selectStudioLevel(lvl) {
+      if (!studioData[lvl]) return;
+      activeLevel = lvl;
+      const data = studioData[lvl];
+
+      // Update pills
+      ['intern', 'fresher', 'junior'].forEach(l => {
+        const btn = document.getElementById(`tab-lvl-${l}`);
+        if (btn) {
+          if (l === lvl) {
+            btn.className = (l === 'intern') ? 'px-3.5 py-2 rounded-xl bg-emerald-600 text-white font-bold transition shadow text-xs'
+              : (l === 'fresher') ? 'px-3.5 py-2 rounded-xl bg-sky-600 text-white font-bold transition shadow text-xs'
+              : 'px-3.5 py-2 rounded-xl bg-purple-600 text-white font-bold transition shadow text-xs';
+          } else {
+            btn.className = 'px-3.5 py-2 rounded-xl text-slate-600 hover:text-slate-900 hover:bg-slate-100 font-bold transition text-xs';
+          }
+        }
+
+        // Update CV Card selection
+        const card = document.getElementById(`cardCv${l.charAt(0).toUpperCase() + l.slice(1)}`);
+        if (card) {
+          const pill = card.querySelector('.status-pill');
+          if (l === lvl) {
+            card.className = (l === 'intern') ? 'p-3.5 rounded-2xl border-2 border-emerald-500 bg-emerald-50/40 flex items-center justify-between cursor-pointer transition'
+              : (l === 'fresher') ? 'p-3.5 rounded-2xl border-2 border-sky-500 bg-sky-50/40 flex items-center justify-between cursor-pointer transition'
+              : 'p-3.5 rounded-2xl border-2 border-purple-500 bg-purple-50/40 flex items-center justify-between cursor-pointer transition';
+            if (pill) {
+              pill.innerText = "Đang xem";
+              pill.className = (l === 'intern') ? 'text-xs font-bold text-emerald-600 status-pill'
+                : (l === 'fresher') ? 'text-xs font-bold text-sky-600 status-pill'
+                : 'text-xs font-bold text-purple-600 status-pill';
+            }
+          } else {
+            card.className = 'p-3.5 rounded-2xl border border-slate-200 hover:border-slate-300 bg-white flex items-center justify-between cursor-pointer transition';
+            if (pill) {
+              pill.innerText = "Chọn";
+              pill.className = 'text-xs font-bold text-slate-400 status-pill';
+            }
+          }
+        }
+      });
+
+      // Update ATS Card
+      const scoreBadge = document.getElementById('atsScoreBadge');
+      if (scoreBadge) {
+        scoreBadge.innerText = data.score;
+        scoreBadge.className = data.scoreClass;
+      }
+      document.getElementById('atsJdTarget').innerHTML = data.jdTarget;
+      document.getElementById('gapsCountLabel').innerText = `${data.gaps.length} Khoảng trống then chốt cần bù đắp trong phỏng vấn:`;
+
+      // Update Gaps List
+      const gapsList = document.getElementById('gapsList');
+      gapsList.innerHTML = data.gaps.map(g => `<li><strong class="text-slate-900">${g.bold}</strong> ${g.text}</li>`).join('');
+
+      // Update Skills List
+      const skillsList = document.getElementById('matchedSkillsList');
+      skillsList.innerHTML = data.skills.map(s => `<span class="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[11px] font-semibold border border-emerald-200">${s}</span>`).join('');
+
+      // Update Cover Letter
+      document.getElementById('atsKeywordsVerified').innerText = data.atsVerified;
+      document.getElementById('coverLetterContent').value = data.coverLetter;
+    }
+
+    function copyCoverLetter() {
+      const textarea = document.getElementById('coverLetterContent');
+      textarea.select();
+      document.execCommand('copy');
+      alert("✓ Đã sao chép nội dung thư ứng tuyển vào bộ nhớ tạm!");
+    }
+
+    function regenerateCoverLetter() {
+      alert(`Đang phân tích lại hồ sơ theo cấp bậc ${activeLevel.toUpperCase()} với góc nhìn tối ưu bài toán giải quyết thực tế...`);
+    }
+
+    // Auto-load level
+    window.addEventListener('DOMContentLoaded', () => {
+      try {
+        const confStr = localStorage.getItem('interview_config');
+        if (confStr) {
+          const conf = JSON.parse(confStr);
+          if (conf.level && studioData[conf.level]) {
+            selectStudioLevel(conf.level);
+            return;
+          }
+        }
+      } catch (e) {}
+      selectStudioLevel('intern');
+    });
+  </script>
+
+</body>
+</html>

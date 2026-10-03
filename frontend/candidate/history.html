@@ -1,0 +1,531 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 selection:bg-sky-200 selection:text-slate-900">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lịch Sử Phỏng Vấn & Tiến Độ STAR | TalentAI Candidate Hub</title>
+  <meta name="description" content="Quản lý toàn bộ lịch sử các phiên phỏng vấn giả lập, theo dõi lộ trình cải thiện điểm STAR và xuất báo cáo học tập.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-[#F8FAFC] min-h-screen flex flex-col justify-between">
+
+  <!-- ==================== 1. IN-APP HEADER NAVBAR ==================== -->
+  <header class="sticky top-0 z-40 h-16 border-b border-slate-200 bg-white/95 backdrop-blur px-4 sm:px-8 flex items-center justify-between">
+    
+    <!-- Left: Brand & Dashboard Tag -->
+    <div class="flex items-center gap-4">
+      <a href="dashboard.html" class="flex items-center gap-2.5 group">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white font-bold text-sm shadow-md group-hover:scale-105 transition-transform">
+          T
+        </div>
+        <span class="font-bold text-lg text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+      </a>
+
+      <div class="h-4 w-px bg-slate-200 hidden sm:block"></div>
+      <div class="flex items-center gap-2 text-xs font-semibold text-slate-500 hidden sm:flex">
+        <a href="dashboard.html" class="hover:text-[#2980B9] transition">Candidate Hub</a>
+        <span>/</span>
+        <span class="text-slate-800 font-bold">Thư Viện Lịch Sử</span>
+      </div>
+    </div>
+
+    <!-- Center Navigation Links -->
+    <nav class="hidden md:flex items-center gap-1 text-sm font-semibold text-slate-600">
+      <a href="dashboard.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tổng quan</a>
+      <a href="setup.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Tạo phiên mới</a>
+      <a href="history.html" class="px-3 py-1.5 rounded-lg text-[#2980B9] bg-sky-50 font-bold">Lịch sử &amp; Điểm STAR</a>
+      <a href="cv_studio.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Kho CV &amp; Thư</a>
+      <a href="settings.html" class="px-3 py-1.5 rounded-lg hover:bg-slate-100 hover:text-slate-900 transition">Cài đặt &amp; Gói</a>
+    </nav>
+
+    <!-- Right: Credits Counter & User Profile -->
+    <div class="flex items-center gap-3">
+      
+      <!-- Session Packs Remaining Badge -->
+      <div class="flex items-center gap-2 bg-sky-50 border border-sky-100 px-3 py-1.5 rounded-xl">
+        <span class="w-2 h-2 rounded-full bg-[#2980B9] animate-pulse"></span>
+        <span class="text-xs font-bold text-slate-700">Còn <strong class="text-[#2980B9]">4</strong> lượt Mock</span>
+        <a href="settings.html#billing" class="text-[10px] font-bold text-[#2980B9] hover:underline ml-1">+ Nạp thêm</a>
+      </div>
+
+      <!-- User Avatar Profile Menu -->
+      <a href="settings.html" class="flex items-center gap-2 pl-2 border-l border-slate-200 group">
+        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] text-white font-bold text-xs flex items-center justify-center shadow-sm group-hover:ring-2 group-hover:ring-[#2980B9]/30 transition">
+          NM
+        </div>
+        <div class="hidden sm:block text-left text-xs">
+          <p class="font-bold text-slate-900 leading-none group-hover:text-[#2980B9] transition">Nguyễn Minh</p>
+          <p class="text-[10px] text-slate-500 mt-0.5">Java Intern Track</p>
+        </div>
+      </a>
+
+    </div>
+
+  </header>
+
+
+  <!-- ==================== 2. MAIN HISTORY CONTENT ==================== -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    
+    <!-- Page Header & Export Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div>
+        <div class="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#2980B9] bg-sky-50 px-3 py-1 rounded-full mb-1">
+          📊 Hồ Sơ Luyện Tập &bull; Lộ Trình Tiến Bộ
+        </div>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          Lịch Sử Toàn Bộ Các Buổi Phỏng Vấn
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+          Theo dõi chi tiết 6 phiên đối thoại giả lập, biểu đồ tăng trưởng kỹ năng và nghe lại các bản thu âm STAR.
+        </p>
+      </div>
+
+      <div class="flex items-center gap-2.5">
+        <button type="button" onclick="alert('Đang tạo tệp PDF Hồ sơ Lộ trình Tiến bộ STAR...')" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-bold text-xs transition shadow-sm">
+          <span>📑 Xuất Báo Cáo Tiến Độ (PDF)</span>
+        </button>
+        <a href="setup.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-extrabold text-xs shadow-md shadow-[#2980B9]/20 transition">
+          <span>+ Phỏng Vấn Mới</span>
+        </a>
+      </div>
+    </div>
+
+
+    <!-- 4 KPI Metrics Row -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Phiên Hoàn Tất</span>
+        <div class="text-2xl sm:text-3xl font-extrabold text-slate-900">
+          6 <span class="text-xs font-normal text-slate-400">phiên</span>
+        </div>
+        <p class="text-[11px] text-emerald-600 font-semibold">100% có báo cáo STAR</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Điểm STAR Cao Nhất</span>
+        <div class="text-2xl sm:text-3xl font-extrabold text-[#2980B9]">
+          86 <span class="text-xs font-normal text-slate-400">/ 100</span>
+        </div>
+        <p class="text-[11px] text-slate-500">Đạt ở phiên #SESS-9042</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tốc Độ Tăng Trưởng</span>
+        <div class="text-2xl sm:text-3xl font-extrabold text-emerald-600">
+          +18%
+        </div>
+        <p class="text-[11px] text-slate-500">Từ 68 điểm lên 86 điểm</p>
+      </div>
+
+      <div class="bg-white rounded-2xl border border-slate-200/80 p-4 sm:p-5 shadow-sm space-y-1">
+        <span class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Tổng Thời Lượng Luyện</span>
+        <div class="text-2xl sm:text-3xl font-extrabold text-purple-600">
+          2h 08m
+        </div>
+        <p class="text-[11px] text-slate-500">Đối thoại giọng nói 2 chiều</p>
+      </div>
+
+    </div>
+
+
+    <!-- Progression Timeline Visual Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-sm space-y-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <h2 class="text-lg font-extrabold text-slate-900">Hành Trình Cải Thiện Điểm STAR Qua Từng Phiên</h2>
+          <p class="text-xs text-slate-500 mt-0.5">Biểu đồ thể hiện sự bứt phá từ phiên khảo hạch đầu tiên đến bài test xuất sắc nhất.</p>
+        </div>
+        <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+          Xu Hướng Tăng Đều Đặn
+        </span>
+      </div>
+
+      <!-- Timeline Chart Simulator -->
+      <div class="space-y-4">
+        <div class="grid grid-cols-6 gap-2 sm:gap-4 items-end h-44 pt-6 pb-2 border-b border-slate-200">
+          
+          <!-- Bar 1 -->
+          <div class="flex flex-col items-center gap-2 h-full justify-end group">
+            <span class="text-xs font-extrabold text-slate-500">68</span>
+            <div class="w-full max-w-[42px] bg-slate-300 rounded-t-xl transition-all duration-300 group-hover:bg-[#2980B9]" style="height: 55%"></div>
+            <span class="text-[10px] text-slate-400 font-semibold truncate">Phiên 1</span>
+          </div>
+
+          <!-- Bar 2 -->
+          <div class="flex flex-col items-center gap-2 h-full justify-end group">
+            <span class="text-xs font-extrabold text-slate-600">72</span>
+            <div class="w-full max-w-[42px] bg-slate-300 rounded-t-xl transition-all duration-300 group-hover:bg-[#2980B9]" style="height: 62%"></div>
+            <span class="text-[10px] text-slate-400 font-semibold truncate">Phiên 2</span>
+          </div>
+
+          <!-- Bar 3 -->
+          <div class="flex flex-col items-center gap-2 h-full justify-end group">
+            <span class="text-xs font-extrabold text-slate-700">75</span>
+            <div class="w-full max-w-[42px] bg-sky-300 rounded-t-xl transition-all duration-300 group-hover:bg-[#2980B9]" style="height: 68%"></div>
+            <span class="text-[10px] text-slate-400 font-semibold truncate">Phiên 3</span>
+          </div>
+
+          <!-- Bar 4 -->
+          <div class="flex flex-col items-center gap-2 h-full justify-end group">
+            <span class="text-xs font-extrabold text-sky-700">78</span>
+            <div class="w-full max-w-[42px] bg-sky-400 rounded-t-xl transition-all duration-300 group-hover:bg-[#2980B9]" style="height: 74%"></div>
+            <span class="text-[10px] text-slate-400 font-semibold truncate">Phiên 4</span>
+          </div>
+
+          <!-- Bar 5 -->
+          <div class="flex flex-col items-center gap-2 h-full justify-end group">
+            <span class="text-xs font-extrabold text-[#2980B9]">82</span>
+            <div class="w-full max-w-[42px] bg-[#2980B9] rounded-t-xl transition-all duration-300 group-hover:brightness-110" style="height: 82%"></div>
+            <span class="text-[10px] text-slate-400 font-semibold truncate">Phiên 5</span>
+          </div>
+
+          <!-- Bar 6 (Peak) -->
+          <div class="flex flex-col items-center gap-2 h-full justify-end group">
+            <span class="text-xs font-extrabold text-emerald-600">86 ★</span>
+            <div class="w-full max-w-[42px] bg-gradient-to-t from-[#1F6B9E] to-emerald-500 rounded-t-xl transition-all duration-300 shadow-md" style="height: 92%"></div>
+            <span class="text-[10px] text-emerald-600 font-bold truncate">Mới nhất</span>
+          </div>
+
+        </div>
+
+        <div class="flex flex-wrap items-center justify-between text-xs text-slate-500 pt-1">
+          <span>05/09/2026: Phiên đầu tiên (Cần cải thiện cấu trúc S-T-A-R)</span>
+          <span class="text-emerald-700 font-bold">01/10/2026: Đạt chuẩn phỏng vấn FPT Software (Xuất sắc)</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Search & Filter Controls Card -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-sm space-y-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        
+        <!-- Search Input -->
+        <div class="relative">
+          <input 
+            type="text" 
+            id="searchInput" 
+            oninput="filterSessions()" 
+            placeholder="Tìm theo mã phiên, công ty, vị trí..." 
+            class="w-full h-10 rounded-xl border border-slate-200 bg-slate-50 px-3.5 pl-9 text-xs text-slate-800 placeholder:text-slate-400 focus:bg-white focus:border-[#2980B9] focus:outline-none transition"
+          />
+          <svg class="w-4 h-4 text-slate-400 absolute left-3 top-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+
+        <!-- Filter 1: Role -->
+        <div>
+          <select id="roleFilter" onchange="filterSessions()" class="w-full h-10 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs text-slate-700 focus:bg-white focus:border-[#2980B9] focus:outline-none transition">
+            <option value="all">Tất cả vị trí phỏng vấn</option>
+            <option value="intern">Java Backend Intern</option>
+            <option value="fresher">Fresher Java Developer</option>
+            <option value="junior">Junior Backend Engineer</option>
+          </select>
+        </div>
+
+        <!-- Filter 2: Score Tier -->
+        <div>
+          <select id="scoreFilter" onchange="filterSessions()" class="w-full h-10 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs text-slate-700 focus:bg-white focus:border-[#2980B9] focus:outline-none transition">
+            <option value="all">Tất cả mức điểm STAR</option>
+            <option value="high">Xuất sắc (&ge; 85 điểm)</option>
+            <option value="mid">Đạt chuẩn (75 - 84 điểm)</option>
+            <option value="low">Cần cải thiện (&lt; 75 điểm)</option>
+          </select>
+        </div>
+
+        <!-- Filter 3: Interviewer -->
+        <div>
+          <select id="interviewerFilter" onchange="filterSessions()" class="w-full h-10 rounded-xl border border-slate-200 bg-slate-50 px-3 text-xs text-slate-700 focus:bg-white focus:border-[#2980B9] focus:outline-none transition">
+            <option value="all">Tất cả Giám khảo AI</option>
+            <option value="alex">Alex Chen (Senior Java Architect)</option>
+            <option value="sarah">Sarah Jenkins (Head of People)</option>
+            <option value="david">David Miller (Senior Director)</option>
+          </select>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- Sessions Full Table -->
+    <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+        <div>
+          <h3 class="font-extrabold text-base text-slate-900">Danh Sách 6 Phiên Phỏng Vấn</h3>
+          <p class="text-xs text-slate-500 mt-0.5">Bấm vào nút "Xem Báo Cáo" để xem phân tích chi tiết từng câu hỏi và nghe lại âm thanh.</p>
+        </div>
+        <span class="text-xs font-bold text-slate-500 bg-slate-100 px-3 py-1 rounded-lg" id="sessionCountBadge">
+          Hiển thị 6 / 6 phiên
+        </span>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs" id="sessionsTable">
+          <thead>
+            <tr class="border-b border-slate-200 bg-slate-50 text-slate-400 font-bold uppercase tracking-wider">
+              <th class="py-3.5 px-5">Mã Phiên</th>
+              <th class="py-3.5 px-5">Vị trí &amp; Doanh nghiệp</th>
+              <th class="py-3.5 px-5">Giám khảo AI</th>
+              <th class="py-3.5 px-5">Ngày thực hiện</th>
+              <th class="py-3.5 px-5">Thời lượng</th>
+              <th class="py-3.5 px-5">Điểm STAR</th>
+              <th class="py-3.5 px-5 text-right">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-100 text-slate-700">
+            
+            <!-- Row 1 (Latest - Java Intern FPT) -->
+            <tr class="hover:bg-sky-50/50 transition session-row" data-role="intern" data-score="86" data-interviewer="alex">
+              <td class="py-4 px-5 font-mono font-bold text-[#2980B9]">
+                #SESS-9042
+                <span class="inline-block ml-1 px-1.5 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[9px] font-bold">Mới nhất</span>
+              </td>
+              <td class="py-4 px-5">
+                <p class="font-extrabold text-slate-900 text-sm">Java Backend Intern</p>
+                <p class="text-[11px] text-[#2980B9] font-medium">FPT Software &bull; Global Tech</p>
+              </td>
+              <td class="py-4 px-5">
+                <span class="font-bold text-slate-800">Alex Chen</span>
+                <span class="text-[10px] text-emerald-700 block">Java Core &amp; Spring Boot</span>
+              </td>
+              <td class="py-4 px-5 text-slate-500 font-medium">01/10/2026</td>
+              <td class="py-4 px-5 font-mono">28m 15s</td>
+              <td class="py-4 px-5 font-extrabold text-[#2980B9] text-base">
+                86 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+                <span class="block text-[10px] text-emerald-600 font-bold">Xuất sắc</span>
+              </td>
+              <td class="py-4 px-5 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs transition shadow-sm">
+                  <span>Báo Cáo STAR &rarr;</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 2 (Viettel Fresher) -->
+            <tr class="hover:bg-sky-50/50 transition session-row" data-role="fresher" data-score="82" data-interviewer="sarah">
+              <td class="py-4 px-5 font-mono font-bold text-slate-700">
+                #SESS-8921
+              </td>
+              <td class="py-4 px-5">
+                <p class="font-extrabold text-slate-900 text-sm">Fresher Java Developer</p>
+                <p class="text-[11px] text-slate-500">Viettel Digital &bull; Khối Nền Tảng</p>
+              </td>
+              <td class="py-4 px-5">
+                <span class="font-bold text-slate-800">Sarah Jenkins</span>
+                <span class="text-[10px] text-slate-500 block">Văn hoá &amp; Kỹ năng mềm</span>
+              </td>
+              <td class="py-4 px-5 text-slate-500 font-medium">26/09/2026</td>
+              <td class="py-4 px-5 font-mono">22m 30s</td>
+              <td class="py-4 px-5 font-extrabold text-slate-800 text-base">
+                82 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+                <span class="block text-[10px] text-emerald-600 font-bold">Đạt chuẩn</span>
+              </td>
+              <td class="py-4 px-5 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem Lại</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 3 (VNG Junior) -->
+            <tr class="hover:bg-sky-50/50 transition session-row" data-role="junior" data-score="78" data-interviewer="alex">
+              <td class="py-4 px-5 font-mono font-bold text-slate-700">
+                #SESS-8810
+              </td>
+              <td class="py-4 px-5">
+                <p class="font-extrabold text-slate-900 text-sm">Junior Backend Engineer</p>
+                <p class="text-[11px] text-slate-500">VNG Corporation &bull; ZaloPay</p>
+              </td>
+              <td class="py-4 px-5">
+                <span class="font-bold text-slate-800">Alex Chen</span>
+                <span class="text-[10px] text-emerald-700 block">MySQL &amp; JPA Query</span>
+              </td>
+              <td class="py-4 px-5 text-slate-500 font-medium">22/09/2026</td>
+              <td class="py-4 px-5 font-mono">25m 40s</td>
+              <td class="py-4 px-5 font-extrabold text-slate-800 text-base">
+                78 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+                <span class="block text-[10px] text-amber-600 font-bold">Khá</span>
+              </td>
+              <td class="py-4 px-5 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem Lại</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 4 (OOP Foundation) -->
+            <tr class="hover:bg-sky-50/50 transition session-row" data-role="intern" data-score="75" data-interviewer="david">
+              <td class="py-4 px-5 font-mono font-bold text-slate-700">
+                #SESS-8705
+              </td>
+              <td class="py-4 px-5">
+                <p class="font-extrabold text-slate-900 text-sm">Java Core &amp; OOP Foundations</p>
+                <p class="text-[11px] text-slate-500">Luyện Tập Chuyên Sâu Tình Huống</p>
+              </td>
+              <td class="py-4 px-5">
+                <span class="font-bold text-slate-800">David Miller</span>
+                <span class="text-[10px] text-amber-700 block">Hỏi Xoáy Áp Lực 4/5</span>
+              </td>
+              <td class="py-4 px-5 text-slate-500 font-medium">18/09/2026</td>
+              <td class="py-4 px-5 font-mono">18m 20s</td>
+              <td class="py-4 px-5 font-extrabold text-slate-800 text-base">
+                75 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+                <span class="block text-[10px] text-amber-600 font-bold">Đạt chuẩn</span>
+              </td>
+              <td class="py-4 px-5 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem Lại</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 5 (Spring Boot CRUD) -->
+            <tr class="hover:bg-sky-50/50 transition session-row" data-role="intern" data-score="72" data-interviewer="alex">
+              <td class="py-4 px-5 font-mono font-bold text-slate-700">
+                #SESS-8542
+              </td>
+              <td class="py-4 px-5">
+                <p class="font-extrabold text-slate-900 text-sm">Spring Boot REST API &amp; MySQL</p>
+                <p class="text-[11px] text-slate-500">Luyện Tập Kỹ Thuật Đồ Án</p>
+              </td>
+              <td class="py-4 px-5">
+                <span class="font-bold text-slate-800">Alex Chen</span>
+                <span class="text-[10px] text-emerald-700 block">RESTful API Design</span>
+              </td>
+              <td class="py-4 px-5 text-slate-500 font-medium">12/09/2026</td>
+              <td class="py-4 px-5 font-mono">20m 10s</td>
+              <td class="py-4 px-5 font-extrabold text-slate-800 text-base">
+                72 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+                <span class="block text-[10px] text-slate-500 font-medium">Khá</span>
+              </td>
+              <td class="py-4 px-5 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem Lại</span>
+                </a>
+              </td>
+            </tr>
+
+            <!-- Row 6 (Baseline First Test) -->
+            <tr class="hover:bg-sky-50/50 transition session-row" data-role="intern" data-score="68" data-interviewer="sarah">
+              <td class="py-4 px-5 font-mono font-bold text-slate-700">
+                #SESS-8411
+              </td>
+              <td class="py-4 px-5">
+                <p class="font-extrabold text-slate-900 text-sm">Khảo Hạch Phản Xạ Khởi Động</p>
+                <p class="text-[11px] text-slate-500">Buổi Test Đầu Tiên (Baseline)</p>
+              </td>
+              <td class="py-4 px-5">
+                <span class="font-bold text-slate-800">Sarah Jenkins</span>
+                <span class="text-[10px] text-slate-500 block">Tự giới thiệu &amp; Mục tiêu</span>
+              </td>
+              <td class="py-4 px-5 text-slate-500 font-medium">05/09/2026</td>
+              <td class="py-4 px-5 font-mono">15m 05s</td>
+              <td class="py-4 px-5 font-extrabold text-slate-600 text-base">
+                68 <span class="text-[10px] text-slate-400 font-normal">/ 100</span>
+                <span class="block text-[10px] text-rose-600 font-bold">Cần cải thiện</span>
+              </td>
+              <td class="py-4 px-5 text-right">
+                <a href="report_detail.html" class="inline-flex items-center gap-1 px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 hover:bg-slate-100 font-bold text-xs transition">
+                  <span>Xem Lại</span>
+                </a>
+              </td>
+            </tr>
+
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ==================== 3. FOOTER ==================== -->
+  <footer class="border-t border-slate-200 bg-white py-6 px-6 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+      <span>TalentAI Platform &bull; Dữ liệu phiên phỏng vấn được bảo vệ bằng mã hóa chuẩn ISO/IEC 27001.</span>
+      <div class="flex items-center gap-4 text-slate-600 font-medium">
+        <a href="dashboard.html" class="hover:text-[#2980B9]">Tổng quan</a>
+        <span>&bull;</span>
+        <a href="setup.html" class="hover:text-[#2980B9]">Tạo phiên mới</a>
+        <span>&bull;</span>
+        <a href="settings.html" class="hover:text-[#2980B9]">Cài đặt</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ==================== JS FILTER LOGIC ==================== -->
+  <script>
+    function filterSessions() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      const role = document.getElementById('roleFilter').value;
+      const score = document.getElementById('scoreFilter').value;
+      const interviewer = document.getElementById('interviewerFilter').value;
+
+      const rows = document.querySelectorAll('.session-row');
+      let visibleCount = 0;
+
+      rows.forEach(row => {
+        const text = row.innerText.toLowerCase();
+        const rRole = row.getAttribute('data-role');
+        const rScore = parseInt(row.getAttribute('data-score'));
+        const rInterviewer = row.getAttribute('data-interviewer');
+
+        let matchSearch = text.includes(search);
+        let matchRole = (role === 'all') || (rRole === role);
+        let matchInterviewer = (interviewer === 'all') || (rInterviewer === interviewer);
+        
+        let matchScore = true;
+        if (score === 'high') matchScore = (rScore >= 85);
+        else if (score === 'mid') matchScore = (rScore >= 75 && rScore < 85);
+        else if (score === 'low') matchScore = (rScore < 75);
+
+        if (matchSearch && matchRole && matchScore && matchInterviewer) {
+          row.style.display = '';
+          visibleCount++;
+        } else {
+          row.style.display = 'none';
+        }
+      });
+
+      document.getElementById('sessionCountBadge').innerText = `Hiển thị ${visibleCount} / 6 phiên`;
+    }
+  </script>
+
+</body>
+</html>

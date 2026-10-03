@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Báo cáo Đánh giá Năng lực Phỏng vấn chuẩn STAR | TalentAI</title>
+  <meta name="description" content="Nhận phản hồi phỏng vấn có điểm số chi tiết, phân tích chuẩn cấu trúc STAR từng câu và các gợi ý cải thiện bám sát khoảng trống giữa CV & JD sau mỗi phiên luyện tập.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          animation: {
+            'hero-float': 'float 4s ease-in-out infinite',
+            'pulse-slow': 'pulse 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-8px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-white min-h-screen flex flex-col selection:bg-sky-200 selection:text-slate-900">
+
+  <!-- ==================== 1. HEADER NAVBAR (CHUẨN 100% POVOTRA) ==================== -->
+  <header class="sticky top-0 z-50 w-full border-b border-b-[#E4E4E4] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <nav class="relative flex h-14 sm:h-16 items-center justify-between gap-3 px-5 sm:px-6 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-4 max-w-7xl mx-auto">
+      
+      <!-- Brand Logo -->
+      <div class="flex cursor-pointer items-center justify-self-start">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white shadow-md shadow-[#2980B9]/20 group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" x2="12" y1="19" x2="22"/>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+            <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider -mt-1 hidden sm:block">AI Interview Practice</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Links (Product dropdown, Resources dropdown, Pricing, Contact) -->
+      <div class="hidden items-center justify-center gap-2 md:flex">
+        
+        <!-- Product Dropdown -->
+        <div class="relative group">
+          <button type="button" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm sm:text-base font-semibold transition-colors text-[#2980B9] bg-sky-50/80">
+            <span>Sản phẩm</span>
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          
+          <div class="absolute top-full left-0 w-80 bg-white border border-slate-200 rounded-xl p-3 shadow-xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50">
+            <a href="live_interviews.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition">
+              <p class="font-bold text-slate-900 text-xs text-[#2980B9]">Phỏng vấn Trực tiếp (Live Avatars)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Đối thoại giọng nói 2 chiều với AI Avatar cử động môi.</p>
+            </a>
+            <a href="interview_reports.html" class="p-2.5 rounded-lg bg-sky-50/80 block transition border-l-2 border-[#2980B9] mt-1">
+              <p class="font-bold text-xs text-[#2980B9]">Báo cáo Đánh giá (Interview Reports)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Phân tích chuẩn cấu trúc STAR, bảng điểm 5 năng lực &amp; Audio Replay.</p>
+            </a>
+            <a href="cv_jd_matcher.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Bóc tách CV &amp; JD, Cover Letters</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Phát hiện khoảng trống kỹ năng &amp; tạo thư ứng tuyển chuẩn ATS.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Resources Dropdown -->
+        <div class="relative group">
+          <button type="button" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm sm:text-base font-semibold transition-colors text-slate-900 hover:bg-slate-100">
+            <span>Tài nguyên</span>
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          
+          <div class="absolute top-full left-0 w-72 bg-white border border-slate-200 rounded-xl p-3 shadow-xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50">
+            <a href="vi_sao_nen_gia_lap.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition">
+              <p class="font-bold text-slate-900 text-xs text-[#2980B9]">Khoa học Giả lập Phỏng vấn</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Safe to fail &amp; Deliberate Practice.</p>
+            </a>
+            <a href="faq.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Câu hỏi thường gặp (FAQ)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Giải đáp về độ trễ giọng nói, bảo mật dữ liệu &amp; tài khoản.</p>
+            </a>
+            <a href="../candidate/mock_room.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Demo Tương tác SPA &rarr;</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Trải nghiệm tương tác 4 màn hình thử nghiệm.</p>
+            </a>
+            <a href="index.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Bản Dark Enterprise (Attensi) &rarr;</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Dành cho tập đoàn và doanh nghiệp lớn.</p>
+            </a>
+          </div>
+        </div>
+
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100" href="povotra_talentai.html#pricing">Bảng giá</a>
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100" href="contact.html">Liên hệ</a>
+      </div>
+
+      <!-- Right Buttons (Login & Get started) -->
+      <div class="hidden items-center justify-end gap-3 md:flex">
+        <a href="login.html" class="inline-flex items-center justify-center rounded-md text-sm font-medium border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 h-10 py-2 px-4 transition">
+          Đăng nhập
+        </a>
+        <a href="signup.html" class="inline-flex items-center justify-center rounded-md text-sm font-medium bg-[#2980B9] text-white hover:bg-[#1F6B9E] h-10 py-2 px-4 shadow-sm transition">
+          Bắt đầu ngay
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <div class="flex shrink-0 md:hidden">
+        <a href="../candidate/mock_room.html" class="inline-flex items-center justify-center rounded-md text-xs font-semibold bg-[#2980B9] text-white px-3 py-2">
+          Bắt đầu
+        </a>
+      </div>
+
+    </nav>
+  </header>
+
+  <main class="flex-grow flex flex-col">
+
+    <!-- ==================== 2. HERO SECTION (CHUẨN 100% POVOTRA INTERVIEW-REPORTS) ==================== -->
+    <section class="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-slate-50 via-white to-white">
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2980B9]/10 via-transparent to-transparent"></div>
+      
+      <div class="relative mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-20 lg:px-10">
+        <div class="mx-auto max-w-3xl text-center">
+          
+          <p class="mb-3 inline-flex rounded-full bg-[#2980B9]/10 px-4 py-1.5 text-sm font-medium text-[#2980B9]">
+            Interview reports &bull; Báo cáo Phỏng vấn
+          </p>
+
+          <h1 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-5xl leading-tight">
+            Phản hồi thực chiến bạn có thể áp dụng ngay
+          </h1>
+
+          <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            Mỗi phiên phỏng vấn đều tự động xuất bản báo cáo chi tiết gồm điểm số năng lực, cấu trúc STAR từng câu và các đề xuất chỉnh sửa chuẩn xác bám sát khoảng trống giữa CV &amp; JD của bạn.
+          </p>
+
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href="../candidate/mock_room.html">
+              <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-medium bg-[#2980B9] text-white hover:bg-[#1F6B9E] h-11 rounded-md px-8 gap-2 shadow-lg shadow-[#2980B9]/25 transition">
+                Bắt đầu miễn phí
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 5 7 7-7 7"/></svg>
+              </button>
+            </a>
+            <a href="povotra_talentai.html#pricing">
+              <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-medium border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 h-11 rounded-md px-8 shadow-sm transition">
+                Xem bảng giá
+              </button>
+            </a>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== 3. SECTION 1: STAR-BY-STAR ANSWER REVIEW (CHUẨN 100% POVOTRA) ==================== -->
+    <section class="py-14 sm:py-20 bg-white">
+      <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
+        
+        <!-- Left Column: Copy & Bullet Points -->
+        <div>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Đánh giá chi tiết từng câu theo chuẩn STAR
+          </h2>
+
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Mỗi câu trả lời của bạn được phân tích theo 4 trụ cột STAR (Bối cảnh, Nhiệm vụ, Hành động, Kết quả). Hệ thống chỉ rõ câu nào thuyết phục, câu nào thiếu số liệu hoặc mâu thuẫn với kinh nghiệm trong CV để bạn hoàn thiện trước buổi phỏng vấn tiếp theo.
+          </p>
+
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Chấm điểm STAR riêng biệt cho từng câu trả lời</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Gợi ý viết lại câu trả lời có số liệu định lượng (% tăng trưởng, ngân sách, nhân sự)</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Tài nguyên và công thức STAR mẫu khớp đúng vào lỗ hổng vừa bị bắt bẻ</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right Column: Mac Mockup Window (starreport) -->
+        <div>
+          <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl ring-1 ring-slate-900/5 min-h-[260px] sm:min-h-[320px]">
+            
+            <!-- Window Topbar -->
+            <div class="flex items-center gap-2 border-b border-slate-100 bg-slate-50/90 px-4 py-3">
+              <span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+              <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+              <span class="mx-auto text-xs font-medium text-slate-400">Session report &bull; STAR result breakdown</span>
+            </div>
+
+            <!-- Inside View: STAR Answer Review Mockup -->
+            <div class="p-5 sm:p-6 bg-slate-50 space-y-4">
+              
+              <!-- Question Card -->
+              <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-3">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-500 uppercase tracking-wide">CÂU HỎI 3 / 6 &bull; HÀNH VI LÃNH ĐẠO</span>
+                  <span class="text-xs font-bold bg-emerald-100 text-emerald-700 px-2.5 py-0.5 rounded-full">STAR 8.8 / 10</span>
+                </div>
+                
+                <p class="text-xs font-bold text-slate-900 leading-snug">
+                  &ldquo;Hãy kể lại một lần bạn dẫn dắt đội ngũ kỹ thuật vượt qua sự cố sập server trong giờ cao điểm?&rdquo;
+                </p>
+
+                <!-- 4 STAR Badges -->
+                <div class="grid grid-cols-4 gap-2 text-center text-[11px]">
+                  <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200">
+                    <span class="font-bold text-emerald-800">S (Situation)</span>
+                    <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">9/10 &bull; Rõ ràng</p>
+                  </div>
+                  <div class="p-2 rounded-lg bg-emerald-50 border border-emerald-200">
+                    <span class="font-bold text-emerald-800">T (Task)</span>
+                    <p class="text-[10px] text-emerald-600 font-semibold mt-0.5">8.5/10 &bull; Trách nhiệm</p>
+                  </div>
+                  <div class="p-2 rounded-lg bg-sky-50 border border-sky-200">
+                    <span class="font-bold text-[#2980B9]">A (Action)</span>
+                    <p class="text-[10px] text-[#2980B9] font-semibold mt-0.5">8.5/10 &bull; Quyết đoán</p>
+                  </div>
+                  <div class="p-2 rounded-lg bg-amber-50 border border-amber-200">
+                    <span class="font-bold text-amber-800">R (Result)</span>
+                    <p class="text-[10px] text-amber-600 font-semibold mt-0.5">7.5/10 &bull; Cần số liệu</p>
+                  </div>
+                </div>
+
+                <!-- Rewrite Suggestion Box -->
+                <div class="p-3 rounded-lg bg-slate-50 border border-slate-200 text-[11px] space-y-1">
+                  <div class="flex items-center gap-1.5 text-[#2980B9] font-bold">
+                    <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                    <span>Gợi ý viết lại để đạt 10/10 điểm:</span>
+                  </div>
+                  <p class="text-slate-600 leading-relaxed">
+                    Bạn trả lời tốt bối cảnh và hành động, nhưng ở phần Kết quả nên bổ sung: <em>"Hệ thống khôi phục sau đúng 18 phút, cứu vãn khoảng 200.000 USD giao dịch và không để lộ bất kỳ rò rỉ dữ liệu nào"</em>.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== 4. SECTION 2: DRILL INTO CATEGORY-LEVEL SCORES (CHUẨN 100% POVOTRA) ==================== -->
+    <section class="py-14 sm:py-20 bg-slate-50/70 border-y border-slate-200/70">
+      <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
+        
+        <!-- Left Column on Desktop (lg:order-1): Mac Mockup Window (scorebreakdown) -->
+        <div class="lg:order-1">
+          <div class="relative">
+            <div class="pointer-events-none absolute -inset-3 rounded-3xl bg-gradient-to-br from-violet-200/25 via-transparent to-emerald-200/20 blur-2xl sm:-inset-4"></div>
+            
+            <div class="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-900/10 ring-1 ring-slate-900/5 sm:rounded-3xl">
+              
+              <!-- Window Topbar -->
+              <div class="flex items-center gap-2 border-b border-slate-100 bg-slate-50/90 px-4 py-3">
+                <span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+                <span class="mx-auto text-xs font-medium text-slate-400">Score breakdown by category</span>
+              </div>
+
+              <!-- Inside View: Score Breakdown by Competencies -->
+              <div class="p-6 bg-slate-50 space-y-4">
+                
+                <div class="bg-white rounded-xl p-5 border border-slate-200/80 shadow-sm space-y-3.5">
+                  <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+                    <div>
+                      <h4 class="font-bold text-xs text-slate-900">Bảng phân tích năng lực đa chiều</h4>
+                      <p class="text-[10px] text-slate-500">Đối chiếu với tiêu chuẩn JD: Senior Technical Lead</p>
+                    </div>
+                    <div class="text-right">
+                      <span class="text-base font-extrabold text-[#2980B9]">88 / 100</span>
+                      <p class="text-[9px] text-emerald-600 font-bold uppercase">&check; KHUYÊN TUYỂN</p>
+                    </div>
+                  </div>
+
+                  <!-- Category Progress Bars -->
+                  <div class="space-y-2.5">
+                    <div>
+                      <div class="flex justify-between text-[11px] font-bold text-slate-700 mb-1">
+                        <span>Cấu trúc STAR (Storytelling &amp; Logic)</span>
+                        <span class="text-[#2980B9]">89%</span>
+                      </div>
+                      <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-[#2980B9] h-2 rounded-full" style="width: 89%"></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="flex justify-between text-[11px] font-bold text-slate-700 mb-1">
+                        <span>Độ sâu Kỹ thuật &amp; Kiến trúc (Technical Depth)</span>
+                        <span class="text-[#2980B9]">92%</span>
+                      </div>
+                      <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-[#2980B9] h-2 rounded-full" style="width: 92%"></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="flex justify-between text-[11px] font-bold text-slate-700 mb-1">
+                        <span>Độ mạch lạc &amp; Ngữ điệu (Clarity &amp; Delivery)</span>
+                        <span class="text-emerald-600">86%</span>
+                      </div>
+                      <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-emerald-500 h-2 rounded-full" style="width: 86%"></div>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div class="flex justify-between text-[11px] font-bold text-slate-700 mb-1">
+                        <span>Sức thuyết phục &amp; Định lượng (Impact &amp; Metrics)</span>
+                        <span class="text-amber-600">78%</span>
+                      </div>
+                      <div class="w-full bg-slate-100 rounded-full h-2">
+                        <div class="bg-amber-500 h-2 rounded-full" style="width: 78%"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Strengths vs Gaps Comparison Tags -->
+                  <div class="grid grid-cols-2 gap-2 pt-2 border-t border-slate-100 text-[10px]">
+                    <div class="p-2 rounded bg-emerald-50 border border-emerald-100 text-emerald-800">
+                      <span class="font-bold">&bull; Điểm mạnh xác nhận:</span>
+                      <p class="mt-0.5 text-slate-600">Kiến trúc Cloud, Xử lý khủng hoảng, Tư duy giải thuật.</p>
+                    </div>
+                    <div class="p-2 rounded bg-amber-50 border border-amber-100 text-amber-800">
+                      <span class="font-bold">&bull; Lỗ hổng cần đào tạo:</span>
+                      <p class="mt-0.5 text-slate-600">Đưa số liệu ROI, đàm phán ngân sách với ban giám đốc.</p>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column on Desktop (lg:order-2): Copy & Bullet Points -->
+        <div class="lg:order-2">
+          <h2 class="text-xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Đo lường chuyên sâu theo từng nhóm năng lực
+          </h2>
+
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Phân tích hiệu suất theo từng năng lực cốt lõi để bạn biết chính xác cần tập trung vào kỹ năng kể chuyện (storytelling), chiều sâu chuyên môn kỹ thuật hay phong thái diễn đạt tự tin.
+          </p>
+
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Các thanh đo phần trăm chi tiết theo từng danh mục năng lực</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Bảng so sánh đối chiếu trực quan giữa Điểm mạnh đã xác nhận và Lỗ hổng kỹ năng</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Biểu đồ theo dõi tiến độ cải thiện điểm số qua từng tuần luyện tập</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== 5. SECTION 3: GET RESOURCES TO IMPROVE (CHUẨN 100% POVOTRA) ==================== -->
+    <section class="py-14 sm:py-20 bg-white">
+      <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
+        
+        <!-- Left Column: Copy & Bullet Points -->
+        <div>
+          <h2 class="text-xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Nhận tài nguyên để bứt phá
+          </h2>
+
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Xem lại toàn văn transcript cuộc phỏng vấn và nhận các tài nguyên, bài học mẫu khớp chính xác với điểm yếu nhất của bạn để bạn biết rõ bước tiếp theo cần rèn luyện điều gì.
+          </p>
+
+          <ul class="mt-6 space-y-3">
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Toàn văn transcript kèm thanh phát âm thanh để nghe lại từng câu hỏi &amp; câu trả lời</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Mẹo thông minh do AI cá nhân hóa khớp đúng lỗ hổng phát hiện từ CV &amp; JD</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="m9 12 2 2 4-4" stroke-width="2"/></svg>
+              <span>Kho tài liệu cẩm nang STAR mẫu và video hướng dẫn chuyên sâu cho từng vùng kỹ năng</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right Column: Mac Mockup Window (Transcript_and_resources_to_improve) -->
+        <div>
+          <div class="relative min-h-[260px] sm:min-h-[320px]">
+            <div class="pointer-events-none absolute -inset-3 rounded-3xl bg-gradient-to-br from-[#2980B9]/15 via-transparent to-amber-200/20 blur-2xl sm:-inset-4"></div>
+            
+            <div class="relative overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-2xl shadow-slate-900/10 ring-1 ring-slate-900/5 sm:rounded-3xl">
+              
+              <!-- Window Topbar -->
+              <div class="flex items-center gap-2 border-b border-slate-100 bg-slate-50/90 px-4 py-3">
+                <span class="h-2.5 w-2.5 rounded-full bg-rose-400"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-400"></span>
+                <span class="mx-auto text-xs font-medium text-slate-400">Session report &bull; Transcript &amp; resources</span>
+              </div>
+
+              <!-- Inside View: Transcript & Actionable Resources -->
+              <div class="p-5 sm:p-6 bg-slate-50 space-y-4">
+                
+                <!-- Q&A Audio Replay Feed -->
+                <div class="bg-white rounded-xl p-4 border border-slate-200 shadow-sm space-y-3">
+                  <div class="flex items-center justify-between border-b border-slate-100 pb-2">
+                    <span class="text-xs font-bold text-slate-800">Q&amp;A Replay &bull; Câu hỏi 2</span>
+                    <!-- Audio Player Button -->
+                    <button class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-sky-50 text-[#2980B9] text-[10px] font-bold hover:bg-sky-100 transition">
+                      <svg class="h-3 w-3 fill-current" viewBox="0 0 24 24"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                      <span>Nghe lại âm thanh (01:24)</span>
+                    </button>
+                  </div>
+
+                  <div class="space-y-2 text-[11px]">
+                    <div class="p-2.5 rounded-lg bg-slate-50 border border-slate-100">
+                      <p class="font-bold text-[#2980B9]">Giám khảo AI (TS. Mai Anh):</p>
+                      <p class="text-slate-700 mt-0.5">&ldquo;Trong CV bạn có đề cập đến việc tối ưu hóa chi phí vận hành hạ tầng AWS, bạn đã làm điều đó như thế nào?&rdquo;</p>
+                    </div>
+
+                    <div class="p-2.5 rounded-lg bg-sky-50/60 border border-sky-100">
+                      <p class="font-bold text-slate-900">Câu trả lời của bạn:</p>
+                      <p class="text-slate-700 mt-0.5">&ldquo;Tôi đã rà soát lại các EC2 instance không dùng đến, chuyển dịch sang cơ chế Spot Instance và Serverless...&rdquo;</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- AI Curated Learning Box -->
+                <div class="p-3.5 rounded-xl bg-amber-50/80 border border-amber-200 text-[11px] space-y-1.5">
+                  <div class="flex items-center gap-1.5 text-amber-800 font-bold">
+                    <svg class="h-4 w-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                    <span>Tài nguyên đề xuất khớp lỗ hổng:</span>
+                  </div>
+                  <p class="text-slate-700">
+                    &bull; Đọc cẩm nang: <strong>Công thức trả lời STAR định lượng chi phí &amp; ROI cho vị trí Kỹ thuật</strong>.
+                  </p>
+                  <p class="text-slate-700">
+                    &bull; Lộ trình đào tạo: <strong>Khóa học FinOps Foundation &amp; Kỹ năng giải trình ngân sách lãnh đạo</strong>.
+                  </p>
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== 6. CALL-TO-ACTION BANNER (CHUẨN 100% POVOTRA) ==================== -->
+    <section class="bg-[#2980B9] px-6 py-16 text-white sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-3xl text-center">
+        
+        <h2 class="text-2xl font-bold tracking-tight sm:text-3xl">
+          Sẵn sàng nhận bản báo cáo năng lực chi tiết của riêng bạn?
+        </h2>
+
+        <p class="mt-3 text-base text-white/90">
+          Hoàn thành một buổi phỏng vấn giả lập và nhận ngay báo cáo đánh giá cấu trúc STAR toàn diện ngay hôm nay.
+        </p>
+
+        <a class="mt-8 inline-block" href="../candidate/mock_room.html">
+          <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-bold ring-offset-background transition-colors h-11 rounded-md px-8 gap-2 bg-white text-[#2980B9] hover:bg-white/90 shadow-lg">
+            Bắt đầu miễn phí ngay
+            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m12 5 7 7-7 7"/></svg>
+          </button>
+        </a>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==================== 7. FOOTER 5 CỘT (CHUẨN 100% POVOTRA) ==================== -->
+  <footer class="border-t border-slate-200 bg-slate-50 text-slate-900">
+    <div class="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-10">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-5">
+        
+        <!-- Left Brand & Tagline -->
+        <div class="col-span-1 hidden flex-col items-center text-center md:col-span-2 md:flex md:items-start md:text-left">
+          <a class="mb-4 inline-flex items-center gap-2" href="index.html">
+            <div class="w-10 h-10 rounded-xl bg-[#2980B9] text-white flex items-center justify-center font-bold text-lg">T</div>
+            <span class="font-bold text-xl text-slate-900">TalentAI</span>
+          </a>
+          <p class="max-w-xs text-sm leading-relaxed text-slate-600 md:max-w-sm">
+            Nền tảng luyện phỏng vấn AI giúp bạn tự tin thực chiến và bước vào mọi cuộc đối thoại tuyển dụng trong tư thế sẵn sàng chiến thắng.
+          </p>
+        </div>
+
+        <!-- 3 Columns Links -->
+        <div class="col-span-1 grid grid-cols-1 gap-8 text-center sm:grid-cols-3 md:col-span-3 md:text-left">
+          
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Sản phẩm</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="live_interviews.html">Phỏng vấn Trực tiếp (Live Avatars)</a></li>
+              <li><a class="text-[#2980B9] font-bold transition-colors" href="interview_reports.html">Báo cáo Đánh giá (STAR Reports)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="cv_jd_matcher.html">Bóc tách CV &amp; JD, Cover Letters</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="povotra_talentai.html#pricing">Bảng giá gói luyện tập</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="index.html">Bản Dark Attensi Enterprise</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Tài nguyên</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="vi_sao_nen_gia_lap.html">Khoa học Giả lập</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="faq.html">Câu hỏi thường gặp (FAQ)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="../candidate/mock_room.html">Demo Tương tác SPA</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="povotra_talentai.html#comparison">So sánh Chatbot</a></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Liên hệ</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="contact.html">Liên hệ chúng tôi</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900 flex items-center justify-center sm:justify-start gap-1" href="#">Twitter/X <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7"/></svg></a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900 flex items-center justify-center sm:justify-start gap-1" href="#">Facebook <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7"/></svg></a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900 flex items-center justify-center sm:justify-start gap-1" href="#">LinkedIn <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 17 17 7"/></svg></a></li>
+            </ul>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="border-t border-slate-200"></div>
+    <div class="mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
+      <div class="flex flex-col items-center gap-4 text-center md:grid md:grid-cols-2 md:items-center md:text-left">
+        <div class="flex items-center justify-center gap-4 md:justify-start text-xs text-slate-500">
+          <span>&copy; 2026 TalentAI Platform &bull; Thiết kế chuyên đề Báo cáo Phỏng vấn chuẩn Povotra.</span>
+        </div>
+        <div class="flex flex-wrap items-center justify-center gap-4 md:justify-end text-xs text-slate-500">
+          <a class="transition-colors hover:text-slate-900 text-[#2980B9] font-medium" href="privacy.html">Chính sách bảo mật</a>
+          <a class="transition-colors hover:text-slate-900 text-slate-600 hover:text-slate-900 font-medium" href="terms.html">Điều khoản sử dụng</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

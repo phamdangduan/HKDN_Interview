@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-50 scroll-smooth">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bóc tách CV &amp; JD, Tạo Cover Letter Chuẩn ATS | TalentAI</title>
+  <meta name="description" content="Tải lên CV và mô tả công việc (JD), TalentAI tự động phát hiện khoảng trống năng lực (Gap Matcher), gợi ý góc hỏi xoáy phỏng vấn và tạo Cover Letter đo ni đóng giày trong vài phút.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            povotraMidBlue: '#2471A3',
+            povotraLightBlue: '#e8f4fd',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          animation: {
+            'float-slow': 'float 4s ease-in-out infinite',
+            'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+          },
+          keyframes: {
+            float: {
+              '0%, 100%': { transform: 'translateY(0)' },
+              '50%': { transform: 'translateY(-6px)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased text-slate-800 bg-white min-h-screen flex flex-col selection:bg-sky-200 selection:text-slate-900">
+
+  <!-- ==================== 1. HEADER NAVBAR (CHUẨN 100% POVOTRA) ==================== -->
+  <header class="sticky top-0 z-50 w-full border-b border-b-[#E4E4E4] bg-white/95 backdrop-blur supports-[backdrop-filter]:bg-white/80">
+    <nav class="relative flex h-14 sm:h-16 items-center justify-between gap-3 px-5 sm:px-6 md:grid md:grid-cols-[1fr_auto_1fr] md:gap-4 max-w-7xl mx-auto">
+      
+      <!-- Brand Logo -->
+      <div class="flex cursor-pointer items-center justify-self-start">
+        <a href="index.html" class="flex items-center gap-3 group">
+          <div class="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white shadow-md shadow-[#2980B9]/20 group-hover:scale-105 transition-transform">
+            <svg class="w-5 h-5 sm:w-6 sm:h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+              <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+              <line x1="12" x2="12" y1="19" x2="22"/>
+            </svg>
+          </div>
+          <div class="flex flex-col">
+            <span class="font-bold text-lg sm:text-xl tracking-tight text-slate-900 group-hover:text-[#2980B9] transition">TalentAI</span>
+            <span class="text-[9px] text-slate-500 font-semibold uppercase tracking-wider -mt-1 hidden sm:block">AI Mock Interview &amp; Coaching</span>
+          </div>
+        </a>
+      </div>
+
+      <!-- Center Links (Product dropdown, Resources dropdown, Pricing, Contact) -->
+      <div class="hidden items-center justify-center gap-2 md:flex">
+        
+        <!-- Product Dropdown -->
+        <div class="relative group">
+          <button type="button" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm sm:text-base font-semibold transition-colors text-[#2980B9] bg-sky-50/80">
+            <span>Sản phẩm</span>
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          
+          <div class="absolute top-full left-0 w-80 bg-white border border-slate-200 rounded-xl p-3 shadow-xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50">
+            <a href="live_interviews.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition">
+              <p class="font-bold text-xs text-slate-900">Phỏng vấn Trực tiếp (Live Avatars)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Đối thoại giọng nói 2 chiều với AI Avatar cử động môi.</p>
+            </a>
+            <a href="interview_reports.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-xs text-slate-900">Báo cáo Đánh giá (Interview Reports)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Phân tích chuẩn cấu trúc STAR, bảng điểm 5 năng lực &amp; Audio Replay.</p>
+            </a>
+            <a href="cv_jd_matcher.html" class="p-2.5 rounded-lg bg-sky-50/80 block transition border-l-2 border-[#2980B9] mt-1">
+              <p class="font-bold text-[#2980B9] text-xs">Bóc tách CV &amp; JD, Cover Letters</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Phát hiện khoảng trống năng lực &amp; tạo thư ứng tuyển chuẩn ATS.</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Resources Dropdown -->
+        <div class="relative group">
+          <button type="button" class="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm sm:text-base font-semibold transition-colors text-slate-900 hover:bg-slate-100">
+            <span>Tài nguyên</span>
+            <svg class="h-4 w-4 transition-transform duration-200 group-hover:rotate-180 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          
+          <div class="absolute top-full left-0 w-72 bg-white border border-slate-200 rounded-xl p-3 shadow-xl opacity-0 translate-y-2 pointer-events-none group-hover:opacity-100 group-hover:translate-y-0 group-hover:pointer-events-auto transition-all z-50">
+            <a href="vi_sao_nen_gia_lap.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition">
+              <p class="font-bold text-slate-900 text-xs">Khoa học Giả lập Phỏng vấn</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Safe to fail &amp; Deliberate Practice.</p>
+            </a>
+            <a href="faq.html" class="p-2.5 rounded-lg hover:bg-sky-50 block transition mt-1">
+              <p class="font-bold text-slate-900 text-xs">Câu hỏi thường gặp (FAQ)</p>
+              <p class="text-[11px] text-slate-500 mt-0.5">Giải đáp về độ trễ giọng nói, bảo mật dữ liệu &amp; tài khoản.</p>
+            </a>
+          </div>
+        </div>
+
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100" href="povotra_talentai.html#pricing">Bảng giá</a>
+        <a class="rounded-lg px-3 py-2 text-sm sm:text-base font-semibold text-slate-900 transition-colors hover:bg-slate-100" href="contact.html">Liên hệ</a>
+      </div>
+
+      <!-- Right Action CTA -->
+      <div class="hidden items-center justify-end gap-3 md:flex">
+        <a href="povotra_talentai.html#login">
+          <button class="inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-colors border border-slate-200 bg-white hover:bg-slate-50 h-10 py-2 px-4 text-slate-700">
+            Đăng nhập
+          </button>
+        </a>
+        <a href="#quick-tool">
+          <button class="inline-flex items-center justify-center rounded-lg text-sm font-semibold transition-all bg-[#2980B9] text-white hover:bg-[#1F6B9E] h-10 py-2 px-5 shadow-sm shadow-[#2980B9]/20 hover:shadow-md">
+            Thử nghiệm miễn phí
+          </button>
+        </a>
+      </div>
+
+      <!-- Mobile Hamburger Button -->
+      <div class="flex shrink-0 md:hidden">
+        <button type="button" onclick="document.getElementById('mobileMenu').classList.toggle('hidden')" class="inline-flex items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 h-10 w-10">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Mobile Menu dropdown -->
+    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-200 bg-white px-5 py-4 space-y-2">
+      <a href="index.html" class="block font-semibold text-slate-700 py-1.5">Trang chủ</a>
+      <a href="live_interviews.html" class="block font-semibold text-slate-700 py-1.5">Phỏng vấn Trực tiếp (Live Avatars)</a>
+      <a href="interview_reports.html" class="block font-semibold text-slate-700 py-1.5">Báo cáo Đánh giá (Interview Reports)</a>
+      <a href="cv_jd_matcher.html" class="block font-bold text-[#2980B9] py-1.5">Bóc tách CV &amp; JD, Cover Letters</a>
+      <a href="faq.html" class="block font-semibold text-slate-700 py-1.5">Câu hỏi thường gặp (FAQ)</a>
+      <a href="povotra_talentai.html#pricing" class="block font-semibold text-slate-700 py-1.5">Bảng giá</a>
+      <div class="pt-3 border-t border-slate-100 flex gap-2">
+        <a href="povotra_talentai.html#login" class="flex-1 text-center py-2 text-sm font-semibold border rounded-lg">Đăng nhập</a>
+        <a href="#quick-tool" class="flex-1 text-center py-2 text-sm font-semibold bg-[#2980B9] text-white rounded-lg">Thử nghiệm</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow flex flex-col">
+
+    <!-- ==================== 2. HERO SECTION (100% POVOTRA RADIAL GLOW & TYPOGRAPHY) ==================== -->
+    <section class="relative overflow-hidden border-b border-slate-200 bg-gradient-to-b from-slate-50 via-white to-white">
+      <div class="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#2980B9]/10 via-transparent to-transparent"></div>
+      
+      <div class="relative mx-auto max-w-6xl px-6 py-14 sm:px-8 sm:py-20 lg:px-10">
+        <div class="mx-auto max-w-3xl text-center">
+          
+          <!-- Eyebrow Badge -->
+          <p class="mb-3 inline-flex items-center gap-1.5 rounded-full bg-[#2980B9]/10 px-4 py-1.5 text-sm font-semibold text-[#2980B9]">
+            <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+              <polyline points="14 2 14 8 20 8"/>
+              <line x1="16" y1="13" x2="8" y2="13"/>
+              <line x1="16" y1="17" x2="8" y2="17"/>
+              <polyline points="10 9 9 9 8 9"/>
+            </svg>
+            CV &amp; JD Gap Matcher &bull; AI Cover Letters
+          </p>
+
+          <!-- Headline H1 -->
+          <h1 class="text-3xl font-extrabold tracking-tight text-slate-900 sm:text-5xl lg:text-5xl leading-tight">
+            Thư ứng tuyển chuẩn ATS &amp; Bóc tách khoảng trống năng lực
+          </h1>
+
+          <!-- Subtitle -->
+          <p class="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-slate-600 sm:text-lg">
+            Tải lên CV và mô tả công việc (JD). TalentAI phân tích tỷ lệ trùng khớp ATS, bóc tách các "điểm mù" mà nhà tuyển dụng sẽ hỏi xoáy, và tự động soạn thảo Cover Letter chiến lược đo ni đóng giày trong vài phút.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+            <a href="#quick-tool">
+              <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-semibold ring-offset-background transition-colors bg-[#2980B9] text-white hover:bg-[#1F6B9E] h-11 rounded-lg px-8 gap-2 shadow-sm shadow-[#2980B9]/20 hover:shadow-md">
+                <span>Phân tích hồ sơ ngay</span>
+                <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+                </svg>
+              </button>
+            </a>
+            <a href="povotra_talentai.html#pricing">
+              <button class="inline-flex items-center justify-center gap-2 whitespace-nowrap text-sm font-semibold transition-colors border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 h-11 rounded-lg px-8">
+                Xem bảng gói lượt
+              </button>
+            </a>
+          </div>
+
+          <!-- Trust Sub-pills -->
+          <div class="mt-8 flex flex-wrap items-center justify-center gap-6 text-xs text-slate-500 font-medium">
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+              Hỗ trợ CV tiếng Việt &amp; tiếng Anh
+            </span>
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+              Tương thích mọi hệ thống ATS (Greenhouse, Lever, Workable)
+            </span>
+            <span class="inline-flex items-center gap-1.5">
+              <svg class="w-4 h-4 text-emerald-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+              Xuất file PDF &amp; Word chuẩn xác
+            </span>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+
+    <!-- ==================== 3. SECTION 1: Z-PATTERN BƯỚC 1 (TRÍCH XUẤT & ĐỐI CHIẾU) ==================== -->
+    <section class="py-14 sm:py-20 bg-white border-b border-slate-100">
+      <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
+        
+        <!-- Left: Copy & Bullet points -->
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#2980B9] bg-sky-50 px-2.5 py-1 rounded-md">Bước 1 &bull; Khởi tạo mục tiêu</span>
+          <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+            Bắt đầu từ vị trí và doanh nghiệp bạn ứng tuyển
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Nhập tên công ty, chức danh và dán toàn bộ bản mô tả công việc (JD). Công nghệ AI của TalentAI bóc tách cấu trúc JD theo các tiêu chí: năng lực cốt lõi (Core Competencies), công nghệ bắt buộc (Tech Stack) và văn hoá ứng viên doanh nghiệp kỳ vọng.
+          </p>
+
+          <ul class="mt-6 space-y-3.5">
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Bóc tách JD theo ngữ cảnh sâu:</strong> Phân biệt rõ Must-have (bắt buộc) và Nice-to-have (ưu tiên) thay vì chỉ quét từ khoá cơ học.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Định vị cấp bậc &amp; phong cách văn hoá:</strong> Tự động tinh chỉnh văn phong theo tính chất doanh nghiệp (Tech Unicorn năng động, Tập đoàn B2B trang trọng, hay Ngân hàng quy chuẩn).</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Tuỳ biến điểm nhấn cá nhân:</strong> Cho phép bạn chọn các dự án tâm đắc nhất hoặc chỉ số chuyển đổi ấn tượng để AI tập trung làm nổi bật.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right: Mac Window Mockup (Form & JD Parsing Visual) -->
+        <div>
+          <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl ring-1 ring-slate-900/5">
+            
+            <!-- Window Titlebar -->
+            <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50/80 px-4 py-3">
+              <div class="flex items-center space-x-2">
+                <div class="h-3 w-3 rounded-full bg-rose-400"></div>
+                <div class="h-3 w-3 rounded-full bg-amber-400"></div>
+                <div class="h-3 w-3 rounded-full bg-emerald-400"></div>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">TalentAI &bull; Setup Hồ sơ &amp; Đối chiếu JD</span>
+              <span class="text-[10px] bg-sky-100 text-[#2980B9] font-bold px-2 py-0.5 rounded">ATS Engine v4.2</span>
+            </div>
+
+            <!-- Window Content -->
+            <div class="p-5 sm:p-6 space-y-4 bg-slate-50/40">
+              
+              <!-- Company & Role Inputs -->
+              <div class="grid grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="text-[11px] font-bold text-slate-700">Doanh nghiệp mục tiêu</label>
+                  <div class="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-900 shadow-sm">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                    <span>VNG Corporation (ZaloPay)</span>
+                  </div>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[11px] font-bold text-slate-700">Vị trí ứng tuyển</label>
+                  <div class="bg-white border border-slate-200 rounded-lg px-3 py-2 text-xs font-medium text-slate-900 shadow-sm">
+                    <span>Senior Product Manager (Payments)</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Uploaded CV file bar -->
+              <div class="bg-white border border-slate-200 rounded-xl p-3 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-sky-50 flex items-center justify-center text-[#2980B9]">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                      <polyline points="14 2 14 8 20 8"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-800">Nguyen_Minh_Senior_PM_CV_2026.pdf</p>
+                    <p class="text-[10px] text-emerald-600 font-medium">Bóc tách thành công &bull; 4 năm kinh nghiệm &bull; 6 dự án</p>
+                  </div>
+                </div>
+                <span class="inline-flex items-center text-[11px] font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  <svg class="w-3.5 h-3.5 mr-1 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                  Sẵn sàng
+                </span>
+              </div>
+
+              <!-- JD Analysis Preview box -->
+              <div class="bg-white border border-slate-200 rounded-xl p-3.5 space-y-2.5 shadow-sm">
+                <div class="flex items-center justify-between">
+                  <span class="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    Từ khoá trọng yếu trích xuất từ JD:
+                  </span>
+                  <span class="text-[10px] text-slate-400 font-medium">12 tiêu chí chính</span>
+                </div>
+
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Payment Gateway</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Fintech Compliance</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">Microservices Architecture</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">SQL &amp; Metabase</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">PCI-DSS Certification</span>
+                  <span class="px-2 py-0.5 rounded text-[11px] font-semibold bg-amber-50 text-amber-700 border border-amber-200">P&amp;L Ownership</span>
+                </div>
+              </div>
+
+              <!-- AI Avatar Assignment preview -->
+              <div class="p-3 bg-gradient-to-r from-sky-50 to-blue-50/60 rounded-xl border border-sky-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-full bg-[#1F6B9E] text-white font-bold text-xs flex items-center justify-center">
+                    DM
+                  </div>
+                  <div>
+                    <p class="text-xs font-bold text-slate-900">David Miller &bull; Cựu VP Product</p>
+                    <p class="text-[10px] text-slate-500">Giám khảo AI được gán phụ trách phỏng vấn và hỏi xoáy</p>
+                  </div>
+                </div>
+                <span class="text-[11px] font-bold text-[#2980B9]">Chuẩn bị hỏi xoáy &rarr;</span>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== 4. SECTION 2: Z-PATTERN BƯỚC 2 (GAP DETECTION & EDITOR) ==================== -->
+    <section class="py-14 sm:py-20 bg-slate-50/70 border-b border-slate-200/80">
+      <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
+        
+        <!-- Left: Mac Window Mockup (Dual Gap Map & AI Cover Letter Editor) -->
+        <div class="lg:order-1">
+          <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl ring-1 ring-slate-900/5">
+            
+            <!-- Window Titlebar -->
+            <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50/80 px-4 py-3">
+              <div class="flex items-center space-x-2">
+                <div class="h-3 w-3 rounded-full bg-rose-400"></div>
+                <div class="h-3 w-3 rounded-full bg-amber-400"></div>
+                <div class="h-3 w-3 rounded-full bg-emerald-400"></div>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">AI Cover Letter Editor &bull; Auto-Save On</span>
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span class="text-[10px] font-bold text-slate-600">Đã lưu nháp</span>
+              </div>
+            </div>
+
+            <!-- Window Content -->
+            <div class="p-5 sm:p-6 space-y-4">
+              
+              <!-- ATS Match Score Banner -->
+              <div class="flex items-center justify-between p-3.5 bg-white border border-slate-200 rounded-xl shadow-sm">
+                <div class="flex items-center gap-3">
+                  <div class="relative w-12 h-12 flex items-center justify-center">
+                    <svg class="w-12 h-12 -rotate-90" viewBox="0 0 36 36">
+                      <path class="text-slate-100" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                      <path class="text-[#2980B9]" stroke-dasharray="88, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                    </svg>
+                    <span class="absolute text-xs font-extrabold text-slate-900">88%</span>
+                  </div>
+                  <div>
+                    <h4 class="text-xs font-bold text-slate-900">Độ tương thích hồ sơ (ATS Score)</h4>
+                    <p class="text-[11px] text-slate-500">Khớp 10/12 yêu cầu &bull; 2 lỗ hổng cần làm rõ</p>
+                  </div>
+                </div>
+                <span class="text-xs font-bold text-[#2980B9] bg-sky-50 px-2.5 py-1 rounded-lg">High Match</span>
+              </div>
+
+              <!-- Gap Probing Alert Box -->
+              <div class="p-3 bg-amber-50/70 border border-amber-200/90 rounded-xl space-y-1.5">
+                <div class="flex items-center gap-2 text-amber-800 text-xs font-bold">
+                  <svg class="w-4 h-4 text-amber-600 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                  <span>Cảnh báo Lỗ hổng (Gap) sẽ bị hỏi xoáy:</span>
+                </div>
+                <p class="text-[11px] text-amber-900/90 leading-relaxed pl-6">
+                  "CV của bạn chưa đề cập trực tiếp đến kinh nghiệm quản lý ngân sách P&amp;L trên 5 tỷ VNĐ. Giám khảo AI sẽ hỏi xoáy sâu vào chỉ số đo lường hiệu quả kinh tế này!"
+                </p>
+              </div>
+
+              <!-- Simulated Editor Text Area -->
+              <div class="relative bg-white border border-slate-200 rounded-xl p-4 text-xs font-normal text-slate-700 leading-relaxed space-y-2.5 shadow-sm">
+                <p class="font-bold text-slate-900">Kính gửi Hội đồng Tuyển dụng VNG Corporation,</p>
+                <p>
+                  Với hơn 4 năm kinh nghiệm dẫn dắt các sản phẩm công nghệ thanh toán số, tôi viết thư này để bày tỏ mong muốn gia nhập ZaloPay với vai trò <strong>Senior Product Manager</strong>.
+                </p>
+                
+                <!-- Highlighted AI improvement bubble -->
+                <div class="relative p-2.5 bg-sky-50 rounded-lg border border-[#2980B9]/30">
+                  <div class="flex items-center justify-between text-[10px] font-bold text-[#2980B9] mb-1">
+                    <span>✨ AI Gợi ý viết lại theo công thức XYZ của Google:</span>
+                    <button class="hover:underline">Áp dụng</button>
+                  </div>
+                  <p class="text-[11px] text-slate-800">
+                    "Tại vị trí trước đây, tôi đã tái cấu trúc quy trình Checkout <strong>(X)</strong> bằng việc tích hợp Smart Routing <strong>(Y)</strong>, giúp giảm thời gian giao dịch 28% và tăng doanh thu quý 2 thêm 2.1 tỷ VNĐ <strong>(Z)</strong>."
+                  </p>
+                </div>
+
+                <p class="text-slate-500 text-[11px]">
+                  Tôi rất hào hứng được mang tư duy dữ liệu và kinh nghiệm tối ưu hóa trải nghiệm người dùng này vào hệ sinh thái ZaloPay...
+                </p>
+              </div>
+
+              <!-- Quick action buttons -->
+              <div class="flex items-center justify-between pt-1">
+                <div class="flex gap-2">
+                  <button class="px-2.5 py-1 text-[11px] font-semibold bg-white border border-slate-200 rounded-md hover:bg-slate-50 text-slate-700">Tăng tính thuyết phục</button>
+                  <button class="px-2.5 py-1 text-[11px] font-semibold bg-white border border-slate-200 rounded-md hover:bg-slate-50 text-slate-700">Rút gọn 200 từ</button>
+                </div>
+                <button class="px-3 py-1 text-[11px] font-bold bg-[#2980B9] text-white rounded-md hover:bg-[#1F6B9E]">Tiếp tục &rarr;</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Copy & Bullet points -->
+        <div class="lg:order-2">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#2980B9] bg-sky-50 px-2.5 py-1 rounded-md">Bước 2 &bull; Phân tích &amp; Hoàn thiện</span>
+          <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+            Phát hiện lỗ hổng và biên tập với Trợ lý AI thông minh
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Không chỉ là một công cụ viết thư thông thường. TalentAI đối chiếu từng dòng trong CV với các yêu cầu khắt khe của JD để phát hiện các "điểm mù" (Gaps) — những câu hỏi xoáy phản biện mà hội đồng tuyển dụng chắc chắn sẽ bắt bẻ — đồng thời hỗ trợ biên tập Cover Letter theo ngôn ngữ hành động mạnh mẽ.
+          </p>
+
+          <ul class="mt-6 space-y-3.5">
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Trình soạn thảo trực quan trong trình duyệt:</strong> Tinh chỉnh câu từ mượt mà, tự động định dạng chuẩn format thư ứng tuyển quốc tế.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Gợi ý viết lại theo công thức chuẩn:</strong> Ứng dụng quy tắc XYZ của Google (Accomplished [X] as measured by [Y], by doing [Z]) và cấu trúc STAR để biến câu văn thành minh chứng đắt giá.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Tự động lưu và đồng bộ:</strong> Mọi thay đổi được lưu tức thì trên Cloud, an toàn và dễ dàng hoàn tác bất kỳ lúc nào.</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== 5. SECTION 3: Z-PATTERN BƯỚC 3 (LƯU TRỮ & KÍCH HOẠT MOCK) ==================== -->
+    <section class="py-14 sm:py-20 bg-white border-b border-slate-100">
+      <div class="mx-auto grid max-w-6xl items-center gap-10 px-6 sm:px-8 lg:grid-cols-2 lg:gap-14 lg:px-10">
+        
+        <!-- Left: Copy & Bullet points -->
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-[#2980B9] bg-sky-50 px-2.5 py-1 rounded-md">Bước 3 &bull; Quản lý &amp; Thử lửa</span>
+          <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl lg:text-4xl">
+            Lưu trữ, xuất file và kích hoạt phỏng vấn thử 1-click
+          </h2>
+          <p class="mt-4 text-base leading-relaxed text-slate-600">
+            Quản lý tập trung toàn bộ hồ sơ ứng tuyển của bạn theo từng công ty (Google, VNG, Shopee, Techcombank...). Bạn có thể xuất file PDF/Word chuẩn ATS để nộp đơn, hoặc bấm 1 nút để đưa toàn bộ hồ sơ này vào phòng phỏng vấn trực tiếp cùng AI Avatar.
+          </p>
+
+          <ul class="mt-6 space-y-3.5">
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Thư viện hồ sơ đa vị trí:</strong> Theo dõi tiến độ chuẩn bị, các phiên bản Cover Letter khác nhau và lịch sử điểm phỏng vấn giả lập của từng vai trò.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>Xuất file PDF &amp; Word chuẩn ATS:</strong> Định dạng tài liệu sạch (Clean typography), không bị lỗi font hay lỗi parser khi các hệ thống ATS quét hồ sơ.</span>
+            </li>
+            <li class="flex items-start gap-3 text-sm text-slate-700">
+              <svg class="mt-0.5 h-4 w-4 shrink-0 text-[#2980B9]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle><path d="m9 12 2 2 4-4"></path>
+              </svg>
+              <span><strong>1-Click đưa vào phòng Mock Room:</strong> Không cần nhập lại thông tin. AI Giám khảo lập tức nạp CV và JD để bắt đầu buổi phỏng vấn giọng nói đối kháng.</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Right: Mac Window Mockup (Dashboard & Download Preview) -->
+        <div>
+          <div class="relative overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-xl ring-1 ring-slate-900/5">
+            
+            <!-- Window Titlebar -->
+            <div class="flex items-center justify-between border-b border-slate-200 bg-slate-50/80 px-4 py-3">
+              <div class="flex items-center space-x-2">
+                <div class="h-3 w-3 rounded-full bg-rose-400"></div>
+                <div class="h-3 w-3 rounded-full bg-amber-400"></div>
+                <div class="h-3 w-3 rounded-full bg-emerald-400"></div>
+              </div>
+              <span class="text-xs font-semibold text-slate-500">TalentAI &bull; Thư viện Hồ sơ &amp; Xuất bản</span>
+              <span class="text-[10px] text-slate-400 font-medium">3 Hồ sơ đang mở</span>
+            </div>
+
+            <!-- Window Content -->
+            <div class="p-5 sm:p-6 space-y-3.5 bg-slate-50/40">
+              
+              <!-- App Card 1: VNG (Ready) -->
+              <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm hover:border-[#2980B9] transition space-y-3">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-900 text-xs sm:text-sm">VNG Corporation &bull; ZaloPay</span>
+                      <span class="bg-emerald-50 text-emerald-700 text-[10px] font-bold px-2 py-0.5 rounded border border-emerald-200">Đã sẵn sàng</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">Senior Product Manager &bull; Cập nhật 15 phút trước</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-bold text-[#2980B9]">ATS Match: 88%</span>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100">
+                  <div class="flex items-center gap-2">
+                    <button class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
+                      <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      Xuất PDF
+                    </button>
+                    <button class="inline-flex items-center gap-1 px-2.5 py-1 text-xs font-medium bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-lg border border-slate-200">
+                      <svg class="w-3.5 h-3.5 text-slate-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                      Word (.docx)
+                    </button>
+                  </div>
+
+                  <a href="../candidate/mock_room.html" class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold bg-[#2980B9] text-white rounded-lg hover:bg-[#1F6B9E] shadow-sm">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                    Vào phòng Mock
+                  </a>
+                </div>
+              </div>
+
+              <!-- App Card 2: Shopee (Gap Analyzed) -->
+              <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-900 text-xs sm:text-sm">Shopee Vietnam</span>
+                      <span class="bg-sky-50 text-[#2980B9] text-[10px] font-bold px-2 py-0.5 rounded border border-sky-200">Gap Analyzed</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">Lead Data Analyst &bull; Cập nhật hôm qua</p>
+                  </div>
+                  <div class="text-right">
+                    <span class="text-xs font-bold text-slate-700">ATS Match: 81%</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-slate-100">
+                  <span class="text-[11px] text-slate-500">Đã phát hiện 3 câu hỏi xoáy phản biện SQL</span>
+                  <a href="../candidate/mock_room.html" class="text-xs font-bold text-[#2980B9] hover:underline">Khởi động vòng Mock &rarr;</a>
+                </div>
+              </div>
+
+              <!-- App Card 3: Techcombank (Finished Mock) -->
+              <div class="bg-white border border-slate-200 rounded-xl p-4 shadow-sm space-y-3">
+                <div class="flex items-start justify-between">
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-slate-900 text-xs sm:text-sm">Techcombank</span>
+                      <span class="bg-purple-50 text-purple-700 text-[10px] font-bold px-2 py-0.5 rounded border border-purple-200">Đã xong Mock (86đ)</span>
+                    </div>
+                    <p class="text-xs text-slate-500 mt-0.5">Digital Banking Manager &bull; 3 ngày trước</p>
+                  </div>
+                  <div class="text-right">
+                    <a href="interview_reports.html" class="text-xs font-bold text-purple-700 hover:underline">Xem báo cáo &rarr;</a>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== 6. INTERACTIVE DEMO WIDGET: TRẢI NGHIỆM MATCH NGAY ==================== -->
+    <section id="quick-tool" class="py-14 sm:py-20 bg-slate-50/50 border-b border-slate-200">
+      <div class="mx-auto max-w-5xl px-6 sm:px-8">
+        
+        <div class="text-center max-w-2xl mx-auto mb-10">
+          <span class="text-xs font-bold uppercase tracking-wider text-[#2980B9] bg-sky-50 px-2.5 py-1 rounded-md">Trải nghiệm tương tác trực tiếp</span>
+          <h2 class="mt-3 text-2xl font-bold tracking-tight text-slate-900 sm:text-3xl">
+            Thử nghiệm Bóc tách &amp; Đối chiếu mẫu
+          </h2>
+          <p class="mt-2 text-sm text-slate-600">
+            Chọn một vị trí mẫu bên dưới để xem cách TalentAI quét khoảng trống và đề xuất câu hỏi phản biện tức thì.
+          </p>
+        </div>
+
+        <!-- Sample Role Selector Buttons -->
+        <div class="flex flex-wrap items-center justify-center gap-2.5 mb-8">
+          <button type="button" onclick="loadSample(0)" id="btnSample0" class="sample-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#2980B9] text-white shadow-sm transition">
+            1. Senior Product Manager @ Fintech
+          </button>
+          <button type="button" onclick="loadSample(1)" id="btnSample1" class="sample-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+            2. Fullstack AI Engineer @ SaaS
+          </button>
+          <button type="button" onclick="loadSample(2)" id="btnSample2" class="sample-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition">
+            3. Enterprise B2B Sales Lead @ Tech
+          </button>
+        </div>
+
+        <!-- Interactive Result Card -->
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xl overflow-hidden p-6 sm:p-8">
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            
+            <!-- Column 1: ATS Gauge & Score -->
+            <div class="bg-slate-50 rounded-xl p-5 border border-slate-200 text-center space-y-3">
+              <span class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">Điểm tương thích ATS</span>
+              
+              <div class="relative w-28 h-28 mx-auto flex items-center justify-center">
+                <svg class="w-28 h-28 -rotate-90" viewBox="0 0 36 36">
+                  <path class="text-slate-200" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                  <path id="matchCircle" class="text-[#2980B9] transition-all duration-700" stroke-dasharray="88, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"/>
+                </svg>
+                <div class="absolute flex flex-col items-center">
+                  <span id="matchScoreText" class="text-2xl font-extrabold text-slate-900">88%</span>
+                  <span class="text-[9px] font-bold text-emerald-600">Rất Cao</span>
+                </div>
+              </div>
+
+              <div class="pt-2 border-t border-slate-200 text-left text-xs space-y-1.5">
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Kỹ năng kỹ thuật:</span>
+                  <span id="techScore" class="font-bold text-slate-800">92/100</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Kinh nghiệm ngành:</span>
+                  <span id="expScore" class="font-bold text-slate-800">85/100</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-slate-500">Năng lực lãnh đạo:</span>
+                  <span id="leadScore" class="font-bold text-slate-800">87/100</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Column 2: Strengths & Gaps list -->
+            <div class="space-y-4">
+              <div>
+                <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-emerald-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>
+                  Điểm mạnh vượt trội (Matched):
+                </h4>
+                <ul id="matchedList" class="space-y-1.5 text-xs text-slate-700">
+                  <li class="p-2 rounded bg-emerald-50/70 border border-emerald-100 flex items-start gap-2">
+                    <span class="text-emerald-600 font-bold">&check;</span>
+                    <span>Có 4+ năm kinh nghiệm quản lý sản phẩm cổng thanh toán và QR Payment.</span>
+                  </li>
+                  <li class="p-2 rounded bg-emerald-50/70 border border-emerald-100 flex items-start gap-2">
+                    <span class="text-emerald-600 font-bold">&check;</span>
+                    <span>Thành thạo tối ưu chuyển đổi phễu người dùng và làm việc với kỹ sư Backend.</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div>
+                <h4 class="text-xs font-bold text-amber-900 uppercase tracking-wider mb-2 flex items-center gap-1.5">
+                  <svg class="w-4 h-4 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>
+                  Khoảng trống (Gaps detected):
+                </h4>
+                <ul id="gapsList" class="space-y-1.5 text-xs text-slate-700">
+                  <li class="p-2 rounded bg-amber-50/70 border border-amber-200 flex items-start gap-2">
+                    <span class="text-amber-600 font-bold">!</span>
+                    <span>Chưa có chứng chỉ PCI-DSS hoặc kiến thức tuân thủ pháp lý thanh toán xuyên biên giới.</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Column 3: AI Probing Questions Generated & Actions -->
+            <div class="space-y-3 bg-sky-50/60 rounded-xl p-4 border border-sky-100">
+              <span class="text-[11px] font-bold text-[#2980B9] uppercase tracking-wider flex items-center gap-1.5">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                Câu hỏi xoáy AI sẽ phản biện:
+              </span>
+
+              <div id="probingBox" class="space-y-2 text-xs text-slate-800">
+                <p class="p-2.5 bg-white rounded-lg border border-sky-200/70 shadow-2xs italic leading-relaxed">
+                  "Trong hồ sơ bạn nêu đã tăng tỷ lệ hoàn tất giao dịch 18%, nhưng nếu hệ thống chịu tải đột biến dịp Tết gây nghẽn cổng đối tác thì chiến lược xử lý sự cố cấp độ 1 của bạn là gì?"
+                </p>
+                <p class="p-2.5 bg-white rounded-lg border border-sky-200/70 shadow-2xs italic leading-relaxed">
+                  "Lỗ hổng lớn nhất giữa bạn và yêu cầu của chúng tôi là kinh nghiệm P&amp;L. Bạn sẽ bù đắp điều này như thế nào trong 90 ngày đầu nhận việc?"
+                </p>
+              </div>
+
+              <div class="pt-2">
+                <a href="../candidate/mock_room.html" class="w-full inline-flex items-center justify-center gap-2 py-2.5 px-4 bg-[#2980B9] hover:bg-[#1F6B9E] text-white text-xs font-bold rounded-lg shadow-sm transition">
+                  <span>Luyện trả lời câu hỏi này với AI Avatar</span>
+                  <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <!-- ==================== 7. CTA BANNER (CHUẨN 100% POVOTRA BG-PRIMARY) ==================== -->
+    <section class="bg-[#2980B9] px-6 py-16 text-white sm:px-8 lg:px-10">
+      <div class="mx-auto max-w-3xl text-center">
+        <h2 class="text-2xl font-bold tracking-tight sm:text-4xl">
+          Sẵn sàng thử nghiệm trên chính hồ sơ của bạn?
+        </h2>
+        <p class="mt-3 text-base text-white/90 leading-relaxed max-w-xl mx-auto">
+          Tạo lá thư ứng tuyển đầu tiên hoàn toàn miễn phí và khám phá các góc phản biện trước khi bước vào phòng phỏng vấn thật.
+        </p>
+        <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+          <a href="#quick-tool" class="inline-block">
+            <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-bold ring-offset-background transition-colors h-11 rounded-lg px-8 gap-2 bg-white text-[#2980B9] hover:bg-slate-100 shadow-md">
+              Bắt đầu miễn phí ngay
+              <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+              </svg>
+            </button>
+          </a>
+          <a href="live_interviews.html" class="inline-block">
+            <button class="inline-flex items-center justify-center whitespace-nowrap text-sm font-semibold transition-colors h-11 rounded-lg px-7 border border-white/40 text-white hover:bg-white/10">
+              Khám phá phòng phỏng vấn Live Avatar
+            </button>
+          </a>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+
+  <!-- ==================== 8. FOOTER (100% POVOTRA EXACT REPLICA) ==================== -->
+  <footer class="border-t border-slate-200 bg-slate-50 text-slate-900">
+    <div class="mx-auto max-w-7xl px-6 py-12 sm:px-8 lg:px-10">
+      <div class="grid grid-cols-1 gap-8 md:grid-cols-5">
+        
+        <!-- Column 1 & 2: Brand Info -->
+        <div class="col-span-1 hidden flex-col items-center text-center md:col-span-2 md:flex md:items-start md:text-left">
+          <a class="mb-4 inline-flex items-center gap-3" href="index.html">
+            <div class="w-12 h-12 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white shadow-md">
+              <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+                <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                <line x1="12" x2="12" y1="19" x2="22"/>
+              </svg>
+            </div>
+            <div>
+              <span class="text-xl font-bold tracking-tight text-slate-900">TalentAI</span>
+              <p class="text-[10px] text-slate-500 font-semibold uppercase tracking-wider">Povotra AI Architecture</p>
+            </div>
+          </a>
+          <p class="max-w-xs text-sm leading-relaxed text-slate-600 md:max-w-sm">
+            Nền tảng luyện tập phỏng vấn trí tuệ nhân tạo thế hệ mới. Đối thoại giọng nói trực tiếp với AI Avatar, bóc tách CV-JD và nhận báo cáo đánh giá chuẩn STAR để tự tin chinh phục mọi cơ hội nghề nghiệp.
+          </p>
+        </div>
+
+        <!-- Links Columns (Product, Resources, Contact) -->
+        <div class="col-span-1 grid grid-cols-1 gap-8 text-center sm:grid-cols-3 md:col-span-3 md:text-left">
+          
+          <!-- Product -->
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Sản phẩm</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="live_interviews.html">Live Interviews (AI Avatars)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="interview_reports.html">Báo cáo đánh giá (STAR Reports)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900 font-semibold text-[#2980B9]" href="cv_jd_matcher.html">Bóc tách CV &amp; JD, Cover Letters</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="povotra_talentai.html#pricing">Bảng giá gói luyện tập</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="povotra_talentai.html#personas">Hội đồng 4 Giám khảo AI</a></li>
+            </ul>
+          </div>
+
+          <!-- Resources -->
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Tài nguyên</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="vi_sao_nen_gia_lap.html">Khoa học Giả lập Phỏng vấn</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="faq.html">Câu hỏi thường gặp (FAQ)</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="../candidate/mock_room.html">Demo Tương tác SPA</a></li>
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="index.html">Attensi Enterprise View</a></li>
+            </ul>
+          </div>
+
+          <!-- Contact & Socials -->
+          <div>
+            <h3 class="mb-3 text-sm font-bold uppercase tracking-wide text-slate-900 sm:mb-4 sm:text-base sm:normal-case sm:tracking-normal">Kết nối</h3>
+            <ul class="space-y-2.5 text-sm sm:space-y-3 sm:text-base">
+              <li><a class="text-slate-600 transition-colors hover:text-slate-900" href="contact.html">Gửi yêu cầu hỗ trợ</a></li>
+              <li>
+                <a target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-slate-900" href="https://x.com/povotra">
+                  X / Twitter
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+              </li>
+              <li>
+                <a target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-slate-900" href="https://linkedin.com">
+                  LinkedIn
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+              </li>
+              <li>
+                <a target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1 text-slate-600 transition-colors hover:text-slate-900" href="https://instagram.com">
+                  Instagram
+                  <svg class="h-3 w-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Copyright -->
+    <div class="border-t border-slate-200"></div>
+    <div class="mx-auto max-w-7xl px-6 py-6 sm:px-8 lg:px-10">
+      <div class="flex flex-col items-center gap-4 text-center md:grid md:grid-cols-2 md:items-center md:text-left">
+        <span class="text-sm text-slate-500">
+          Copyright &copy; 2026 TalentAI &bull; Phục vụ tuyển dụng &amp; huấn luyện phỏng vấn công nghệ cao.
+        </span>
+        <div class="flex flex-wrap items-center justify-center gap-4 md:justify-end text-sm text-slate-500">
+          <a class="transition-colors hover:text-slate-900" href="#">Chính sách quyền riêng tư</a>
+          <a class="transition-colors hover:text-slate-900 text-slate-600 hover:text-slate-900 font-medium" href="terms.html">Điều khoản sử dụng</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Interactive Demo Script -->
+  <script>
+    const sampleData = [
+      {
+        score: "88%",
+        circle: "88, 100",
+        tech: "92/100",
+        exp: "85/100",
+        lead: "87/100",
+        matched: [
+          "Có 4+ năm kinh nghiệm quản lý sản phẩm cổng thanh toán và QR Payment.",
+          "Thành thạo tối ưu chuyển đổi phễu người dùng và làm việc với kỹ sư Backend."
+        ],
+        gaps: [
+          "Chưa có chứng chỉ PCI-DSS hoặc kiến thức tuân thủ pháp lý thanh toán xuyên biên giới."
+        ],
+        probing: [
+          "\"Trong hồ sơ bạn nêu đã tăng tỷ lệ hoàn tất giao dịch 18%, nhưng nếu hệ thống chịu tải đột biến dịp Tết gây nghẽn cổng đối tác thì chiến lược xử lý sự cố cấp độ 1 của bạn là gì?\"",
+          "\"Lỗ hổng lớn nhất giữa bạn và yêu cầu của chúng tôi là kinh nghiệm P&L. Bạn sẽ bù đắp điều này như thế nào trong 90 ngày đầu nhận việc?\""
+        ]
+      },
+      {
+        score: "94%",
+        circle: "94, 100",
+        tech: "96/100",
+        exp: "91/100",
+        lead: "82/100",
+        matched: [
+          "Thành thạo Next.js 15, FastAPI, LangChain, vector database (Pinecone/pgvector).",
+          "Kinh nghiệm triển khai mô hình LLM on-premise giảm latency xuống dưới 450ms."
+        ],
+        gaps: [
+          "Ít kinh nghiệm xây dựng quy trình CI/CD đa vùng trên Kubernetes (EKS)."
+        ],
+        probing: [
+          "\"Bạn tuyên bố giảm latency giọng nói xuống 450ms. Làm thế nào bạn xử lý race condition giữa luồng STT và TTS khi ứng viên ngắt lời AI giữa chừng?\"",
+          "\"Nếu Kubernetes cluster tại Tokyo gặp sự cố mất điện đột ngột, kịch bản failover của bạn mất bao nhiêu giây?\""
+        ]
+      },
+      {
+        score: "82%",
+        circle: "82, 100",
+        tech: "75/100",
+        exp: "88/100",
+        lead: "89/100",
+        matched: [
+          "Từng chốt các hợp đồng SaaS Enterprise trị giá trên 100,000 USD với khối tài chính ngân hàng.",
+          "Quan hệ rộng với các C-Level executives và kỹ năng đàm phán giải pháp phức tạp."
+        ],
+        gaps: [
+          "Chưa có số liệu rõ ràng về tỷ lệ giữ chân khách hàng (Net Retention Rate) năm vừa qua."
+        ],
+        probing: [
+          "\"Chu kỳ bán hàng cho ngân hàng thường kéo dài 9 tháng. Nếu sau 6 tháng khách hàng đổi CIO mới và muốn hủy thầu, bạn sẽ cứu deal đó bằng chiến lược nào?\"",
+          "\"Tại sao tỷ lệ churn ở công ty cũ của bạn trong Q4 lại chạm ngưỡng 14%? Trách nhiệm trực tiếp của bạn ở đâu?\""
+        ]
+      }
+    ];
+
+    function loadSample(index) {
+      const data = sampleData[index];
+      
+      // Update buttons
+      for (let i = 0; i < 3; i++) {
+        const btn = document.getElementById(`btnSample${i}`);
+        if (i === index) {
+          btn.className = "sample-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-bold bg-[#2980B9] text-white shadow-sm transition";
+        } else {
+          btn.className = "sample-btn px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold bg-white text-slate-700 border border-slate-200 hover:bg-slate-50 transition";
+        }
+      }
+
+      // Update Gauge
+      document.getElementById("matchCircle").setAttribute("stroke-dasharray", data.circle);
+      document.getElementById("matchScoreText").innerText = data.score;
+      document.getElementById("techScore").innerText = data.tech;
+      document.getElementById("expScore").innerText = data.exp;
+      document.getElementById("leadScore").innerText = data.lead;
+
+      // Update Matched List
+      const matchedUl = document.getElementById("matchedList");
+      matchedUl.innerHTML = data.matched.map(item => `
+        <li class="p-2 rounded bg-emerald-50/70 border border-emerald-100 flex items-start gap-2">
+          <span class="text-emerald-600 font-bold">&check;</span>
+          <span>${item}</span>
+        </li>
+      `).join('');
+
+      // Update Gaps List
+      const gapsUl = document.getElementById("gapsList");
+      gapsUl.innerHTML = data.gaps.map(item => `
+        <li class="p-2 rounded bg-amber-50/70 border border-amber-200 flex items-start gap-2">
+          <span class="text-amber-600 font-bold">!</span>
+          <span>${item}</span>
+        </li>
+      `).join('');
+
+      // Update Probing
+      const probingBox = document.getElementById("probingBox");
+      probingBox.innerHTML = data.probing.map(p => `
+        <p class="p-2.5 bg-white rounded-lg border border-sky-200/70 shadow-2xs italic leading-relaxed">
+          ${p}
+        </p>
+      `).join('');
+    }
+  </script>
+
+</body>
+</html>

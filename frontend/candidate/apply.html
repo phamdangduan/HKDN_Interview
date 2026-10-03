@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="vi" class="h-full bg-slate-900 text-slate-100 selection:bg-[#2980B9] selection:text-white">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ứng Tuyển Java Backend Intern &bull; FPT Software Careers &times; TalentAI</title>
+  <meta name="description" content="Cổng nộp hồ sơ ứng tuyển và đăng ký khảo hạch AI sơ loại vị trí Java Backend Intern tại FPT Software.">
+
+  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            fptOrange: '#F36F21',
+            fptBlue: '#0054A6',
+            fptGreen: '#00A859',
+            povotraBlue: '#2980B9',
+            povotraDarkBlue: '#1F6B9E',
+            primary: {
+              DEFAULT: '#2980B9',
+              foreground: '#ffffff',
+            }
+          },
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .scanner-line {
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #38bdf8, transparent);
+      animation: scanAnim 2s infinite ease-in-out;
+    }
+    @keyframes scanAnim {
+      0% { transform: translateY(0); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(180px); opacity: 0; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between antialiased">
+
+  <!-- ==================== 1. TOP HEADER ==================== -->
+  <header class="sticky top-0 z-40 border-b border-slate-800 bg-slate-900/90 backdrop-blur px-4 sm:px-8 py-3.5">
+    <div class="max-w-6xl mx-auto flex items-center justify-between">
+      
+      <!-- Left: Co-Branded Logos -->
+      <div class="flex items-center gap-3 sm:gap-4">
+        <div class="flex items-center gap-2 bg-white px-3 py-1.5 rounded-xl shadow-sm">
+          <div class="flex items-center gap-1 font-black text-sm tracking-tighter">
+            <span class="text-[#0054A6]">F</span>
+            <span class="text-[#F36F21]">P</span>
+            <span class="text-[#00A859]">T</span>
+          </div>
+          <span class="text-slate-800 font-extrabold text-xs tracking-tight">Software Careers</span>
+        </div>
+
+        <span class="text-slate-600 font-bold text-sm hidden sm:inline">&times;</span>
+
+        <div class="flex items-center gap-2 hidden sm:flex">
+          <div class="w-7 h-7 rounded-lg bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] text-white flex items-center justify-center font-bold text-xs shadow-md">
+            T
+          </div>
+          <span class="font-bold text-xs text-slate-300">TalentAI Assessment Portal</span>
+        </div>
+      </div>
+
+      <!-- Right: Campaign Status Badge -->
+      <div class="flex items-center gap-3">
+        <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+          Đang Mở Tuyển Dụng &bull; Đợt Q4/2026
+        </span>
+        <a href="../public/index.html" class="text-xs text-slate-400 hover:text-white transition hidden md:inline">
+          Về Trang Chủ
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <!-- ==================== 2. MAIN APPLICATION CONTENT ==================== -->
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-12 space-y-8 flex-1 w-full">
+    
+    <!-- Hero Job Banner -->
+    <div class="rounded-3xl bg-gradient-to-br from-slate-900 via-[#0F2F45] to-slate-900 border border-slate-800 p-6 sm:p-10 shadow-2xl space-y-6 relative overflow-hidden">
+      <div class="absolute -right-16 -top-16 w-64 h-64 rounded-full bg-[#2980B9]/15 blur-3xl pointer-events-none"></div>
+
+      <div class="space-y-3 relative z-10">
+        <div class="flex flex-wrap items-center gap-2 text-xs">
+          <span class="px-3 py-1 rounded-lg bg-sky-950 text-sky-400 font-bold border border-sky-800">
+            FPT Global Delivery Center
+          </span>
+          <span class="px-3 py-1 rounded-lg bg-slate-800 text-slate-300 font-medium">
+            Mã đợt tuyển: <strong class="font-mono text-white">#FPT-JAVA-2026-9042</strong>
+          </span>
+          <span class="px-3 py-1 rounded-lg bg-amber-950 text-amber-300 font-bold border border-amber-800">
+            Hạn nộp: 15/10/2026
+          </span>
+        </div>
+
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight" id="jobTitleHeader">
+          Java Backend Intern &bull; Khối Dự Án Công Nghệ Toàn Cầu
+        </h1>
+
+        <p class="text-sm text-slate-300 leading-relaxed max-w-3xl">
+          Chào mừng các bạn sinh viên Công nghệ Thông tin tham gia chương trình tuyển dụng Thực tập sinh Kỹ thuật 2026 tại FPT Software. Quy trình ứng tuyển kết hợp khảo hạch tự động 1-1 với <strong>Giám khảo AI (Alex Chen - Senior Java Architect)</strong> giúp bạn nhận kết quả và lịch phỏng vấn nhanh chóng chỉ trong 24 giờ!
+        </p>
+      </div>
+
+      <!-- Quick Perks Grid (Địa điểm & Chu cấp đãi ngộ) -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-4 border-t border-slate-800/80 text-xs relative z-10">
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <span class="text-slate-400 block text-[11px] flex items-center gap-1"><span>💰</span> Trợ cấp thực tập</span>
+          <span class="font-extrabold text-emerald-400 text-sm mt-0.5 block" id="appDisplayStipend">6 - 9 Triệu VNĐ / tháng</span>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <span class="text-slate-400 block text-[11px] flex items-center gap-1"><span>📍</span> Địa điểm làm việc</span>
+          <span class="font-extrabold text-white text-xs sm:text-sm mt-0.5 block truncate" id="appDisplayLocation" title="Tòa nhà F-Ville 1 & 2, Khu CNC Hòa Lạc, Hà Nội">F-Ville Hòa Lạc (Xe bus đón)</span>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <span class="text-slate-400 block text-[11px] flex items-center gap-1"><span>🍱</span> Chu cấp đồ &amp; ăn uống</span>
+          <span class="font-extrabold text-sky-400 text-xs sm:text-sm mt-0.5 block" id="appDisplayHardware">Cơm trưa Canteen &bull; Cấp Laptop</span>
+        </div>
+        <div class="p-3.5 rounded-2xl bg-slate-950/70 border border-slate-800">
+          <span class="text-slate-400 block text-[11px] flex items-center gap-1"><span>🤝</span> Cơ hội nghề nghiệp</span>
+          <span class="font-extrabold text-amber-300 text-sm mt-0.5 block">Ký Junior sau 3 tháng</span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Detailed Benefits & Provisions Box (Chu Cấp Đồ & Đãi Ngộ Thực Tập Sinh) -->
+    <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">🎁</span>
+          Chế Độ Chu Cấp, Địa Điểm &amp; Phúc Lợi Dành Riêng Cho Thực Tập Sinh FPT Software
+        </h2>
+        <span class="text-[11px] text-emerald-400 font-bold bg-emerald-950 px-2.5 py-0.5 rounded border border-emerald-800">Đầy Đủ 100%</span>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+          <span class="text-emerald-400 font-bold text-xs flex items-center gap-1.5">
+            <span>💰</span> Trợ Cấp Cạnh Tranh
+          </span>
+          <p class="text-white font-extrabold text-sm" id="boxStipend">6.000.000 - 9.000.000 VNĐ / tháng</p>
+          <p class="text-slate-400 text-[11px]">Được xét duyệt dựa trên năng lực và điểm số vòng khảo hạch AI.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+          <span class="text-sky-400 font-bold text-xs flex items-center gap-1.5">
+            <span>📍</span> Địa Điểm &amp; Xe Bus Tuyến
+          </span>
+          <p class="text-white font-bold text-xs" id="boxAddress">Tòa nhà F-Ville 1 &amp; 2, Khu CNC Hòa Lạc, Hà Nội</p>
+          <p class="text-slate-400 text-[11px]">Tuyến xe bus FPT đưa đón 2 chiều khắp các quận nội thành hoàn toàn miễn phí.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+          <span class="text-amber-400 font-bold text-xs flex items-center gap-1.5">
+            <span>🍱</span> Cơm Trưa &amp; Trang Thiết Bị
+          </span>
+          <p class="text-white font-bold text-xs" id="boxHardware">Suất ăn Canteen miễn phí + Cấp Laptop làm việc</p>
+          <p class="text-slate-400 text-[11px]">Được cấp phát Laptop / PC cấu hình cao, 2 màn hình phụ và quầy trà, cà phê tự do.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+          <span class="text-purple-400 font-bold text-xs flex items-center gap-1.5">
+            <span>👨‍🏫</span> Đào Tạo &amp; Dấu Mộc
+          </span>
+          <p class="text-white font-bold text-xs">Mentor 1-1 &bull; Dấu Mộc Báo Cáo Thực Tập</p>
+          <p class="text-slate-400 text-[11px]">Hỗ trợ xác nhận con dấu doanh nghiệp nộp về trường và đồ án tốt nghiệp.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+          <span class="text-rose-400 font-bold text-xs flex items-center gap-1.5">
+            <span>🏊</span> Tiện Ích Đời Sống Campus
+          </span>
+          <p class="text-white font-bold text-xs">Phòng Gym &bull; Bể Bơi &bull; Sân Bóng Đá</p>
+          <p class="text-slate-400 text-[11px]">Sử dụng miễn phí toàn bộ hệ sinh thái thể thao, giải trí tại F-Ville Campus.</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1.5">
+          <span class="text-emerald-400 font-bold text-xs flex items-center gap-1.5">
+            <span>🤝</span> Lộ Trình Lên Chính Thức
+          </span>
+          <p class="text-white font-bold text-xs">Xét Duyệt Junior Sau 3 Tháng</p>
+          <p class="text-slate-400 text-[11px]">90% thực tập sinh đạt yêu cầu được ký hợp đồng lao động chính thức.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-Step Clear Pipeline Cards -->
+    <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 space-y-4 shadow-xl">
+      <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+        <span class="w-6 h-6 rounded-lg bg-[#2980B9] text-white flex items-center justify-center text-xs font-bold">★</span>
+        Quy Trình Tuyển Dụng Nhanh Chóng 3 Bước
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-sky-500/20 text-sky-400 font-extrabold flex items-center justify-center text-sm border border-sky-500/30">
+            1
+          </div>
+          <h3 class="font-bold text-white text-sm">Nộp CV &amp; Quét ATS Tức Thì</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Điền thông tin và tải lên file CV. Hệ thống AI ATS sẽ quét độ tương thích kỹ năng Java/Spring Boot trong 2 giây.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-amber-500/20 text-amber-400 font-extrabold flex items-center justify-center text-sm border border-amber-500/30">
+            2
+          </div>
+          <h3 class="font-bold text-white text-sm">Phỏng Vấn Với AI Avatar</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Hệ thống xếp lịch hoặc bạn có thể vào phòng phỏng vấn ngay. AI khảo hạch các câu hỏi kỹ thuật chuẩn khung STAR Rubric.
+          </p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-2">
+          <div class="w-8 h-8 rounded-xl bg-emerald-500/20 text-emerald-400 font-extrabold flex items-center justify-center text-sm border border-emerald-500/30">
+            3
+          </div>
+          <h3 class="font-bold text-white text-sm">Nhận Kết Quả &amp; Mời Vòng 2</h3>
+          <p class="text-slate-400 leading-relaxed">
+            Nếu đạt ngưỡng điểm Cut-off (&ge; 80 điểm), kết quả sẽ được chuyển tới HR và bạn sẽ nhận email mời gặp Giám đốc khối.
+          </p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- Job Description (JD) Accordion / Detail Box -->
+    <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 space-y-4 shadow-xl">
+      <div class="flex items-center justify-between">
+        <h2 class="text-base font-extrabold text-white flex items-center gap-2">
+          <span class="w-6 h-6 rounded-lg bg-slate-800 text-sky-400 flex items-center justify-center text-xs font-bold">📄</span>
+          Bản Mô Tả Công Việc &amp; Yêu Cầu Chi Tiết (Job Description)
+        </h2>
+        <span class="text-[11px] text-slate-400 font-mono">FPT-JD-2026</span>
+      </div>
+
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 text-xs text-slate-300 font-mono leading-relaxed whitespace-pre-wrap max-h-60 overflow-y-auto select-all" id="jdContentDisplay">Tuyển dụng Thực tập sinh Lập trình Java Backend (Java Intern):
+- Nắm vững kiến thức nền tảng Java Core (OOP, Collections Framework, Exception Handling, I/O).
+- Có đồ án hoặc hiểu biết về Spring Boot 3, xây dựng RESTful API và kết nối MySQL / PostgreSQL qua Spring Data JPA.
+- Thành thạo công cụ quản lý mã nguồn Git / GitHub, biết viết Unit Test cơ bản bằng JUnit 5.
+- Tinh thần chủ động học hỏi, đam mê giải quyết vấn đề kỹ thuật và tư duy cấu trúc chuẩn STAR khi phân tích lỗi code.
+- Quyền lợi: Phụ cấp thực tập 6-9tr/tháng, được Mentor kèm 1-1, cơ hội xét duyệt trở thành nhân viên chính thức sau 3 tháng thực tập.</div>
+    </div>
+
+
+    <!-- ==================== APPLICATION FORM ==================== -->
+    <div class="rounded-3xl border border-slate-800 bg-slate-900/90 p-6 sm:p-8 space-y-6 shadow-xl" id="applyFormSection">
+      
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-5 border-b border-slate-800">
+        <div>
+          <h2 class="text-xl font-extrabold text-white">Form Đăng Ký Ứng Tuyển &amp; Nộp CV</h2>
+          <p class="text-xs text-slate-400 mt-0.5">Vui lòng điền thông tin chính xác để hệ thống AI tạo hồ sơ và gửi lịch phỏng vấn về email của bạn.</p>
+        </div>
+
+        <!-- Quick Demo Fill Button -->
+        <button type="button" onclick="fillDemoData()" class="px-3.5 py-1.5 rounded-xl bg-sky-950 text-sky-400 hover:bg-sky-900 hover:text-white border border-sky-800 text-xs font-bold transition flex items-center gap-1.5 self-start sm:self-auto">
+          <span>⚡ Điền nhanh hồ sơ mẫu (Nguyễn Văn An - Bách Khoa)</span>
+        </button>
+      </div>
+
+      <form id="candidateApplyForm" onsubmit="handleApplySubmit(event)" class="space-y-6">
+        
+        <!-- Row 1: Name & Email -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-300">Họ và Tên Ứng Viên <span class="text-rose-400">*</span></label>
+            <input 
+              type="text" 
+              id="appFullName" 
+              required 
+              placeholder="Ví dụ: Nguyễn Văn An" 
+              class="w-full h-11 rounded-xl border border-slate-700 bg-slate-800 px-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none transition"
+            />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-300">Địa Chỉ Email (Nhận Lịch Phỏng Vấn AI) <span class="text-rose-400">*</span></label>
+            <input 
+              type="email" 
+              id="appEmail" 
+              required 
+              placeholder="Ví dụ: nguyenvanan.it@gmail.com" 
+              class="w-full h-11 rounded-xl border border-slate-700 bg-slate-800 px-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none transition"
+            />
+          </div>
+        </div>
+
+        <!-- Row 2: Phone & University -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-300">Số Điện Thoại <span class="text-rose-400">*</span></label>
+            <input 
+              type="tel" 
+              id="appPhone" 
+              required 
+              placeholder="0912 345 678" 
+              class="w-full h-11 rounded-xl border border-slate-700 bg-slate-800 px-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none transition"
+            />
+          </div>
+
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold text-slate-300">Trường Đại Học / Chuyên Ngành <span class="text-rose-400">*</span></label>
+            <input 
+              type="text" 
+              id="appUniversity" 
+              required 
+              placeholder="ĐH Bách Khoa Hà Nội &bull; Khoa CNTT" 
+              class="w-full h-11 rounded-xl border border-slate-700 bg-slate-800 px-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none transition"
+            />
+          </div>
+        </div>
+
+        <!-- Row 3: GitHub / Project Link -->
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold text-slate-300">Link GitHub / Portfolio Dự Án (Nếu có)</label>
+          <input 
+            type="url" 
+            id="appGithub" 
+            placeholder="https://github.com/nguyenvanan/spring-boot-ecommerce-api" 
+            class="w-full h-11 rounded-xl border border-slate-700 bg-slate-800 px-4 text-xs sm:text-sm text-white placeholder:text-slate-500 focus:border-sky-400 focus:outline-none transition"
+          />
+        </div>
+
+        <!-- Row 4: CV File Upload Area -->
+        <div class="space-y-2">
+          <label class="text-xs font-bold text-slate-300">Tải Lên Hồ Sơ CV (Định dạng PDF / DOCX) <span class="text-rose-400">*</span></label>
+          
+          <div id="dropZone" class="border-2 border-dashed border-slate-700 hover:border-sky-400 rounded-2xl p-6 sm:p-8 text-center bg-slate-950/60 transition cursor-pointer space-y-3" onclick="triggerFileInput()">
+            <input type="file" id="cvFileInput" accept=".pdf,.doc,.docx" class="hidden" onchange="handleFileSelected(this)">
+            
+            <div class="w-12 h-12 rounded-2xl bg-sky-500/10 text-sky-400 flex items-center justify-center mx-auto text-xl">
+              📎
+            </div>
+
+            <div class="space-y-1">
+              <p class="text-xs sm:text-sm font-bold text-white" id="cvFileNameDisplay">
+                Kéo thả file CV vào đây hoặc <span class="text-sky-400 underline">bấm để chọn từ thiết bị</span>
+              </p>
+              <p class="text-[11px] text-slate-400">Hỗ trợ file PDF, DOCX dung lượng tối đa 10MB</p>
+            </div>
+
+            <div id="selectedCvBadge" class="hidden inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800 text-xs font-bold">
+              <span>✓ Đã đính kèm:</span>
+              <span id="cvBadgeText">CV_Nguyen_Van_An_JavaIntern.pdf</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="pt-2">
+          <button type="submit" id="submitBtn" class="w-full py-4 rounded-2xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-extrabold text-sm sm:text-base shadow-xl shadow-[#2980B9]/25 transition hover:scale-[1.01] flex items-center justify-center gap-2">
+            <span>🚀 Nộp Hồ Sơ &amp; Đăng Ký Lịch Khảo Hạch AI Ngay</span>
+          </button>
+          <p class="text-[11px] text-center text-slate-500 mt-2">
+            Bằng việc nộp hồ sơ, bạn đồng ý tham gia vòng khảo hạch AI khách quan theo tiêu chuẩn tuyển dụng FPT Software.
+          </p>
+        </div>
+
+      </form>
+    </div>
+
+  </main>
+
+
+  <!-- ==================== 3. MODAL: AI SCREENING & APPOINTMENT CONFIRMATION ==================== -->
+  <div id="appointmentModal" class="fixed inset-0 z-50 hidden bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-slate-900 rounded-3xl max-w-2xl w-full p-6 sm:p-8 border border-slate-700 shadow-2xl space-y-6 my-8 text-left animate-in fade-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between gap-4 pb-4 border-b border-slate-800">
+        <div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-1.5 border border-emerald-800">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            ✓ Hồ Sơ Đã Được Tiếp Nhận Thành Công!
+          </div>
+          <h3 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
+            Xác Nhận Lịch Khảo Hạch Phỏng Vấn AI
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">AI đã quét sơ bộ hồ sơ và ấn định lịch phỏng vấn kỹ thuật cho bạn:</p>
+        </div>
+        <button type="button" onclick="closeAppointmentModal()" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white flex items-center justify-center font-bold text-sm transition">
+          ✕
+        </button>
+      </div>
+
+      <!-- Quick ATS Scan Score Banner -->
+      <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 flex items-center justify-between gap-4">
+        <div class="space-y-1">
+          <span class="text-[10px] font-bold text-sky-400 uppercase tracking-wider block">Kết Quả Quét Tương Thích CV (AI ATS):</span>
+          <p class="text-xs text-slate-300">
+            Khớp các từ khóa kỹ thuật: <strong class="text-white">Java Core, Spring Boot, MySQL, REST API</strong>.
+          </p>
+        </div>
+        <div class="text-right shrink-0">
+          <span class="text-2xl font-extrabold text-emerald-400 font-mono">88 / 100</span>
+          <span class="block text-[10px] text-emerald-400 font-bold">✓ Đủ điều kiện thi</span>
+        </div>
+      </div>
+
+      <!-- Interview Appointment Details -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Thời Gian Phỏng Vấn Ấn Định</span>
+          <p class="text-sm font-extrabold text-white">09:00 AM &bull; Thứ Hai, 05/10/2026</p>
+          <p class="text-[11px] text-amber-300 font-semibold">⚡ Hoặc bạn có thể bấm vào thi ngay!</p>
+        </div>
+
+        <div class="p-4 rounded-2xl bg-slate-950 border border-slate-800 space-y-1">
+          <span class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Giám Khảo Khảo Hạch AI</span>
+          <p class="text-sm font-extrabold text-white">Alex Chen (Senior Java Architect)</p>
+          <p class="text-[11px] text-slate-400">Thời lượng: 30 phút &bull; Chuẩn STAR</p>
+        </div>
+      </div>
+
+      <!-- Mock Email Notification Box (Visual Confirmation to Candidate) -->
+      <div class="p-4 sm:p-5 rounded-2xl bg-slate-950 border border-slate-800 space-y-3">
+        <div class="flex items-center justify-between border-b border-slate-800/80 pb-2">
+          <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1.5">
+            <span>✉️</span> Thư Xác Nhận Đã Gửi Về Email Của Bạn:
+          </span>
+          <span class="text-[10px] text-sky-400 font-mono" id="modalSentEmailDisplay">nguyenvanan.it@gmail.com</span>
+        </div>
+
+        <div class="bg-slate-900 p-3.5 rounded-xl border border-slate-800 text-xs text-slate-300 space-y-2 font-sans">
+          <div class="text-slate-400 text-[11px]">
+            <strong>Người gửi:</strong> Hội Đồng Tuyển Dụng FPT Software &lt;tuyendung@fptsoftware.com&gt;<br>
+            <strong>Tiêu đề:</strong> [FPT Software x TalentAI] Lời mời tham gia Vòng Khảo Hạch AI Vị Trí Java Backend Intern
+          </div>
+          <div class="pt-2 border-t border-slate-800/60 leading-relaxed text-slate-300 text-[11px]">
+            Chào bạn <strong class="text-white" id="modalCandidateName">Nguyễn Văn An</strong>,<br>
+            Hồ sơ ứng tuyển của bạn cho vị trí <strong>Java Backend Intern</strong> đã vượt qua vòng sơ loại hồ sơ. Chúng tôi trân trọng mời bạn tham gia vòng phỏng vấn đối thoại kỹ thuật trực tiếp với Giám khảo AI Alex Chen.
+          </div>
+        </div>
+      </div>
+
+      <!-- CTA Actions -->
+      <div class="pt-3 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <button type="button" onclick="addToGoogleCalendar()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-700 hover:bg-slate-800 text-slate-300 font-bold text-xs transition flex items-center justify-center gap-1.5">
+          <span>📅 Thêm Vào Google Calendar</span>
+        </button>
+
+        <div class="flex items-center gap-2 w-full sm:w-auto">
+          <a href="invite.html" class="flex-1 sm:flex-none text-center px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold text-xs transition border border-slate-700">
+            Xem Thư Mời &amp; Test Mic
+          </a>
+          <a href="mock_room.html" class="flex-1 sm:flex-none text-center px-6 py-2.5 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-extrabold text-xs shadow-lg transition">
+            Vào Phỏng Vấn Ngay &rarr;
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="border-t border-slate-800 bg-slate-950 py-6 px-4 text-center text-xs text-slate-500">
+    <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p>&copy; 2026 FPT Software &bull; Đồng hành công nghệ cùng Nền tảng Đánh giá TalentAI.</p>
+      <div class="flex items-center gap-4 text-[11px]">
+        <a href="../public/privacy.html" class="hover:text-slate-300">Bảo mật thông tin</a>
+        <a href="../public/terms.html" class="hover:text-slate-300">Quy chuẩn phỏng vấn AI</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- ==================== SCRIPT LOGIC ==================== -->
+  <script>
+    // Load dynamic campaign if stored in localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const saved = localStorage.getItem('saved_campaign');
+      if (saved) {
+        try {
+          const data = JSON.parse(saved);
+          if (data.role) {
+            document.getElementById('jobTitleHeader').innerText = data.role + (data.department ? " • " + data.department : "");
+          }
+          if (data.jd) {
+            document.getElementById('jdContentDisplay').innerText = data.jd;
+          }
+          if (data.stipend) {
+            if (document.getElementById('appDisplayStipend')) document.getElementById('appDisplayStipend').innerText = data.stipend;
+            if (document.getElementById('boxStipend')) document.getElementById('boxStipend').innerText = data.stipend;
+          }
+          if (data.address) {
+            if (document.getElementById('appDisplayLocation')) document.getElementById('appDisplayLocation').innerText = data.address;
+            if (document.getElementById('boxAddress')) document.getElementById('boxAddress').innerText = data.address;
+          }
+          if (data.hardware) {
+            if (document.getElementById('appDisplayHardware')) document.getElementById('appDisplayHardware').innerText = data.hardware;
+            if (document.getElementById('boxHardware')) document.getElementById('boxHardware').innerText = data.hardware;
+          }
+        } catch(e) {}
+      }
+    });
+
+    function fillDemoData() {
+      document.getElementById('appFullName').value = "Nguyễn Văn An";
+      document.getElementById('appEmail').value = "nguyenvanan.it@gmail.com";
+      document.getElementById('appPhone').value = "0912 345 678";
+      document.getElementById('appUniversity').value = "ĐH Bách Khoa Hà Nội • Khoa CNTT";
+      document.getElementById('appGithub').value = "https://github.com/nguyenvanan/spring-boot-ecommerce-api";
+      
+      // Select mock file
+      document.getElementById('selectedCvBadge').classList.remove('hidden');
+      document.getElementById('cvFileNameDisplay').innerHTML = "<span class='text-emerald-400 font-bold'>✓ Đã tải file: CV_Nguyen_Van_An_JavaIntern.pdf (1.4 MB)</span>";
+    }
+
+    function triggerFileInput() {
+      document.getElementById('cvFileInput').click();
+    }
+
+    function handleFileSelected(input) {
+      if (input.files && input.files[0]) {
+        const file = input.files[0];
+        document.getElementById('selectedCvBadge').classList.remove('hidden');
+        document.getElementById('cvBadgeText').innerText = file.name;
+        document.getElementById('cvFileNameDisplay').innerHTML = `<span class='text-emerald-400 font-bold'>✓ Đã chọn file: ${file.name} (${(file.size / (1024*1024)).toFixed(2)} MB)</span>`;
+      }
+    }
+
+    async function handleApplySubmit(e) {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      btn.disabled = true;
+      btn.innerHTML = `
+        <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+        </svg>
+        AI ATS Đang Quét Hồ Sơ &amp; Xếp Lịch Phỏng Vấn...
+      `;
+
+      const name = document.getElementById('appFullName').value;
+      const email = document.getElementById('appEmail').value;
+      const phone = document.getElementById('appPhone') ? document.getElementById('appPhone').value : '';
+
+      // Get campaign_id from URL query if present
+      const urlParams = new URLSearchParams(window.location.search);
+      const campId = urlParams.get('campaign_id') || 1;
+
+      // Call Backend API to save into MySQL
+      try {
+        const formData = new FormData();
+        formData.append('full_name', name);
+        formData.append('email', email);
+        if (phone) formData.append('phone', phone);
+        if (campId) formData.append('campaign_id', campId);
+        const cvInput = document.getElementById('cvFileInput');
+        if (cvInput && cvInput.files && cvInput.files[0]) {
+          formData.append('cv_file', cvInput.files[0]);
+        }
+
+        const res = await fetch('http://127.0.0.1:8000/api/candidates/apply', {
+          method: 'POST',
+          body: formData
+        });
+        if (res.ok) {
+          const candData = await res.json();
+          console.log("✓ Saved candidate to MySQL, id:", candData.id);
+        }
+      } catch (err) {
+        console.warn("Backend API offline or unreachable:", err);
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = `<span>🚀 Nộp Hồ Sơ &amp; Đăng Ký Lịch Khảo Hạch AI Ngay</span>`;
+
+      // Populate Modal
+      document.getElementById('modalCandidateName').innerText = name;
+      document.getElementById('modalSentEmailDisplay').innerText = email;
+
+      // Show Modal
+      document.getElementById('appointmentModal').classList.remove('hidden');
+    }
+
+    function closeAppointmentModal() {
+      document.getElementById('appointmentModal').classList.add('hidden');
+    }
+
+    function addToGoogleCalendar() {
+      const title = encodeURIComponent("[FPT Software] Phỏng Vấn Kỹ Thuật AI - Java Backend Intern");
+      const details = encodeURIComponent("Vòng phỏng vấn kỹ thuật 1-1 với Giám khảo AI Alex Chen tại nền tảng TalentAI.");
+      const location = encodeURIComponent("Phòng Phỏng Vấn Trực Tuyến TalentAI");
+      window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}&location=${location}`, '_blank');
+    }
+  </script>
+
+</body>
+</html>
