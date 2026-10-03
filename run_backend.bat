@@ -37,5 +37,5 @@ if not exist "node_modules\" (
 )
 
 echo Dang khoi chay TalentAI Server...
-npx tsx watch src/main.ts
+call npm run dev
 pause
