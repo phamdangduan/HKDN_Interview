@@ -5,10 +5,8 @@ dotenv.config();
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
 const CANDIDATE_MODELS = [
-  "gemini-3.5-flash-lite",
-  "gemini-3.5-flash",
-  "gemini-3-flash-preview",
-  "gemini-flash-latest"
+  "gemini-3.8-flash",
+  "gemini-3.5-flash-lite"
 ];
 
 function getClient(): GoogleGenAI {
@@ -19,29 +17,35 @@ function getClient(): GoogleGenAI {
 }
 
 export function extractJson<T = any>(text: string): T {
+  if (!text) throw new Error("Phản hồi từ AI rỗng");
   let cleaned = text.trim();
-  if (cleaned.startsWith("```")) {
-    cleaned = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "");
-  }
-  cleaned = cleaned.trim();
 
   try {
     return JSON.parse(cleaned);
-  } catch {
-    const objMatch = cleaned.match(/\{[\s\S]*\}/);
-    if (objMatch) {
-      try {
-        return JSON.parse(objMatch[0]);
-      } catch {}
-    }
-    const arrMatch = cleaned.match(/\[[\s\S]*\]/);
-    if (arrMatch) {
-      try {
-        return JSON.parse(arrMatch[0]);
-      } catch {}
-    }
-    throw new Error(`Không thể trích xuất JSON từ phản hồi: ${text.slice(0, 150)}...`);
+  } catch {}
+
+  let stripped = cleaned.replace(/^```(?:json)?\s*/i, "").replace(/\s*```$/i, "").trim();
+  try {
+    return JSON.parse(stripped);
+  } catch {}
+
+  const firstBrace = cleaned.indexOf("{");
+  const lastBrace = cleaned.lastIndexOf("}");
+  if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+    try {
+      return JSON.parse(cleaned.substring(firstBrace, lastBrace + 1));
+    } catch {}
   }
+
+  const firstBracket = cleaned.indexOf("[");
+  const lastBracket = cleaned.lastIndexOf("]");
+  if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+    try {
+      return JSON.parse(cleaned.substring(firstBracket, lastBracket + 1));
+    } catch {}
+  }
+
+  throw new Error(`Không thể trích xuất JSON từ phản hồi: ${text.slice(0, 150)}...`);
 }
 
 export function sanitizeToSingleQuestion(questionText: string): string {
