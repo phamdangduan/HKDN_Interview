@@ -1,244 +1,36 @@
-<!DOCTYPE html>
-<html lang="vi" class="h-full bg-slate-900 text-slate-100 selection:bg-sky-500 selection:text-white">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TalentAI &bull; Trung Tâm Phân Loại Hệ Thống (Master Workspace Portal)</title>
-  <meta name="description" content="Cổng chuyển tiếp trung tâm phân loại hệ thống TalentAI: Phân hệ Người dùng chưa đăng nhập (Public SaaS), Phân hệ Ứng cử viên (Candidate Hub), Phân hệ Doanh nghiệp (Enterprise) và Tài liệu kỹ thuật (/docs).">
-
-  <!-- Tailwind CSS & Plus Jakarta Sans Font -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
-
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            povotraBlue: '#2980B9',
-            povotraDarkBlue: '#1F6B9E',
-            povotraMidBlue: '#2471A3',
-            povotraLightBlue: '#e8f4fd',
-            primary: {
-              DEFAULT: '#2980B9',
-              foreground: '#ffffff',
-            }
-          },
-          fontFamily: {
-            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+<!doctype html>
+<html lang="vi" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="interview68 - AI Career Copilot. Luyện mock phỏng vấn cùng AI, phản hồi theo chuẩn STAR và phân tích CV tự động."
+    />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <title>Mock Interview</title>
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem("i68-theme");
+          var prefersDark = window.matchMedia(
+            "(prefers-color-scheme: dark)",
+          ).matches;
+          if (stored === "dark" || (!stored && prefersDark)) {
+            document.documentElement.classList.add("dark");
           }
-        }
-      }
-    }
-  </script>
-
-  <style>
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-  </style>
-</head>
-<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between">
-
-  <!-- ==================== HEADER ==================== -->
-  <header class="border-b border-slate-800 bg-slate-900/90 backdrop-blur px-6 py-4 flex items-center justify-between">
-    <div class="flex items-center gap-3">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#1F6B9E] to-[#2980B9] flex items-center justify-center text-white font-bold text-lg shadow-lg shadow-[#2980B9]/20">
-        T
-      </div>
-      <div>
-        <span class="font-extrabold text-xl text-white tracking-tight">TalentAI Platform</span>
-        <span class="text-[10px] text-sky-400 font-bold uppercase tracking-wider block -mt-0.5">Master Workspace Directory</span>
-      </div>
-    </div>
-
-    <div class="flex items-center gap-2 text-xs">
-      <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
-      <span class="text-slate-400 font-medium">Toàn bộ thư mục gom nhóm khoa học &amp; sạch sẽ 100%</span>
-    </div>
-  </header>
-
-
-  <!-- ==================== MAIN CONTENT ==================== -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-12">
-    
-    <div class="text-center max-w-3xl mx-auto space-y-3">
-      <span class="px-3 py-1 rounded-full bg-sky-950 text-sky-400 border border-sky-800 text-xs font-bold uppercase tracking-wider">
-        Nền Tảng Giả Lập Phỏng Vấn Kỹ Thuật AI Cho Ngành CNTT (Intern • Fresher • Junior)
-      </span>
-      <h1 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">
-        Lựa Chọn Phân Hệ Trải Nghiệm
-      </h1>
-      <p class="text-sm sm:text-base text-slate-400 leading-relaxed">
-        Hệ sinh thái kép chuyên sâu cho Kỹ sư Phần mềm: <strong>Khách vãng lai (Public SaaS)</strong>, <strong>Ứng cử viên IT (Candidate Hub)</strong>, <strong>Cổng Doanh nghiệp Tuyển dụng (Enterprise Portal)</strong> và <strong>Tài liệu Kỹ thuật</strong>.
-      </p>
-    </div>
-
-    <!-- 3 Big Category Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-      
-      <!-- FOLDER 1: PUBLIC / CHƯA ĐĂNG NHẬP -->
-      <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-sky-500/60 transition shadow-xl group">
-        <div class="space-y-4">
-          <div class="w-14 h-14 rounded-2xl bg-sky-500/10 border border-sky-400/20 text-sky-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🌐
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-xl font-extrabold text-white">1. Thư mục /public</h2>
-              <span class="px-2 py-0.5 rounded-full bg-sky-950 text-sky-300 text-[10px] font-bold border border-sky-800">12 Trang</span>
-            </div>
-            <p class="text-xs text-sky-400 font-semibold mt-0.5">Dành cho Người Dùng Chưa Đăng Nhập</p>
-          </div>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Bao gồm Trang chủ Povotra SaaS, Khoa học Giả lập phỏng vấn AI, tính năng chuyên đề, FAQ tìm kiếm, Về chúng tôi, Liên hệ, Đăng nhập, Đăng ký và Pháp lý GDPR.
-          </p>
-          
-          <!-- Key Files List -->
-          <div class="pt-2 border-t border-slate-800 space-y-1.5 text-xs text-slate-300">
-            <p>📄 <a href="public/index.html" class="hover:text-sky-400 font-bold underline text-sky-300">public/index.html</a> (Trang chủ chính)</p>
-            <p>🧠 <a href="public/vi_sao_nen_gia_lap.html" class="hover:text-sky-400 font-semibold">public/vi_sao_nen_gia_lap.html</a> (Khoa học Giả lập)</p>
-            <p>🎙️ <a href="public/live_interviews.html" class="hover:text-sky-400">public/live_interviews.html</a></p>
-            <p>📊 <a href="public/interview_reports.html" class="hover:text-sky-400">public/interview_reports.html</a></p>
-            <p>📄 <a href="public/cv_jd_matcher.html" class="hover:text-sky-400">public/cv_jd_matcher.html</a></p>
-            <p>🔑 <a href="public/login.html" class="hover:text-amber-400 font-bold text-amber-300">public/login.html</a> &bull; <a href="public/signup.html" class="hover:text-amber-400">signup.html</a></p>
-            <p>🛡️ <a href="public/privacy.html" class="hover:text-sky-400">public/privacy.html</a> &bull; <a href="public/terms.html" class="hover:text-sky-400">terms.html</a></p>
-          </div>
-        </div>
-
-        <a href="public/index.html" class="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-xs shadow-md transition">
-          <span>Vào Phân Hệ Public (12 Trang) &rarr;</span>
-        </a>
-      </div>
-
-
-      <!-- FOLDER 2: CANDIDATE / ỨNG CỬ VIÊN ĐÃ ĐĂNG NHẬP -->
-      <div class="rounded-3xl border-2 border-[#2980B9] bg-slate-900 p-6 sm:p-8 flex flex-col justify-between space-y-6 shadow-2xl shadow-[#2980B9]/15 group relative overflow-hidden">
-        <div class="absolute top-0 right-0 bg-[#2980B9] text-white text-[10px] font-extrabold px-3 py-1 rounded-bl-xl uppercase tracking-wider">
-          Phân Hệ Trọng Tâm
-        </div>
-
-        <div class="space-y-4">
-          <div class="w-14 h-14 rounded-2xl bg-[#2980B9]/20 border border-[#2980B9]/40 text-[#2980B9] flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🎯
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-xl font-extrabold text-white">2. Thư mục /candidate</h2>
-              <span class="px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 text-[10px] font-bold border border-emerald-800">10 Trang</span>
-            </div>
-            <p class="text-xs text-emerald-400 font-semibold mt-0.5">Dành Cho Ứng Cử Viên (In-App Hub)</p>
-          </div>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Không gian luyện thi thực chiến: Quản lý số lượt phỏng vấn, phòng chuẩn bị trước giờ G, phòng phỏng vấn WebRTC Live, báo cáo Audio Replay và Studio Cover Letter.
-          </p>
-
-          <!-- Key Files List -->
-          <div class="pt-2 border-t border-slate-800 space-y-1.5 text-xs text-slate-300">
-            <p>🚀 <a href="candidate/dashboard.html" class="hover:text-emerald-400 font-bold underline text-emerald-400">candidate/dashboard.html</a> (Trung tâm chỉ huy)</p>
-            <p>⚙️ <a href="candidate/setup.html" class="hover:text-emerald-400 font-bold">candidate/setup.html</a> (Setup Wizard 4 bước)</p>
-            <p>🎙️ <a href="candidate/mock_room.html" class="hover:text-emerald-400 font-bold text-sky-400">candidate/mock_room.html</a> (Phòng WebRTC Live)</p>
-            <p>📊 <a href="candidate/report_detail.html" class="hover:text-emerald-400 font-bold">candidate/report_detail.html</a> (Audio Player STAR)</p>
-            <p>📄 <a href="candidate/cv_studio.html" class="hover:text-emerald-400">candidate/cv_studio.html</a></p>
-            <p>💳 <a href="candidate/settings.html" class="hover:text-emerald-400">candidate/settings.html</a></p>
-            <p>📨 <a href="candidate/invite.html" class="hover:text-emerald-400 font-bold text-amber-300">candidate/invite.html</a> (Lời mời FPT)</p>
-            <p>📊 <a href="candidate/history.html" class="hover:text-emerald-400 font-bold text-sky-400">candidate/history.html</a> (Lịch sử &amp; Tiến độ)</p>
-            <p>⚡ <a href="candidate/drill_room.html" class="hover:text-emerald-400 font-bold text-amber-300">candidate/drill_room.html</a> (Luyện 3 phút)</p>
-            <p>🏢 <a href="candidate/application_status.html" class="hover:text-emerald-400 font-bold text-emerald-300">candidate/application_status.html</a> (Tiến độ tuyển dụng)</p>
-          </div>
-        </div>
-
-        <a href="candidate/dashboard.html" class="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-extrabold text-xs shadow-lg transition">
-          <span>Vào Candidate Hub (10 Trang) &rarr;</span>
-        </a>
-      </div>
-
-
-      <!-- FOLDER 3: ENTERPRISE / DOANH NGHIỆP HR -->
-      <div class="rounded-3xl border border-slate-800 bg-slate-900/80 p-6 sm:p-8 flex flex-col justify-between space-y-6 hover:border-purple-500/60 transition shadow-xl group">
-        <div class="space-y-4">
-          <div class="w-14 h-14 rounded-2xl bg-purple-500/10 border border-purple-400/20 text-purple-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
-            🏢
-          </div>
-          <div>
-            <div class="flex items-center gap-2">
-              <h2 class="text-xl font-extrabold text-white">3. Thư mục /enterprise</h2>
-              <span class="px-2 py-0.5 rounded-full bg-purple-950 text-purple-300 text-[10px] font-bold border border-purple-800">3 Trang</span>
-            </div>
-            <p class="text-xs text-purple-400 font-semibold mt-0.5">Dành Cho Nhà Tuyển Dụng &amp; Doanh Nghiệp</p>
-          </div>
-          <p class="text-xs text-slate-400 leading-relaxed">
-            Hạ tầng tự động hoá vòng sơ loại: Ma trận xếp hạng ứng viên chuẩn STAR, thẩm định tính xác thực CV, và công cụ tự động sinh link mời ứng viên.
-          </p>
-
-          <!-- Key Files List -->
-          <div class="pt-2 border-t border-slate-800 space-y-1.5 text-xs text-slate-300">
-            <p>🏛️ <a href="enterprise/portal.html" class="hover:text-purple-400 font-bold underline text-purple-400">enterprise/portal.html</a> (Ma trận sơ loại)</p>
-            <p>➕ <a href="enterprise/campaign_creator.html" class="hover:text-purple-400">enterprise/campaign_creator.html</a></p>
-            <p>📋 <a href="enterprise/candidate_dossier.html" class="hover:text-purple-400 font-bold">enterprise/candidate_dossier.html</a> (Dossier Audit)</p>
-          </div>
-        </div>
-
-        <a href="enterprise/portal.html" class="w-full inline-flex items-center justify-center gap-2 py-3.5 px-6 rounded-2xl bg-purple-600 hover:bg-purple-700 text-white font-extrabold text-xs shadow-md transition">
-          <span>Vào Cổng Doanh Nghiệp (3 Trang) &rarr;</span>
-        </a>
-      </div>
-
-    </div>
-
-    <!-- 4. SECTION: DOCS / TÀI LIỆU KỸ THUẬT & THIẾT KẾ -->
-    <div class="rounded-3xl border border-slate-800 bg-slate-900/60 p-6 sm:p-8 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 hover:border-amber-500/40 transition">
-      <div class="flex items-start sm:items-center gap-4">
-        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-400/20 text-amber-400 flex items-center justify-center text-2xl shrink-0">
-          📚
-        </div>
-        <div>
-          <div class="flex items-center gap-2.5">
-            <h3 class="text-lg font-bold text-white">4. Thư mục /docs &bull; Tài Liệu Kiến Trúc &amp; Kế Hoạch Giao Diện</h3>
-            <span class="px-2 py-0.5 rounded-full bg-amber-950 text-amber-300 text-[10px] font-bold border border-amber-800">3 Tài liệu kỹ thuật &bull; Mới cập nhật</span>
-          </div>
-          <p class="text-xs text-slate-400 mt-1">
-            Bao gồm bản thuyết minh luồng vận hành toàn diện dự án, đề án kiến trúc hệ thống phỏng vấn AI và kế hoạch thiết kế giao diện.
-          </p>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap items-center gap-3 w-full md:w-auto">
-        <a href="docs/LUONG_HOAT_DONG_DU_AN_TALENTAI.md" target="_blank" class="px-4 py-2.5 rounded-xl bg-emerald-800/80 hover:bg-emerald-700 text-white border border-emerald-600 text-xs font-bold inline-flex items-center gap-2 transition shadow-sm">
-          <span>🚀 LUONG_HOAT_DONG_DU_AN_TALENTAI.md (Mới &bull; Cho Team/Bạn)</span>
-          <span class="text-white">&nearr;</span>
-        </a>
-        <a href="docs/AI_MOCK_INTERVIEW_DESIGN.md" target="_blank" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold inline-flex items-center gap-2 transition">
-          <span>📄 AI_MOCK_INTERVIEW_DESIGN.md</span>
-          <span class="text-slate-400">&nearr;</span>
-        </a>
-        <a href="docs/KE_HOACH_THIET_KE_GIAO_DIEN_NGUOI_DUNG.md" target="_blank" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 text-xs font-bold inline-flex items-center gap-2 transition">
-          <span>📋 KE_HOACH_THIET_KE_GIAO_DIEN_NGUOI_DUNG.md</span>
-          <span class="text-slate-400">&nearr;</span>
-        </a>
-      </div>
-    </div>
-
-  </main>
-
-
-  <!-- ==================== FOOTER ==================== -->
-  <footer class="border-t border-slate-800 bg-slate-950 py-6 px-6 text-center text-xs text-slate-500">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
-      <span>TalentAI Platform &bull; Toàn bộ liên kết giữa các thư mục đã được cấu hình tương đối (relative paths) chính xác 100%.</span>
-      <div class="flex items-center gap-4 text-slate-400">
-        <a href="public/index.html" class="hover:text-white">Public</a>
-        <span>&bull;</span>
-        <a href="candidate/dashboard.html" class="hover:text-white">Candidate</a>
-        <span>&bull;</span>
-        <a href="enterprise/portal.html" class="hover:text-white">Enterprise</a>
-        <span>&bull;</span>
-        <a href="docs/AI_MOCK_INTERVIEW_DESIGN.md" class="hover:text-white">Docs</a>
-      </div>
-    </div>
-  </footer>
-
-</body>
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

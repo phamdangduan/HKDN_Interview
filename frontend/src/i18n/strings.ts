@@ -1,0 +1,293 @@
+import type { Lang } from '@/types'
+
+const en = {
+  'promo.text': 'LAUNCH OFFER: USE NEW_COMER_68 FOR 68% OFF PRO',
+  'promo.icon': 'Tag',
+
+  'nav.positions': 'Mock interview positions',
+  'nav.pricing': 'Pricing',
+  'nav.cv': 'CV analysis',
+  'nav.journey': 'My journey',
+  'nav.menu': 'Open navigation menu',
+  'nav.notifications': 'Notifications',
+
+  'hero.title': 'Mock interview positions',
+  'hero.subtitle':
+    'Pick the position that fits your CV and career goal, then rehearse the full hiring process with AI.',
+  'hero.notice':
+    'Note: these mock positions are created independently for practice using market data. They are not official job listings, and we do not recruit on behalf of the companies mentioned.',
+
+  'filter.all': 'All positions',
+  'filter.hot': 'Hot jobs',
+  'filter.tech': 'Tech',
+  'filter.allTechs': 'All',
+  'filter.nontech': 'Non-tech',
+  'filter.level': 'Level',
+  'filter.language': 'Language',
+  'filter.allLevels': 'All',
+  'filter.allLanguages': 'All',
+  'filter.specialty': 'Specialty',
+  'filter.clear': 'Clear filters',
+  'filter.resultCount': '{n} positions',
+  'filter.resultCountOne': '{n} position',
+
+  'list.empty.title': 'No matching position',
+  'list.empty.desc': 'Try loosening a filter or clearing them all to see more roles.',
+  'list.loading': 'Loading positions',
+  'list.page': 'Page',
+  'list.previous': 'Previous page',
+  'list.next': 'Next page',
+
+  'card.hot': 'HOT',
+  'card.applicants': '{n} applicants',
+  'card.rounds': '{n} ROUNDS',
+  'card.hints': 'Hints',
+  'card.open': 'Open mock interview for {title}',
+
+  'cta.badge': 'PREMIUM RESOURCE',
+  'cta.title': 'Practise with the Interview68 founding team.',
+  'cta.desc':
+    'Get direct feedback on your CV and technical skills from senior and lead engineers at top-tier tech companies — before your real mock round.',
+  'cta.button': 'Book now',
+  'cta.quote':
+    'Interviewing for your dream company is a long journey. Interview68 was built to walk that road with you — every practice session, every small step forward.',
+  'cta.founderName': 'Phu Nguyen',
+  'cta.founderRole': 'Founder @ Interview68',
+
+  'footer.tagline': '© 2026 interview68 - AI Career Copilot',
+  'footer.email': 'interview68.com@gmail.com',
+  'footer.profile': 'Company profile',
+  'footer.community': 'Community',
+  'footer.code': 'Source code',
+  'footer.profileTitle': 'Profile',
+  'footer.supportTitle': 'Support',
+  'footer.legalTitle': 'Legal',
+  'footer.communityTitle': 'Community',
+  'footer.profile1': 'Mock interview positions',
+  'footer.profile2': 'Pricing',
+  'footer.profile3': 'CV analysis',
+  'footer.support1': 'Getting started',
+  'footer.support2': 'Help center',
+  'footer.support3': 'FAQ',
+  'footer.support4': 'Contact',
+  'footer.legal1': 'Privacy',
+  'footer.legal2': 'Data protection',
+  'footer.legal3': 'Terms of use',
+  'footer.community1': 'Success stories',
+  'footer.community2': 'Join the Telegram group',
+
+  'prep.back': 'Back to My journey',
+  'prep.eyebrow': 'BEFORE YOU START',
+  'prep.roundOf': 'Round {i} of {n}',
+  'prep.limit': '{n} min limit',
+  'prep.passScore': 'Pass from {score}/10',
+  'prep.languageTitle': 'Interview language',
+  'prep.languageDesc':
+    'Choose one of the languages allowed for this round. During the session, answer in the language you picked so the AI can score you accurately.',
+  'prep.prepTitle': 'What to prepare',
+  'prep.focusTitle': 'Hints & focus for this round',
+  'prep.jdTitle': 'Job description (JD)',
+  'prep.actionNote':
+    'When you are ready you enter the live interview room. The clock starts after your first message.',
+  'prep.start': 'Start',
+  'prep.notFound': 'This round could not be found.',
+  'prep.backToList': 'Back to position list',
+  'prep.skipToEnd': 'Skip to end',
+
+  'session.back': 'Leave interview room',
+  'session.remaining': 'REMAINING',
+  'session.mute': 'Mute AI voice',
+  'session.unmute': 'Unmute AI voice',
+  'session.end': 'End interview',
+  'session.endTitle': 'End this interview?',
+  'session.endDesc':
+    'Your answers so far will be scored. You cannot rejoin this round after ending it.',
+  'session.keepGoing': 'Keep going',
+  'session.confirmEnd': 'End and see report',
+  'session.timeUp': 'Time is up',
+  'session.timeUpDesc': 'The round reached its time limit, so the interview was closed.',
+  'session.scratchTitle': 'Scratch space',
+  'session.scratchDesc':
+    'Use this space to rehearse ideas before answering, take quick notes or revisit the scoring criteria.',
+  'session.scratchPlaceholder':
+    'Bullet-point your key ideas, use a framework like STAR (Situation, Task, Action, Result)...',
+  'session.contextTitle': 'Scoring context',
+  'session.duration': 'Duration',
+  'session.passLine': 'Pass mark',
+  'session.speaker': 'AI interviewer',
+  'session.you': 'You',
+  'session.voiceHint': '...to answer by voice, or type below.',
+  'session.micTooltip': 'Tap the mic to answer by voice.',
+  'session.micUnsupported': 'Voice input is not supported in this browser.',
+  'session.micDenied': 'Microphone permission was denied.',
+  'session.placeholder': 'Type your answer... (Shift+Enter for a new line)',
+  'session.send': 'Send answer',
+  'session.listening': 'Listening...',
+  'session.typing': 'AI is typing',
+  'session.answered': '{n} questions answered',
+  'session.reportTitle': 'Round report (demo)',
+  'session.reportDesc':
+    'This is a mock report. Connect the API to score with the real AI engine.',
+  'session.reportOverall': 'Overall',
+  'session.reportAgain': 'Practise again',
+  'session.reportBack': 'Back to positions',
+  'session.reportStructure': 'Structure',
+  'session.reportEvidence': 'Evidence',
+  'session.reportClarity': 'Clarity',
+
+  'common.language': 'Language',
+  'common.theme': 'Toggle dark mode',
+  'common.loading': 'Loading',
+  'common.close': 'Close',
+} as const
+
+export type StringKey = keyof typeof en
+
+const vi: Record<StringKey, string> = {
+  'promo.text': 'ƯU ĐÃI RA MẮT: NHẬP NEW_COMER_68 GIẢM 68% GÓI PRO',
+  'promo.icon': 'Tag',
+
+  'nav.positions': 'Vị trí mock phỏng vấn',
+  'nav.pricing': 'Bảng giá',
+  'nav.cv': '✦ Phân tích CV',
+  'nav.journey': 'Hành trình của tôi',
+  'nav.menu': 'Mở menu điều hướng',
+  'nav.notifications': 'Thông báo',
+
+  'hero.title': 'Vị trí mock phỏng vấn',
+  'hero.subtitle':
+    'Chọn vị trí phù hợp với CV và mục tiêu nghề nghiệp, sau đó mô phỏng quy trình tuyển dụng với AI.',
+  'hero.notice':
+    'Lưu ý: Các vị trí mô phỏng được tạo độc lập để luyện tập theo dữ liệu thị trường. Đây không phải tin tuyển dụng chính thức, và chúng tôi không tuyển dụng thay cho các công ty được đề cập.',
+
+  'filter.all': 'Tất cả vị trí',
+  'filter.hot': 'Hot jobs',
+  'filter.tech': 'Tech',
+  'filter.allTechs': 'All',
+  'filter.nontech': 'Non-tech',
+  'filter.level': 'Cấp bậc',
+  'filter.language': 'Ngôn ngữ',
+  'filter.allLevels': 'Tất cả',
+  'filter.allLanguages': 'Tất cả',
+  'filter.specialty': 'Chuyên môn',
+  'filter.clear': 'Xoá bộ lọc',
+  'filter.resultCount': '{n} vị trí',
+  'filter.resultCountOne': '{n} vị trí',
+
+  'list.empty.title': 'Không có vị trí phù hợp',
+  'list.empty.desc': 'Hãy nới lỏng một bộ lọc hoặc xoá hết để xem thêm vị trí.',
+  'list.loading': 'Đang tải vị trí',
+  'list.page': 'Trang',
+  'list.previous': 'Trang trước',
+  'list.next': 'Trang sau',
+
+  'card.hot': 'HOT',
+  'card.applicants': '{n} ứng viên',
+  'card.rounds': '{n} ROUNDS',
+  'card.hints': 'Gợi ý',
+  'card.open': 'Mở mock phỏng vấn cho {title}',
+
+  'cta.badge': 'TÀI NGUYÊN CAO CẤP',
+  'cta.title': 'Luyện tập cùng đội ngũ sáng lập Interview68.',
+  'cta.desc':
+    'Nhận phản hồi trực tiếp từ các Senior/Lead kỳ cựu tại các công ty công nghệ hàng đầu (top tier) về CV và kỹ năng kỹ thuật trước khi vào vòng mock.',
+  'cta.button': 'Đặt lịch ngay',
+  'cta.quote':
+    'Phỏng vấn vào công ty mơ ước là một hành trình dài. Interview68 được tạo ra để đồng hành cùng bạn trên hành trình đó – từng buổi luyện tập, từng bước tiến nhỏ',
+  'cta.founderName': 'Phu Nguyen',
+  'cta.founderRole': 'Founder @ Interview68',
+
+  'footer.tagline': '"© 2026 interview68 - AI Career Copilot"',
+  'footer.email': 'interview68.com@gmail.com',
+  'footer.profile': 'Hồ sơ công ty',
+  'footer.community': 'Cộng đồng',
+  'footer.code': 'Mã nguồn',
+  'footer.profileTitle': 'Hồ sơ',
+  'footer.supportTitle': 'Hỗ trợ',
+  'footer.legalTitle': 'Pháp lý',
+  'footer.communityTitle': 'Cộng đồng',
+  'footer.profile1': 'Vị trí mock phỏng vấn',
+  'footer.profile2': 'Bảng giá',
+  'footer.profile3': 'Phân tích CV',
+  'footer.support1': 'Hướng dẫn sử dụng',
+  'footer.support2': 'Trung tâm hỗ trợ',
+  'footer.support3': 'Câu hỏi thường gặp (FAQ)',
+  'footer.support4': 'Liên hệ',
+  'footer.legal1': 'Quyền riêng tư',
+  'footer.legal2': 'Điều khoản bảo mật dữ liệu',
+  'footer.legal3': 'Điều khoản sử dụng',
+  'footer.community1': 'Câu chuyện thành công',
+  'footer.community2': 'Tham gia nhóm Telegram',
+
+  'prep.back': 'Về Hành trình của tôi',
+  'prep.eyebrow': 'TRƯỚC KHI BẮT ĐẦU',
+  'prep.roundOf': 'VÒNG {i} / {n}',
+  'prep.limit': 'Giới hạn {n} phút',
+  'prep.passScore': 'Đạt từ {score}/10',
+  'prep.languageTitle': 'Ngôn ngữ phỏng vấn',
+  'prep.languageDesc':
+    'Chọn một trong các ngôn ngữ được phép cho vòng này. Trong phiên, hãy trả lời đúng ngôn ngữ đã chọn để AI chấm điểm chính xác.',
+  'prep.prepTitle': 'Cần chuẩn bị gì',
+  'prep.focusTitle': 'Gợi ý & trọng tâm vòng này',
+  'prep.jdTitle': 'Mô tả công việc (JD)',
+  'prep.actionNote':
+    'Khi sẵn sàng, bạn vào phòng phỏng vấn trực tiếp. Đồng hồ bắt đầu sau tin nhắn đầu tiên.',
+  'prep.start': 'Bắt đầu',
+  'prep.notFound': 'Không tìm thấy vòng phỏng vấn này.',
+  'prep.backToList': 'Về danh sách vị trí',
+  'prep.skipToEnd': 'Bỏ qua tới cuối',
+
+  'session.back': 'Rời phòng phỏng vấn',
+  'session.remaining': 'CÒN LẠI',
+  'session.mute': 'Tắt tiếng AI',
+  'session.unmute': 'Bật tiếng AI',
+  'session.end': 'Kết thúc phỏng vấn',
+  'session.endTitle': 'Kết thúc phỏng vấn này?',
+  'session.endDesc':
+    'Các câu trả lời của bạn sẽ được chấm điểm. Bạn không thể quay lại vòng này sau khi kết thúc.',
+  'session.keepGoing': 'Tiếp tục phỏng vấn',
+  'session.confirmEnd': 'Kết thúc & xem báo cáo',
+  'session.timeUp': 'Đã hết giờ',
+  'session.timeUpDesc': 'Vòng phỏng vấn đã hết thời gian nên phiên được đóng tự động.',
+  'session.scratchTitle': 'Không gian nháp',
+  'session.scratchDesc':
+    'Sử dụng không gian này biểu diễn ý tưởng trước khi trả lời, ghi chú nhanh hoặc xem lại tiêu chí chấm điểm.',
+  'session.scratchPlaceholder':
+    'Gạch đầu dòng ý chính, áp dụng phương pháp hiệu quả như STAR (Tình huống, Thử thách, Hành động, Kết quả)...',
+  'session.contextTitle': 'Bối cảnh đánh giá',
+  'session.duration': 'Thời lượng',
+  'session.passLine': 'Điểm chuẩn',
+  'session.speaker': 'AI phỏng vấn',
+  'session.you': 'Bạn',
+  'session.voiceHint': '…để trả lời bằng giọng nói, hoặc nhập liệu bên dưới.',
+  'session.micTooltip': 'Nhấn mic để trả lời bằng giọng nói.',
+  'session.micUnsupported': 'Trình duyệt này không hỗ trợ nhập bằng giọng nói.',
+  'session.micDenied': 'Quyền sử dụng microphone đã bị từ chối.',
+  'session.placeholder': 'Nhập câu trả lời... (Shift+Enter để xuống dòng)',
+  'session.send': 'Gửi câu trả lời',
+  'session.listening': 'Đang nghe...',
+  'session.typing': 'AI đang trả lời',
+  'session.answered': 'Đã trả lời {n} câu',
+  'session.reportTitle': 'Báo cáo vòng (demo)',
+  'session.reportDesc': 'Đây là báo cáo mô phỏng. Kết nối API để chấm điểm bằng AI thật.',
+  'session.reportOverall': 'Tổng quan',
+  'session.reportAgain': 'Luyện lại',
+  'session.reportBack': 'Về danh sách vị trí',
+  'session.reportStructure': 'Cấu trúc',
+  'session.reportEvidence': 'Minh chứng',
+  'session.reportClarity': 'Trình bày',
+
+  'common.language': 'Ngôn ngữ',
+  'common.theme': 'Đổi giao diện sáng/tối',
+  'common.loading': 'Đang tải',
+  'common.close': 'Đóng',
+}
+
+export const dictionaries: Record<Lang, Record<StringKey, string>> = { en, vi }
+
+export const interpolate = (template: string, values: Record<string, string | number>) =>
+  template.replace(/\{(\w+)\}/g, (_, key: string) =>
+    key in values ? String(values[key]) : `{${key}}`
+  )
+
+export const DEFAULT_LANG: Lang = 'vi'
