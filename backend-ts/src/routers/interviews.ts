@@ -1,7 +1,5 @@
 import { Router, Request, Response } from "express";
 import crypto from "crypto";
-// @ts-ignore
-import * as googleTTS from "google-tts-api";
 import { prisma } from "../db/prisma.js";
 import {
   generateInterviewQuestions,
@@ -9,8 +7,35 @@ import {
   evaluateStarInterview,
   analyzeCvAndJdMatching
 } from "../services/aiEngine.js";
+import { synthesizeSpeechBlaze, BLAZE_VOICES } from "../services/blazeTts.js";
+import { getLevelConfig } from "../interview/config.js";
+import { createInitialState, parseState, summarizeCompetencies } from "../interview/state.js";
+import { buildInterviewPlan, buildOpeningLine, runInterviewTurn } from "../interview/brain.js";
+import { Action } from "../interview/policy.js";
 
 export const interviewsRouter = Router();
+
+// Trạng thái v2 chứa đáp án kỳ vọng nên không trả về trình duyệt
+function publicSession<T extends { interview_state?: string | null }>(session: T): Omit<T, "interview_state"> {
+  const { interview_state, ...rest } = session;
+  return rest;
+}
+
+// Ánh xạ hành động v2 sang 3 huy hiệu chiến lược đang có trên giao diện mock_room
+const ACTION_BRANCH: Record<Action, string> = {
+  STEP_UP: "PROBE_DEEPER",
+  ASK_TOPIC: "PROBE_DEEPER",
+  FOLLOW_UP: "GROUND_TO_PRACTICE",
+  PROBE_MISCONCEPTION: "GROUND_TO_PRACTICE",
+  OPEN_QUESTION: "GROUND_TO_PRACTICE",
+  OPEN_FOLLOW_UP: "GROUND_TO_PRACTICE",
+  ANSWER_CANDIDATE: "GROUND_TO_PRACTICE",
+  STEP_DOWN: "EMPATHIC_PIVOT",
+  HINT: "EMPATHIC_PIVOT",
+  REPHRASE: "EMPATHIC_PIVOT",
+  REASSURE_EASIER: "EMPATHIC_PIVOT",
+  CLOSE: "GROUND_TO_PRACTICE"
+};
 
 // Memory Cache cho TTS Audio
 const ttsCache = new Map<string, Buffer>();
@@ -51,9 +76,12 @@ interviewsRouter.post("/start", async (req: Request, res: Response) => {
 
     const lvl = target_level || "fresher";
     const trk = track || "backend";
+    const levelCfg = getLevelConfig(lvl);
+    // setup.html gửi JD riêng qua jd_text; requirement_text có thể chỉ là yêu cầu tự soạn chứ không phải JD
+    if (typeof req.body.jd_text === "string") jdText = req.body.jd_text.trim();
 
-    // Phân tích so khớp tự động nếu có đủ CV và JD
-    if (cvText && jdText) {
+    // Phân tích so khớp tự động nếu có đủ CV và JD (engine cũ; engine v2 tự lập kế hoạch bên dưới)
+    if (!levelCfg && cvText && jdText) {
       try {
         analyzeCvAndJdMatching(cvText, jdText, role_target, lvl, trk).catch(() => {});
       } catch (e) {
@@ -61,17 +89,35 @@ interviewsRouter.post("/start", async (req: Request, res: Response) => {
       }
     }
 
-    // 1. Sinh bộ 10 câu hỏi chuẩn hóa
-    const questions = await generateInterviewQuestions(
-      role_target,
-      cvText,
-      jdText || reqFull,
-      persona,
-      Number(difficulty_level) || 4,
-      Number(duration_minutes) || 30,
-      lvl,
-      trk
-    );
+    // 1. Cấp bậc đã có engine v2 (hiện là intern): câu mở đầu soạn sẵn, các câu sau sinh theo từng lượt.
+    //    Các cấp bậc khác: sinh bộ 10 câu hỏi như cũ.
+    let questions: string[];
+    let interviewState: string | null = null;
+    if (levelCfg) {
+      const opening = buildOpeningLine(persona, Number(duration_minutes) || 30);
+      questions = [opening];
+      // Lập kế hoạch từ CV + JD; lỗi hoặc không có CV/JD thì phỏng vấn theo thứ tự chủ đề mặc định
+      const plan = await buildInterviewPlan(cvText, jdText, role_target, levelCfg);
+      interviewState = JSON.stringify(createInitialState(levelCfg, {
+        persona,
+        role: role_target,
+        company: req.body.company || "",
+        cvText,
+        openingText: opening,
+        plan
+      }));
+    } else {
+      questions = await generateInterviewQuestions(
+        role_target,
+        cvText,
+        jdText || reqFull,
+        persona,
+        Number(difficulty_level) || 4,
+        Number(duration_minutes) || 30,
+        lvl,
+        trk
+      );
+    }
 
     // 2. Tạo phiên trong cơ sở dữ liệu
     const session = await prisma.interviewSession.create({
@@ -87,7 +133,8 @@ interviewsRouter.post("/start", async (req: Request, res: Response) => {
         persona,
         difficulty_level: Number(difficulty_level) || 4,
         duration_minutes: Number(duration_minutes) || 30,
-        status: "in_progress"
+        status: "in_progress",
+        interview_state: interviewState
       }
     });
 
@@ -106,8 +153,9 @@ interviewsRouter.post("/start", async (req: Request, res: Response) => {
     );
 
     return res.status(201).json({
-      ...session,
-      questions
+      ...publicSession(session),
+      questions,
+      engine: levelCfg ? "v2" : "v1"
     });
   } catch (err: any) {
     console.error("[Start Interview Error]:", err);
@@ -115,37 +163,46 @@ interviewsRouter.post("/start", async (req: Request, res: Response) => {
   }
 });
 
-// GET /api/interviews/tts - Chuyển văn bản thành giọng nói (Google TTS Audio)
+// GET /api/interviews/voices - Danh sách giọng đọc Blaze AI hỗ trợ
+interviewsRouter.get("/voices", (_req: Request, res: Response) => {
+  return res.json({
+    success: true,
+    voices: Object.values(BLAZE_VOICES)
+  });
+});
+
+// GET /api/interviews/tts - Chuyển văn bản thành giọng nói chuẩn Blaze AI
 interviewsRouter.get("/tts", async (req: Request, res: Response) => {
   try {
     const text = ((req.query.text as string) || "").trim();
+    const persona = ((req.query.persona as string) || "Alex Chen").trim();
+    const voice = ((req.query.voice as string) || "").trim();
+    const voiceTarget = voice || persona;
+
     if (!text) {
       return res.status(400).json({ error: "Vui lòng cung cấp văn bản cần đọc" });
     }
 
-    if (ttsCache.has(text)) {
-      const cached = ttsCache.get(text)!;
+    const cacheKey = `blaze:${voiceTarget}:${text}`;
+    if (ttsCache.has(cacheKey)) {
+      const cached = ttsCache.get(cacheKey)!;
       res.set("Content-Type", "audio/mpeg");
       res.set("Cache-Control", "public, max-age=86400");
       return res.send(cached);
     }
 
-    const chunks = await googleTTS.getAllAudioBase64(text, {
-      lang: "vi",
-      slow: false,
-      host: "https://translate.google.com",
-      timeout: 15000
-    });
-
-    const audioBuffer = Buffer.concat(chunks.map((c: any) => Buffer.from(c.base64, "base64")));
-    if (ttsCache.size > 200) {
-      ttsCache.clear();
+    // Tạo giọng đọc chuẩn Studio qua Blaze AI API
+    const blazeAudio = await synthesizeSpeechBlaze(text, voiceTarget);
+    if (blazeAudio && blazeAudio.length > 0) {
+      if (ttsCache.size > 300) ttsCache.clear();
+      ttsCache.set(cacheKey, blazeAudio);
+      res.set("Content-Type", "audio/mpeg");
+      res.set("Cache-Control", "public, max-age=86400");
+      return res.send(blazeAudio);
     }
-    ttsCache.set(text, audioBuffer);
 
-    res.set("Content-Type", "audio/mpeg");
-    res.set("Cache-Control", "public, max-age=86400");
-    return res.send(audioBuffer);
+    console.warn(`[TTS] Blaze AI chưa thể tạo âm thanh cho: "${text.substring(0, 50)}..."`);
+    return res.status(502).json({ error: "Dịch vụ giọng nói Blaze AI tạm thời chưa hoàn thành bản đọc." });
   } catch (err: any) {
     console.error("[TTS Error]:", err);
     return res.status(500).json({ error: `Lỗi tạo giọng nói: ${err.message}` });
@@ -200,8 +257,9 @@ interviewsRouter.get("/:id", async (req: Request, res: Response) => {
 
     const questions = session.turns?.map(t => t.question_text) || [];
     return res.json({
-      ...session,
-      questions
+      ...publicSession(session),
+      questions,
+      engine: parseState(session.interview_state) ? "v2" : "v1"
     });
   } catch (err: any) {
     console.error("[Get Session Error]:", err);
@@ -298,13 +356,17 @@ interviewsRouter.post("/next-question", async (req: Request, res: Response) => {
       candidate_answer,
       default_next_question = "",
       target_level,
-      track
+      track,
+      duration_minutes,
+      seconds_left
     } = req.body;
 
-    const session = await prisma.interviewSession.findUnique({
-      where: { id: session_id },
-      include: { campaign: true }
-    });
+    const session = session_id
+      ? await prisma.interviewSession.findUnique({
+          where: { id: session_id },
+          include: { campaign: true }
+        })
+      : null;
 
     const role = session?.role_target || "Backend Software Engineer";
     const persona = session?.persona || "Alex Chen";
@@ -312,6 +374,60 @@ interviewsRouter.post("/next-question", async (req: Request, res: Response) => {
     const company = session?.campaign?.company || "doanh nghiệp";
     const lvl = target_level || session?.target_level || "fresher";
     const trk = track || session?.track || "backend";
+    const duration = Number(duration_minutes) || session?.duration_minutes || 30;
+    const secLeft = seconds_left !== undefined ? Number(seconds_left) : duration * 60;
+
+    // Lấy lịch sử các lượt trước từ cơ sở dữ liệu để AI có trí nhớ hoàn chỉnh (Working Memory)
+    // CHỈ lấy các lượt đã diễn ra và có câu trả lời (loại bỏ các câu rỗng tương lai)
+    let turnsHistory: Array<{ turn_number: number; question_text: string; answer_transcript?: string | null }> = [];
+    if (session_id) {
+      turnsHistory = await prisma.interviewTurn.findMany({
+        where: {
+          session_id,
+          answer_transcript: { not: null }
+        },
+        orderBy: { turn_number: "asc" },
+        select: { turn_number: true, question_text: true, answer_transcript: true }
+      });
+    }
+
+    // Engine v2: phân tích -> luật điều phối -> lời nói, trạng thái lưu trong session
+    const levelCfg = getLevelConfig(session?.target_level);
+    const v2State = parseState(session?.interview_state);
+    if (session && levelCfg && v2State) {
+      const answer = String(candidate_answer || "").trim();
+      // /turns đã lưu lượt hiện tại trước khi gọi API này; bỏ nó khỏi lịch sử để không bị lặp trong prompt
+      const last = turnsHistory[turnsHistory.length - 1];
+      const history = last && (last.answer_transcript || "").trim() === answer ? turnsHistory.slice(0, -1) : turnsHistory;
+
+      const result = await runInterviewTurn(v2State, levelCfg, answer, history, {
+        secondsLeft: secLeft,
+        durationSeconds: duration * 60
+      });
+
+      await prisma.interviewSession.update({
+        where: { id: session.id },
+        data: { interview_state: JSON.stringify(result.state) }
+      });
+
+      const phase = levelCfg.phases.find(p => p.id === result.move.phase)!;
+      return res.json({
+        engine: "v2",
+        action: result.move.action,
+        branch: ACTION_BRANCH[result.move.action],
+        branch_reason: result.move.reason,
+        competency_focus: result.move.topicName ? `${result.move.topicName} · L${result.move.level}` : phase.name,
+        intent: result.analysis.category,
+        feedback_phrase: "",
+        next_question: result.spoken,
+        stage_id: phase.id,
+        stage_index: phase.stageIndex,
+        stage_name: phase.name,
+        is_finished: result.move.action === "CLOSE",
+        quota_warning: result.quotaWarning,
+        is_fallback: result.isFallback
+      });
+    }
 
     const aiResult = await generateAdaptiveNextTurn(
       role,
@@ -325,17 +441,26 @@ interviewsRouter.post("/next-question", async (req: Request, res: Response) => {
       difficulty,
       default_next_question,
       lvl,
-      trk
+      trk,
+      turnsHistory,
+      duration,
+      secLeft
     );
 
     return res.json({
+      branch: aiResult.branch || "PROBE_DEEPER",
+      branch_reason: aiResult.branch_reason || "",
+      candidate_statement_analysis: aiResult.candidate_statement_analysis || "",
+      competency_focus: aiResult.competency_focus || "Kỹ năng lập trình cốt lõi",
       intent: aiResult.intent || "GOOD",
       turn_score: Number(aiResult.turn_score) || 6.0,
       feedback_phrase: aiResult.feedback_phrase || "Tôi đã ghi nhận câu trả lời của bạn.",
       next_question: aiResult.next_question || default_next_question || "Hãy tiếp tục với câu hỏi tiếp theo.",
       critique: aiResult.critique || "",
       is_pivot: Boolean(aiResult.is_pivot),
-      should_advance_stage: Boolean(aiResult.should_advance_stage ?? true)
+      should_advance_stage: Boolean(aiResult.should_advance_stage ?? true),
+      quota_warning: aiResult.quota_warning || null,
+      is_fallback: Boolean(aiResult.is_fallback)
     });
   } catch (err: any) {
     console.error("[Adaptive Next Turn Error]:", err);
@@ -347,7 +472,6 @@ interviewsRouter.post("/next-question", async (req: Request, res: Response) => {
 interviewsRouter.post("/:id/complete", async (req: Request, res: Response) => {
   try {
     const sessionId = req.params.id;
-    const evalIn = req.body;
 
     let session = await prisma.interviewSession.findUnique({
       where: { id: sessionId },
@@ -385,60 +509,43 @@ interviewsRouter.post("/:id/complete", async (req: Request, res: Response) => {
       orderBy: { turn_number: "asc" }
     });
 
-    const turnsData = turns.map(t => ({
-      question_text: t.question_text,
-      answer_transcript: t.answer_transcript?.trim()
-        ? t.answer_transcript
-        : "Ứng viên đã trả lời câu hỏi trực tiếp bằng giọng nói bám sát khung chuẩn STAR."
-    }));
+    // Chỉ chấm các lượt đã thực sự diễn ra: /start tạo sẵn 10 lượt rỗng làm kịch bản,
+    // các lượt chưa được hỏi tới không được tính là ứng viên đã trả lời.
+    const turnsData = turns
+      .filter(t => t.answer_transcript !== null)
+      .map(t => ({
+        question_text: t.question_text,
+        answer_transcript: t.answer_transcript?.trim() || ""
+      }));
 
-    let sit = 18.0;
-    let tsk = 17.5;
-    let act = 18.0;
-    let resScore = 16.5;
-    let tot = 70.0;
-    let passed = false;
-    let strengths = "Tư duy mạch lạc, trả lời rõ ràng.";
-    let weaknesses = "Cần bổ sung thêm số liệu.";
-    let recs = "Nên cấu trúc câu trả lời theo đúng 4 bước STAR.";
-    let summary = "Ứng viên đã hoàn thành buổi phỏng vấn.";
-    let turnEvalsStr: string | null = null;
+    const levelCfg = getLevelConfig(session.target_level);
+    const v2State = parseState(session.interview_state);
+    const competencies = levelCfg && v2State ? summarizeCompetencies(v2State, levelCfg) : null;
+    const competencyNotes = competencies
+      ? competencies.map(c => `- ${c.topic_name}: ${c.summary}`).join("\n")
+      : "";
 
-    if (evalIn && evalIn.situation_score !== undefined) {
-      sit = Number(evalIn.situation_score) || 0;
-      tsk = Number(evalIn.task_score) || 0;
-      act = Number(evalIn.action_score) || 0;
-      resScore = Number(evalIn.result_score) || 0;
-      tot = sit + tsk + act + resScore;
-      passed = tot >= cutoff;
-      strengths = evalIn.strengths || strengths;
-      weaknesses = evalIn.weaknesses || weaknesses;
-      recs = evalIn.ai_recommendations || recs;
-      summary = evalIn.dossier_summary || `Ứng viên đạt ${tot}/100 điểm.`;
-      turnEvalsStr = evalIn.turn_evaluations ? JSON.stringify(evalIn.turn_evaluations) : null;
-    } else {
-      const aiRes = await evaluateStarInterview(
-        session.role_target,
-        turnsData,
-        cutoff,
-        session.target_level || "fresher",
-        session.track || "backend"
-      );
+    // Điểm chỉ do server chấm, không nhận điểm gửi lên từ trình duyệt.
+    const aiRes = await evaluateStarInterview(
+      session.role_target,
+      turnsData,
+      cutoff,
+      session.target_level || "fresher",
+      session.track || "backend",
+      competencyNotes
+    );
 
-      sit = Number(aiRes.situation_score) || 18.0;
-      tsk = Number(aiRes.task_score) || 17.5;
-      act = Number(aiRes.action_score) || 18.0;
-      resScore = Number(aiRes.result_score) || 16.5;
-      tot = Number(aiRes.total_score) || (sit + tsk + act + resScore);
-      passed = Boolean(aiRes.is_passed);
-      strengths = aiRes.strengths || strengths;
-      weaknesses = aiRes.weaknesses || weaknesses;
-      recs = aiRes.ai_recommendations || recs;
-      summary = aiRes.dossier_summary || summary;
-      if (aiRes.turn_evaluations) {
-        turnEvalsStr = JSON.stringify(aiRes.turn_evaluations);
-      }
-    }
+    const sit = Number(aiRes.situation_score) || 0;
+    const tsk = Number(aiRes.task_score) || 0;
+    const act = Number(aiRes.action_score) || 0;
+    const resScore = Number(aiRes.result_score) || 0;
+    const tot = Number(aiRes.total_score) || 0;
+    const passed = Boolean(aiRes.is_passed);
+    const strengths = aiRes.strengths || "";
+    const weaknesses = aiRes.weaknesses || "";
+    const recs = aiRes.ai_recommendations || "";
+    const summary = aiRes.dossier_summary || "";
+    const turnEvalsStr = aiRes.turn_evaluations ? JSON.stringify(aiRes.turn_evaluations) : null;
 
     const evaluation = await prisma.starEvaluation.upsert({
       where: { session_id: sessionId },
@@ -471,7 +578,7 @@ interviewsRouter.post("/:id/complete", async (req: Request, res: Response) => {
       }
     });
 
-    return res.json(evaluation);
+    return res.json(competencies ? { ...evaluation, competencies } : evaluation);
   } catch (err: any) {
     console.error("[Complete Interview Error]:", err);
     return res.status(500).json({ error: err.message || "Lỗi kết thúc phỏng vấn" });
@@ -488,6 +595,13 @@ interviewsRouter.get("/:id/report", async (req: Request, res: Response) => {
 
     if (!evalData) {
       return res.status(404).json({ error: "Chưa có báo cáo đánh giá cho phiên này" });
+    }
+
+    const session = await prisma.interviewSession.findUnique({ where: { id: sessionId } });
+    const levelCfg = getLevelConfig(session?.target_level);
+    const v2State = parseState(session?.interview_state);
+    if (levelCfg && v2State) {
+      return res.json({ ...evalData, competencies: summarizeCompetencies(v2State, levelCfg) });
     }
 
     return res.json(evalData);

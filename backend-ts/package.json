@@ -10,6 +10,8 @@
     "start": "node dist/main.js",
     "prisma:pull": "prisma db pull",
     "prisma:generate": "prisma generate",
+    "test:interview": "tsx scripts/test-interview-policy.ts",
+    "simulate:interview": "tsx scripts/simulate-interview.ts",
     "postinstall": "prisma generate"
   },
   "engines": {

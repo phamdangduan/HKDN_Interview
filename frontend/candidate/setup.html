@@ -979,25 +979,37 @@ Yêu cầu:
     let audioContext = null;
     let analyser = null;
 
+    // Đang đọc CV trên server; startInterviewSession chờ xong mới tạo phiên
+    let cvParsePromise = null;
+
     function handleCvUpload(event) {
       const file = event.target.files[0];
-      if (file) {
-        uploadedCvFileName = file.name;
-        const sizeStr = file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` : `${(file.size / 1024).toFixed(0)} KB`;
-        document.getElementById('cvFileNameDisplay').innerText = `${file.name} (${sizeStr})`;
-        document.getElementById('cvFileSubDisplay').innerText = `Đã chọn tệp CV thực tế từ thiết bị của bạn`;
-        const badge = document.getElementById('cvBadgeStatus');
-        badge.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold mt-1";
-        badge.innerText = `✓ Đã sẵn sàng nạp CV vào kịch bản phỏng vấn kỹ thuật của Gemini AI`;
+      if (!file) return;
+      uploadedCvFileName = file.name;
+      uploadedCvText = "";
+      const sizeStr = file.size > 1024 * 1024 ? `${(file.size / (1024 * 1024)).toFixed(1)} MB` : `${(file.size / 1024).toFixed(0)} KB`;
+      document.getElementById('cvFileNameDisplay').innerText = `${file.name} (${sizeStr})`;
+      document.getElementById('cvFileSubDisplay').innerText = `Đã chọn tệp CV thực tế từ thiết bị của bạn`;
+      const badge = document.getElementById('cvBadgeStatus');
+      badge.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold mt-1";
+      badge.innerText = `⏳ Đang đọc nội dung CV...`;
 
-        if (file.type.includes("text") || file.name.endsWith(".txt")) {
-          const reader = new FileReader();
-          reader.onload = (e) => { uploadedCvText = e.target.result; };
-          reader.readAsText(file);
-        } else {
-          uploadedCvText = `Hồ sơ CV ứng viên kỹ thuật: ${file.name} (${sizeStr})`;
-        }
-      }
+      // Server đọc nội dung chữ của PDF/DOCX/TXT để AI thực sự dựa vào CV khi phỏng vấn
+      const form = new FormData();
+      form.append('cv_file', file);
+      cvParsePromise = fetch('http://127.0.0.1:8000/api/candidates/parse-cv', { method: 'POST', body: form })
+        .then(async res => {
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok) throw new Error(data.error || `Lỗi ${res.status}`);
+          uploadedCvText = data.text;
+          badge.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-bold mt-1";
+          badge.innerText = `✓ Đã đọc CV (${data.chars} ký tự). AI sẽ hỏi bám theo đồ án và kỹ năng trong CV`;
+        })
+        .catch(err => {
+          uploadedCvText = "";
+          badge.className = "inline-flex items-center gap-1 px-3 py-1 rounded-full bg-rose-100 text-rose-800 text-[10px] font-bold mt-1";
+          badge.innerText = `⚠️ Không đọc được CV: ${err.message}`;
+        });
     }
 
     function fillDemoCVByLevel(level) {
@@ -1160,9 +1172,12 @@ Yêu cầu:
       const btn = document.getElementById('btnLaunchRoom');
       if (btn) {
         btn.disabled = true;
-        btn.innerHTML = `<span class="inline-block animate-spin mr-2">⚙️</span> Đang kết nối Gemini AI tạo đề thi STAR cấp bậc ${selectedTargetLevel.toUpperCase()}...`;
+        btn.innerHTML = `<span class="inline-block animate-spin mr-2">⚙️</span> Gemini AI đang đọc CV & JD để lập kế hoạch phỏng vấn cấp bậc ${selectedTargetLevel.toUpperCase()}...`;
         btn.classList.add('opacity-80', 'cursor-not-allowed');
       }
+
+      // CV vừa tải lên có thể chưa đọc xong
+      if (cvParsePromise) await cvParsePromise;
 
       // Gather all setup data and save to localStorage
       const rawJobTitle = document.getElementById('inputJobTitle').value.trim();
@@ -1182,9 +1197,11 @@ Yêu cầu:
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             role_target: jobTitle,
+            company: company,
             target_level: selectedTargetLevel,
             track: selectedTrack,
             cv_text: uploadedCvText || "",
+            jd_text: requirementMode === 'jd' ? rawReq : "",
             requirement_text: (uploadedCvText ? `[Hồ sơ CV: ${uploadedCvText}]\n\n` : '') + reqText,
             persona: selectedPersonaName,
             difficulty_level: parseInt(probing),
@@ -1217,8 +1234,8 @@ Yêu cầu:
       };
       localStorage.setItem('interview_config', JSON.stringify(interviewConfig));
 
-      // Direct to mock_room.html with session_id
-      window.location.href = `mock_room.html?session_id=${sessionId}`;
+      // Direct to mock_room.html with session_id and duration
+      window.location.href = `mock_room.html?session_id=${sessionId}&duration=${duration}`;
     }
   </script>
 

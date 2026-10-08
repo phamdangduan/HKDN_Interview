@@ -56,6 +56,7 @@ model InterviewSession {
   difficulty_level Int             @default(4)
   duration_minutes Int             @default(30)
   status           String          @default("in_progress") @db.VarChar(50)
+  interview_state  String?         @db.LongText
   created_at       DateTime?       @default(now()) @db.DateTime(0)
   completed_at     DateTime?       @db.DateTime(0)
   candidate        Candidate?      @relation(fields: [candidate_id], references: [id], onDelete: Cascade)

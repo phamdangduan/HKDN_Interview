@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS `interview_sessions` (
     `difficulty_level` INT NOT NULL DEFAULT 4 COMMENT 'Mức độ đào sâu câu hỏi (1-5)',
     `duration_minutes` INT NOT NULL DEFAULT 30 COMMENT 'Thời lượng quy định (phút)',
     `status` VARCHAR(50) NOT NULL DEFAULT 'in_progress' COMMENT 'Trạng thái: in_progress, completed, abandoned',
+    `interview_state` LONGTEXT NULL COMMENT 'Trạng thái phỏng vấn v2 (JSON): giai đoạn, chủ đề, bậc năng lực đo được',
     `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP,
     `completed_at` DATETIME NULL COMMENT 'Thời điểm hoàn thành phiên',
     CONSTRAINT `fk_session_candidate` FOREIGN KEY (`candidate_id`) 

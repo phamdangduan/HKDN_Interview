@@ -22,10 +22,70 @@ load_dotenv(dotenv_path=env_path)
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 CANDIDATE_MODELS = ["gemini-3.5-flash-lite", "gemini-3.5-flash", "gemini-3-flash-preview", "gemini-flash-latest"]
 
+PERSONA_PROFILES = {
+    "Alex Chen": {
+        "title": "Senior Software Architect (Kỹ sư trưởng Công nghệ - Ex Big Tech)",
+        "focus": "Kiến trúc hệ thống, bản chất kỹ thuật bên dưới (Under the hood), tối ưu hiệu năng (Scalability), Clean Code và cơ chế hoạt động của Framework/Database.",
+        "tone": "Điềm tĩnh, sắc bén, chuyên môn sâu, đánh giá cao tư duy logic và hiểu sâu bản chất kỹ thuật.",
+        "questionStyle": "Hỏi xoáy vào bản chất cơ chế hoạt động (Tại sao chọn công nghệ này? Cơ chế bộ nhớ/index/concurrency bên dưới ra sao?).",
+        "probingRule": "Nếu ứng viên trả lời lý thuyết chung chung, lập tức yêu cầu bóc tách chi tiết kỹ thuật thực tế và cơ chế bên dưới (Under the hood)."
+    },
+    "David Miller": {
+        "title": "Senior Tech Director (Giám đốc Công nghệ Khó Tính & Hỏi Xoáy Gắt)",
+        "focus": "Sự cố thực tế, số liệu đo lường cụ thể (Metrics/Numbers), khả năng chịu áp lực (Stress Test), xử lý khủng hoảng và tính xác thực của CV.",
+        "tone": "Nghiêm khắc, sắc lạnh, hay đặt nghi vấn phản biện: 'Tại sao không làm cách khác?', 'Con số cụ thể là bao nhiêu?'.",
+        "questionStyle": "Đặt các tình huống sự cố production khẩn cấp, bắt bẻ số liệu đo lường, kiểm tra tính tự lập (tự code hay làm theo người khác).",
+        "probingRule": "Nếu ứng viên trả lời mập mờ hoặc thiếu số liệu, lập tức bắt bẻ và yêu cầu đưa ra con số chính xác (RPS, latency, downtime, lỗi cụ thể)."
+    },
+    "Sarah Jenkins": {
+        "title": "Head of Talent & Culture (Trưởng Ban Nhân Sự & Văn Hóa Doanh Nghiệp)",
+        "focus": "Kỹ năng mềm, khả năng giao tiếp (Communication), giải quyết mâu thuẫn nội bộ (Conflict Resolution), văn hóa làm việc nhóm (Teamwork) và chuẩn mực ứng xử theo STAR.",
+        "tone": "Truyền cảm, nhã nhặn, biết lắng nghe nhưng đánh giá rất sâu về EQ, thái độ cầu tiến và khả năng hòa nhập đội ngũ.",
+        "questionStyle": "Hỏi về các tình huống giao tiếp, giải quyết bất đồng quan điểm kỹ thuật với đồng nghiệp, áp lực deadline và cách đón nhận phản hồi tiêu cực.",
+        "probingRule": "Nếu ứng viên chỉ nói về công nghệ mà quên yếu tố con người, yêu cầu làm rõ cách ứng viên phối hợp với đồng nghiệp và xử lý cảm xúc trong tình huống đó."
+    },
+    "Rachel Vance": {
+        "title": "Executive Vice President (Lãnh đạo Cấp Cao C-Level)",
+        "focus": "Tầm nhìn chiến lược kinh doanh (Business Value), đánh đổi kỹ thuật (Trade-offs), tối ưu chi phí hạ tầng (ROI) và khả năng dẫn dắt đội ngũ.",
+        "tone": "Đĩnh đạc, bao quát, tầm nhìn vĩ mô của nhà lãnh đạo điều hành doanh nghiệp.",
+        "questionStyle": "Hỏi về giá trị kinh doanh mà giải pháp kỹ thuật mang lại, sự cân bằng giữa chi phí máy chủ và tốc độ phát triển sản phẩm.",
+        "probingRule": "Yêu cầu ứng viên giải thích các quyết định kỹ thuật đứng trên góc nhìn hiệu quả kinh doanh và lợi ích lâu dài của toàn công ty."
+    }
+}
+
 def get_client():
     if not GEMINI_API_KEY:
         raise ValueError("Chưa tìm thấy GEMINI_API_KEY trong file .env")
     return genai.Client(api_key=GEMINI_API_KEY)
+
+
+def detect_and_log_api_quota_warning(service: str, err: Exception) -> Dict[str, Any]:
+    err_msg = str(err).lower()
+    is_quota = any(k in err_msg for k in ["resource_exhausted", "quota", "rate limit", "too many requests", "429", "exceeded your current quota", "billing"])
+    is_key_err = any(k in err_msg for k in ["api_key_invalid", "permission_denied", "403", "unauthenticated"])
+
+    if is_quota:
+        print("\n" + "🚨" * 36, flush=True)
+        print(f"⚠️  [CẢNH BÁO HẾT HẠN MỨC GỌI API MIỄN PHÍ - {service.upper()}]", flush=True)
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", flush=True)
+        print(f"📌 Dịch vụ: {service}", flush=True)
+        print("⚠️ Trạng thái: LỖI 429 - HẾT QUOTA / RATE LIMIT (Vượt tần suất gọi)", flush=True)
+        print(f"💡 Thông báo từ nhà cung cấp: {err}", flush=True)
+        print("🔄 Hành động tự động: Hệ thống kích hoạt Chế độ Dự phòng Thông minh (Fallback Engine)!", flush=True)
+        print("👉 Khuyến nghị: Thay GEMINI_API_KEY / BLAZE_API_KEY mới vào file .env.", flush=True)
+        print("🚨" * 36 + "\n", flush=True)
+        return {"is_quota": True, "message": f"Hạn mức gọi API miễn phí ({service}) tạm thời đã hết lượt (Rate Limit / Quota Exceeded)."}
+    elif is_key_err:
+        print("\n" + "🚨" * 36, flush=True)
+        print(f"⚠️  [CẢNH BÁO API KEY {service.upper()} KHÔNG HỢP LỆ HOẶC BỊ KHÓA]", flush=True)
+        print("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━", flush=True)
+        print(f"📌 Dịch vụ: {service}", flush=True)
+        print("⚠️ Trạng thái: LỖI 403 - FORBIDDEN / INVALID KEY", flush=True)
+        print(f"💡 Thông báo: {err}", flush=True)
+        print("👉 Khuyến nghị: Vui lòng kiểm tra lại cấu hình API Key trong file .env.", flush=True)
+        print("🚨" * 36 + "\n", flush=True)
+        return {"is_quota": True, "message": f"API Key {service} không hợp lệ hoặc đã bị khóa."}
+    return {"is_quota": False, "message": ""}
 
 
 def print_cv_jd_terminal_log(data: Dict[str, Any], role_title: str):
@@ -202,11 +262,27 @@ def print_adaptive_turn_terminal_log(
         score = data.get("turn_score", 0.0)
         feedback = data.get("feedback_phrase", "")
         next_q = data.get("next_question", "")
-        is_pivot = " [CHUYỂN HƯỚNG/PIVOT VÌ NÓI KHÔNG BIẾT]" if data.get("is_pivot") else ""
+        is_pivot = " [CHUYỂN HƯỚNG/PIVOT]" if data.get("is_pivot") else ""
+        branch = data.get("branch", "PROBE_DEEPER")
+        branch_badge = (
+            "🚀 [NHÁNH 1: ĐÀO SÂU MỞ RỘNG / +1 LEVEL]"
+            if branch == "PROBE_DEEPER"
+            else "🔍 [NHÁNH 2: KÉO VỀ THỰC TẾ / BÓC TÁCH MÃ NGUỒN]"
+            if branch == "GROUND_TO_PRACTICE"
+            else "🤝 [NHÁNH 3: ĐỒNG CẢM & HẠ ĐỘ KHÓ / PIVOT THÂN THIỆN]"
+        )
+        analysis = data.get("candidate_statement_analysis") or data.get("critique", "")
         print("🧠 AI Phân tích phản hồi:", flush=True)
+        print(f"   • {branch_badge}", flush=True)
+        if data.get("branch_reason"):
+            print(f"     Lý do chọn nhánh: {data.get('branch_reason')}", flush=True)
+        if data.get("competency_focus"):
+            print(f"   • Trọng tâm năng lực: {data.get('competency_focus')}", flush=True)
+        if analysis:
+            print(f"   • Phân tích câu nói & tâm lý ứng viên: \"{analysis}\"", flush=True)
         print(f"   • Ý định (Intent): {intent} | Điểm lượt này: {score}/10{is_pivot}", flush=True)
         print(f"   • Giám khảo phản hồi: \"{feedback}\"", flush=True)
-        print(f"   • Câu hỏi tiếp theo: \"{next_q}\"", flush=True)
+        print(f"   • Câu hỏi tiếp theo thích ứng: \"{next_q}\"", flush=True)
         print(sep + "\n", flush=True)
     except Exception as err:
         print(f"[Logging Exception in print_adaptive_turn_terminal_log]: {err}", flush=True)
@@ -304,9 +380,19 @@ CẤP BẬC KHẢO NGHIỆM: MỚI TỐT NGHIỆP (FRESHER / <1 NĂM KINH NGHI�
 - Đồ án: Xoáy sâu vào đồ án tốt nghiệp/cá nhân, kiểm tra tự tay code hay copy, cách tổ chức mã nguồn và xử lý lỗi.
 """
 
+    p_prof = PERSONA_PROFILES.get(persona, PERSONA_PROFILES["Alex Chen"])
+    persona_info = f"""
+CHÂN DUNG & PHONG CÁCH GIÁM KHẢO: {persona} ({p_prof['title']})
+- Trọng tâm đánh giá: {p_prof['focus']}
+- Tông giọng đối thoại: {p_prof['tone']}
+- Phong cách đặt câu hỏi: {p_prof['questionStyle']}
+- Quy tắc đào sâu: {p_prof['probingRule']}
+"""
+
     prompt = f"""
-Bạn là {persona}, Giám khảo phỏng vấn kỹ thuật cấp cao tại TalentAI (Cấp độ hỏi thực chiến IT {difficulty}/5).
+Bạn là {persona}, {p_prof['title']} tại TalentAI (Cấp độ hỏi thực chiến IT {difficulty}/5).
 Buổi phỏng vấn kỹ thuật dự kiến kéo dài {duration_minutes} phút cho vị trí: {role} (Track: {track}).
+{persona_info}
 {level_focus}
 
 Yêu cầu kịch bản tuyển dụng: {requirement or 'Khảo sát năng lực thực tế, tư duy giải quyết bài toán kỹ thuật theo chuẩn STAR.'}
@@ -351,6 +437,7 @@ Trả về duy nhất một mảng JSON thuần túy gồm đúng 10 chuỗi câ
                 print_interview_start_terminal_log(role, persona, difficulty, cv_text, requirement, gen_questions, target_level=lvl, track=track)
                 return gen_questions
         except Exception as e:
+            detect_and_log_api_quota_warning("Gemini", e)
             print(f"[AI Engine] Error calling {model_name} in generate_interview_questions: {e}. Retrying next model...")
 
     # Fallback chất lượng cao chuẩn IT theo từng cấp bậc
@@ -410,29 +497,58 @@ def generate_adaptive_next_turn(
     difficulty: int = 4,
     default_next_question: str = "",
     target_level: str = "fresher",
-    track: str = "backend"
+    track: str = "backend",
+    history: Optional[List[Dict[str, Any]]] = None,
+    duration_minutes: int = 30,
+    seconds_left: int = 1800
 ) -> Dict[str, Any]:
-    """Phân tích câu trả lời tức thời của ứng viên và sinh phản hồi + câu hỏi tiếp theo thông minh.
-    Được may đo theo đúng cấp bậc IT (Intern, Fresher, Junior, Mid-Level):
-    1. Ứng viên nói 'không biết / chưa học / xin qua': Giám khảo thông cảm, chuyển hướng (Pivot) sang câu hỏi khác, KHÔNG đào sâu vào điểm mù.
-    2. Ứng viên trả lời lý thuyết, thiếu STAR: Hỏi xoáy thông minh (Targeted Probing) vào chi tiết cụ thể đã nêu theo đúng tầm cấp bậc.
-    3. Ứng viên trả lời tốt: Khen ngợi ngắn gọn, chuyển mượt mà sang câu tiếp theo.
-    4. Ứng viên hỏi ngược lại AI (Giai đoạn candidate_qa): AI trả lời câu hỏi của ứng viên sắc sảo rồi kết thúc.
-    """
+    """Phân tích câu trả lời tức thời của ứng viên theo Chiến lược Thích ứng 3 Nhánh và Trí nhớ Toàn phiên."""
     client = get_client()
 
     ans_clean = (candidate_answer or "").strip()
     lvl = (target_level or "fresher").lower()
 
+    p_prof = PERSONA_PROFILES.get(persona, PERSONA_PROFILES["Alex Chen"])
+    persona_info = f"""
+CHÂN DUNG & PHONG CÁCH GIÁM KHẢO: {persona} ({p_prof['title']})
+- Trọng tâm đánh giá: {p_prof['focus']}
+- Tông giọng đối thoại: {p_prof['tone']}
+- Phong cách đặt câu hỏi: {p_prof['questionStyle']}
+- Quy tắc đào sâu: {p_prof['probingRule']}
+"""
+
+    history_context = ""
+    if history and len(history) > 0:
+        lines = []
+        for h in history:
+            tn = h.get("turn_number", 1)
+            q = h.get("question_text", "")
+            a = (h.get("answer_transcript") or "").strip() or "[Chưa trả lời / Im lặng]"
+            lines.append(f"• Lượt {tn}:\n   - Giám khảo đã hỏi: \"{q}\"\n   - Ứng viên đã trả lời: \"{a}\"")
+        history_context = "\nSỔ TAY GHI NHỚ TOÀN PHIÊN PHỎNG VẤN (CÁC LƯỢT ĐÃ DIỄN RA TRƯỚC ĐÓ):\n" + "\n".join(lines) + "\n"
+    else:
+        history_context = "(Đây là lượt đầu tiên, chưa có lịch sử trước đó)."
+
     prompt = f"""
-Bạn là Giám khảo phỏng vấn kỹ thuật AI tên là {persona} (Phong cách kỹ sư cao cấp, thực chiến, cuốn hút, tâm lý, độ khó {difficulty}/5).
+Bạn là Giám khảo phỏng vấn kỹ thuật AI tên là {persona} ({p_prof['title']}), độ khó {difficulty}/5.
+{persona_info}
 Vị trí phỏng vấn: {role} (Track: {track}) tại {company}.
 Cấp bậc khảo nghiệm: {lvl.upper()}.
 Giai đoạn phỏng vấn hiện tại: Bước {stage_index + 1}/10 - {stage_name} (ID: {stage_id}).
-Câu hỏi bạn vừa hỏi ứng viên:
+THỜI LƯỢNG BUỔI PHỎNG VẤN: {duration_minutes} phút.
+THỜI GIAN CÒN LẠI: {max(0, seconds_left // 60)} phút {seconds_left % 60} giây.
+
+QUY TẮC ĐIỀU PHỐI THEO THỜI GIAN (TIME-PACED INTERVIEW PACING):
+- Buổi phỏng vấn được thiết kế kéo dài đúng {duration_minutes} phút theo cấu hình.
+- NẾU THỜI GIAN CÒN NHIỀU (còn > 3 phút): BẠN BẮT BUỘC TIẾP TỤC ĐÀO SÂU, hỏi xoáy, thử thách tư duy kỹ thuật hoặc đổi góc nhìn theo 3 nhánh thích ứng. TUYỆT ĐỐI CẤM chào tạm biệt, TUYỆT ĐỐI CẤM vội kết thúc phỏng vấn!
+- CHỈ KHI THỜI GIAN CÒN DƯỚI 2.5 PHÚT CUỐI: Bạn mới chủ động thông báo thời gian sắp hết và mời ứng viên đặt câu hỏi cho bạn hoặc tổng kết.
+
+{history_context}
+
+CÂU HỎI BẠN VỪA HỎI ỨNG VIÊN Ở LƯỢT NÀY:
 "{current_question}"
 
-Câu trả lời thực tế của ứng viên:
+CÂU TRẢ LỜI THỰC TẾ CỦA ỨNG VIÊN VỪA NÓI:
 "{ans_clean}"
 
 Gợi ý định hướng cho giai đoạn tiếp theo (chỉ để tham khảo chủ đề, KHÔNG ĐƯỢC lặp lại nguyên văn):
@@ -444,41 +560,64 @@ TIÊU CHUẨN KỲ VỌNG THEO CẤP BẬC {lvl.upper()}:
 - JUNIOR: Đòi hỏi kinh nghiệm thực chiến production: Concurrency, Caching Redis, Race Condition, tối ưu SQL, giải thích được đánh đổi kỹ thuật (Trade-offs) và có số liệu thực tế.
 - MID-LEVEL: Đòi hỏi tư duy System Design, Microservices, High Availability, khả năng giải quyết sự cố quy mô lớn.
 
-QUY TẮC PHỎNG VẤN THÍCH ỨNG & ĐỔI MỚI (CHỐNG NHÀM CHÁN - TRÁNH LÝ THUYẾT SUÔNG):
-1. LẮNG NGHE & BẮT TRỰC DIỆN Ý CỦA ỨNG VIÊN (Listen & Connect):
-   - feedback_phrase: Nhận xét 1 câu tự nhiên, sắc sảo về ĐÚNG CÔNG NGHỆ, THƯ VIỆN, HOẶC LUẬN ĐIỂM mà ứng viên vừa nói trong câu trả lời (Ví dụ: nếu ứng viên nhắc đến JWT, hãy nhận xét về JWT; nếu ứng viên nói dùng Breakpoint debug, hãy ghi nhận điều đó).
-2. SINH CÂU HỎI TIẾP THEO SÁNG TẠO, TƯƠI MỚI, THỰC TẾ & KHƠI GỢI TƯ DUY:
-   - TUYỆT ĐỐI TRÁNH hỏi những câu hỏi lý thuyết sách giáo khoa khô khan nhàm chán (như "4 tính chất OOP là gì", "vòng đời HTTP request là gì").
-   - HÃY ĐƯA RA CÁC TÌNH HUỐNG THỰC TẾ HẤP DẪN PHÙ HỢP CẤP BẬC {lvl.upper()}:
-     * Tình huống Bug dị / Edge Case: "Trong code đồ án bạn từng làm, có con bug nào 'chạy ở máy bạn thì được mà đưa sang máy bạn khác thì chết' chưa, bạn tìm ra nguyên nhân do đâu?"
-     * Tình huống Đánh đổi / Dilemma: "Tại sao bạn lại chọn công nghệ/thư viện đó thay vì một giải pháp khác? Nếu dữ liệu tăng gấp 10 lần thì điểm nghẽn đầu tiên sẽ nằm ở đâu?"
-     * Tình huống Thực tế & Xu hướng mới: "Hiện nay nhiều bạn dùng AI (như ChatGPT, Copilot) để sinh code. Bạn sử dụng công cụ này thế nào để nâng cao tốc độ mà không bị phụ thuộc hoặc sinh code lỗi tiềm ẩn?"
-     * Tình huống Xử lý sự cố / Làm việc nhóm: Đặt ứng viên vào một bối cảnh cụ thể để xem phản xạ tư duy STAR.
+BỘ NÃO ĐIỀU HƯỚNG PHỎNG VẤN - CHIẾN LƯỢC THÍCH ỨNG 3 NHÁNH (3-BRANCH ADAPTIVE ENGINE):
+Dựa trên toàn bộ lịch sử trao đổi và câu trả lời hiện tại của ứng viên, bạn PHẢI phân loại lượt này vào đúng 1 trong 3 nhánh sau:
+
+1. NHÁNH 1: "PROBE_DEEPER" (Đào sâu mở rộng - Thử thách trần năng lực)
+   - Điều kiện: Ứng viên trả lời gãy gọn, tự tin, đúng bản chất kỹ thuật, có số liệu hoặc kiến trúc rõ ràng.
+   - Hành động của bạn:
+     * feedback_phrase: Lời khen ngợi chân thành, tự nhiên của đàn anh Tech Lead (Ví dụ: "Rất tốt, giải pháp của em xử lý rất đúng chỗ!", "Chuẩn rồi, tư duy thiết kế đoạn này rất sắc nét.").
+     * next_question: Tăng độ khó lên +1 Level. Đặt tình huống thực chiến sâu hơn: Edge-case bất thường, bài toán Scale khi lượng người dùng tăng gấp 10 lần, hoặc sự đánh đổi (Trade-off) giữa tốc độ và tính toàn vẹn dữ liệu.
+     * branch: "PROBE_DEEPER", turn_score: 7.0 - 10.0 / 10.
+
+2. NHÁNH 2: "GROUND_TO_PRACTICE" (Kéo về thực tế - Kiểm tra tự tay làm code)
+   - Điều kiện: Ứng viên chỉ đọc lý thuyết thuộc lòng như sách giáo khoa (Wikipedia style), nói chung chung, hoặc chưa chứng minh được bản thân tự code tính năng đó.
+   - Hành động của bạn:
+     * feedback_phrase: Ghi nhận định nghĩa nhưng khéo léo kéo vào đồ án (Ví dụ: "Về mặt lý thuyết thì chuẩn rồi. Nhưng anh muốn xem cách em áp dụng vào thực tế...").
+     * next_question: Đặt câu hỏi bóc tách vào dòng code cụ thể trong đồ án/dự án của ứng viên (Ví dụ: "Cụ thể trong đồ án, đoạn logic đó em tự tay viết ở đâu, và khi chạy thực tế có con bug nào làm em tốn thời gian nhất?").
+     * branch: "GROUND_TO_PRACTICE", turn_score: 4.0 - 6.5 / 10.
+
+3. NHÁNH 3: "EMPATHIC_PIVOT" (Đồng cảm & Hạ độ khó / Chuyển hướng thân thiện)
+   - Điều kiện: Ứng viên ấp úng, bối rối, kêu khó, xin qua câu, im lặng, hoặc chủ động xin chuyển sang bất kỳ ngôn ngữ/chủ đề nào khác (Python, JS, C#, Java, Go, React, SQL, OOP...).
+   - Hành động của bạn:
+     * NGUYÊN TẮC VÀNG: BỚT LÀM KHÓ ỨNG VIÊN - BẢO VỆ TÂM LÝ & TÌM RA ĐIỂM MẠNH!
+     * feedback_phrase: Lời động viên, trấn an chân thành, cởi mở (Ví dụ: "Không sao cả, kiến thức công nghệ rất rộng và ai cũng có thế mạnh riêng. Mình chuyển sang phần nhẹ nhàng và quen thuộc hơn nhé!", "Được chứ, không sao cả! Chúng ta cùng chuyển sang trao đổi về [chủ đề/ngôn ngữ em tự tin] nhé.").
+     * next_question: BẮT BUỘC HẠ ĐỘ KHÓ XUỐNG MỨC CƠ BẢN/NỀN TẢNG (Foundational & Accessible) của đúng chủ đề ứng viên tự tin hoặc chủ đề quen thuộc hàng ngày (như cách debug lỗi, công cụ IDE, Git, cấu trúc dữ liệu đơn giản, bài tập nhỏ từng làm) để giúp ứng viên lấy lại sự tự tin.
+     * TUYỆT ĐỐI CẤM ĐÁNH ĐỐ: Không được hỏi tầng thực thi sâu thẳm / runtime internals (như JVM bytecode/vtable, Python GIL / CPython internals, JS V8 JIT internals, Go pprof internals...).
+     * branch: "EMPATHIC_PIVOT", is_pivot: true, turn_score: 2.0 - 4.5 / 10.
+
+QUY TẮC SỬ DỤNG TRÍ NHỚ (CALL-BACK & CONTINUITY):
+- Tận dụng thông tin ứng viên đã từng nói ở các lượt trước (ví dụ trường học, công nghệ đã học, đồ án cá nhân) để đan cài vào lời thoại hoặc câu hỏi (Call-back: "Lúc nãy em có nhắc đến...").
+- Tuyệt đối KHÔNG hỏi lại những công nghệ hoặc phần kiến thức mà ứng viên đã từng nhận là "chưa học / chưa làm" ở các câu trước!
+- Mọi nhận xét (critique) phải mang tính xây dựng, khách quan, tôn trọng và chuyên nghiệp.
+
+QUY TẮC SỐ 1 - TUYỆT ĐỐI CẤM HỎI LẠI ĐIỀU ỨNG VIÊN VỪA NÊU (ANTI-CIRCULAR REPETITION):
+1. KHÔNG HỎI LẠI NỘI DUNG VỪA ĐƯỢC TRẢ LỜI: Nếu ứng viên vừa mới nêu hoặc giải thích một ý/khái niệm nào đó (kể cả khi âm thanh thu nhận bị sai chính tả như 'drylic' = ArrayList, 'liên kết list' = LinkedList, 'mảng động' vs 'Node'):
+   - Bạn TUYỆT ĐỐI CẤM hỏi lại câu hỏi về chính ý đó (Ví dụ: CẤM HỎI LẠI "Trong Java, sự khác biệt cốt lõi về bản chất lưu trữ giữa ArrayList và LinkedList là gì?").
+   - Hỏi lại điều ứng viên vừa nói xong sẽ làm ứng viên cực kỳ khó chịu vì cảm thấy bạn không hề lắng nghe họ và tạo cảm giác con bot bị lặp đĩa!
+2. NGUYÊN TẮC TIẾN LÊN PHÍA TRƯỚC (FORWARD PROGRESSION):
+   - Trong feedback_phrase: Công nhận ngắn gọn ý đúng mà họ vừa nêu (Ví dụ: "Anh hiểu ý em về việc ArrayList lưu mảng động và LinkedList lưu theo các Node liên kết.").
+   - Trong next_question: BẮT BUỘC PHẢI HỎI SANG MỘT KHÍA CẠNH MỚI:
+     * Chuyển sang hiệu năng/thuật toán (Big-O): "Vậy khi cần truy xuất ngẫu nhiên get(i) hay chèn phần tử ở đầu danh sách, hiệu năng của 2 thằng này khác nhau ra sao?"
+     * Hoặc bóc tách vào đồ án thực tế: "Trong đồ án web thương mại của em, danh sách sản phẩm hay giỏ hàng em đã dùng ArrayList hay LinkedList và vì sao?"
+     * Hoặc tối ưu bộ nhớ: "Về mặt tiêu tốn bộ nhớ RAM, giữa ArrayList và LinkedList cấu trúc nào tốn nhiều overhead hơn?"
+3. KHÔNG RẬP KHUÔN THEO defaultNextQuestion:
+   - "defaultNextQuestion" chỉ là gợi ý tham khảo. Nếu câu trả lời của ứng viên ĐÃ ĐỀ CẬP ĐẾN chủ đề đó rồi, bạn BẮT BUỘC PHẢI BỎ QUA GỢI Ý ĐÓ VÀ TỰ SINH CÂU HỎI MỚI SÂU HƠN HOẶC ĐỔI GÓC NHÌN!
+
 QUY TẮC BẮT BUỘC - MỖI LƯỢT CHỈ ĐƯỢC HỎI ĐÚNG 1 CÂU HỎI DUY NHẤT (SINGLE ATOMIC QUESTION):
 1. TUYỆT ĐỐI CẤM hỏi kép, hỏi dồn, hoặc nhồi nhét 2-3 câu hỏi vào 1 câu!
-   - ❌ VÍ DỤ CẤM: "Em tự tay code tính năng gì, thiết kế Database ra sao và cách em test thế nào?" (Đây là 3 câu hỏi, làm ứng viên bị ngợp và không thể phân tích sâu).
-   - ✅ CÁCH HỎI ĐÚNG: Chia nhỏ vấn đề, chỉ hỏi 1 khía cạnh duy nhất: "Trong đồ án đó, tính năng nào là do em tự tay viết code từ đầu đến cuối?" (Chờ ứng viên trả lời xong thì ở lượt sau mới hỏi tiếp về Database!).
 2. next_question: BẮT BUỘC chỉ là ĐÚNG 1 CÂU HỎI ĐƠN LẺ, kết thúc bằng DUY NHẤT 1 DẤU CHẤM HỎI (?). Độ dài súc tích từ 15 đến 25 từ.
-3. feedback_phrase: Nhận xét ngắn gọn 1 câu tự nhiên về ý ứng viên vừa nói (tối đa 15 từ).
-
-3. PHÂN LOẠI Ý ĐỊNH (INTENT):
-   - "DONT_KNOW": Ứng viên nói không biết, chưa từng làm, hoặc xin chuyển câu.
-     * feedback_phrase: Thông cảm, khích lệ tự nhiên.
-     * next_question: Chuyển hướng sang một khía cạnh kỹ thuật thực tế khác mà cấp bậc {lvl.upper()} thường quen thuộc. TUYỆT ĐỐI KHÔNG ép ứng viên vào điểm mù vừa nói.
-     * is_pivot: true, turn_score: 1.0 - 2.0 / 10.
-   - "SHALLOW": Trả lời ngắn, chung chung:
-     * next_question: Bắt đúng 1 từ khóa ứng viên vừa nói để hỏi xoáy sâu hơn vào thực tế.
-     * turn_score: 3.0 - 5.5 / 10.
-   - "GOOD": Trả lời tốt, có chuyên môn:
-     * next_question: Nâng cao hoặc mở rộng sang một tình huống thực chiến tiếp theo.
-     * turn_score: 7.0 - 10.0 / 10.
 
 ĐỊNH DẠNG ĐẦU RA:
 Trả về duy nhất JSON hợp lệ (không kèm markdown):
 {{
-  "intent": "DONT_KNOW | SHALLOW | GOOD | OFF_TOPIC",
+  "branch": "PROBE_DEEPER | GROUND_TO_PRACTICE | EMPATHIC_PIVOT",
+  "branch_reason": "Giải thích ngắn vì sao chọn nhánh này dựa trên trí nhớ và câu trả lời hiện tại...",
+  "candidate_statement_analysis": "Phân tích cụ thể câu nói của ứng viên: Ý định, tâm lý, mức độ hiểu biết hoặc khó khăn mà ứng viên đang gặp phải...",
+  "competency_focus": "Mảng năng lực đang khảo sát (Kỹ năng lập trình cốt lõi | Đồ án & Kiến trúc code | Cơ sở dữ liệu & Logic xử lý | Giải quyết sự cố STAR)",
+  "intent": "GOOD | SHALLOW | DONT_KNOW | PIVOT_REQUEST",
   "turn_score": 7.5,
-  "feedback_phrase": "Lời nhận xét ngắn tối đa 1 câu...",
+  "feedback_phrase": "Lời thoại tự nhiên của Tech Lead (1-2 câu đồng cảm, ghi nhận hoặc gợi mở)...",
   "next_question": "Duy nhất 1 câu hỏi đơn lẻ súc tích kết thúc bằng đúng 1 dấu hỏi chấm?",
   "critique": "Nhận xét ngắn về câu trả lời...",
   "is_pivot": false,
@@ -493,22 +632,218 @@ Trả về duy nhất JSON hợp lệ (không kèm markdown):
             )
             data = extract_json(response.text)
             if isinstance(data, dict) and "next_question" in data:
+                # Hậu kiểm chống lặp câu hỏi (Anti-Circular & Anti-Repetition Guard)
+                all_prev = [current_question]
+                if history:
+                    all_prev.extend([h.get("question_text", "") for h in history if h.get("question_text")])
+                
+                next_q_clean = data["next_question"].lower()
+                is_repeated = any(
+                    p.lower() == next_q_clean or
+                    ("arraylist" in next_q_clean and "linkedlist" in next_q_clean and "arraylist" in p.lower() and "linkedlist" in p.lower()) or
+                    ("list" in next_q_clean and "tuple" in next_q_clean and "list" in p.lower() and "tuple" in p.lower()) or
+                    ("==" in next_q_clean and "===" in next_q_clean and "==" in p.lower() and "===" in p.lower()) or
+                    ("inner join" in next_q_clean and "left join" in next_q_clean and "inner join" in p.lower() and "left join" in p.lower())
+                    for p in all_prev
+                )
+
+                if is_repeated:
+                    if "arraylist" in next_q_clean or "linkedlist" in next_q_clean:
+                        data["next_question"] = "Về mặt hiệu năng (Big-O), khi truy xuất get(i) hay thêm/xóa phần tử ở đầu danh sách, ArrayList và LinkedList khác nhau ra sao?"
+                        data["feedback_phrase"] = "Tôi ghi nhận giải thích về cấu trúc lưu trữ của bạn. Hãy nhìn sâu hơn vào bài toán hiệu năng nhé:"
+                    elif "list" in next_q_clean or "tuple" in next_q_clean:
+                        data["next_question"] = "Về mặt quản lý bộ nhớ và tính bất biến (Immutability), khi nào bạn ưu tiên dùng Tuple hơn List trong Python?"
+                        data["feedback_phrase"] = "Tôi ghi nhận định nghĩa của bạn. Hãy phân tích từ góc độ tối ưu bộ nhớ nhé:"
+                    elif default_next_question and not any(p.lower() == default_next_question.lower() for p in all_prev):
+                        data["next_question"] = default_next_question
+                    else:
+                        data["next_question"] = "Trong dự án thực tế bạn từng làm, bài toán kỹ thuật nào bạn tự tay thiết kế và tối ưu tốt nhất?"
+
                 print_adaptive_turn_terminal_log(stage_index, stage_name, current_question, ans_clean, data)
                 return data
         except Exception as e:
+            detect_and_log_api_quota_warning("Gemini", e)
             print(f"[AI Engine] Error calling {model_name} in generate_adaptive_next_turn: {e}. Retrying next model...")
 
     # Heuristic fallback nếu AI tạm thời mất kết nối
     lower_ans = ans_clean.lower()
-    is_dont_know = any(k in lower_ans for k in ["không biết", "chưa biết", "chưa rõ", "chưa từng", "chịu", "qua câu", "bỏ qua", "chưa tìm hiểu", "em không rành", "mình không biết"])
+    import random
+
+    # Danh mục hỗ trợ đa ngôn ngữ & công nghệ phong phú với nhiều cấp độ câu hỏi (Multi-tier)
+    tech_topics = [
+        {
+            "keywords": ["python", "py"],
+            "name": "Python",
+            "questions": [
+                "Được rồi, trong Python, bạn có thể phân biệt sự khác nhau cơ bản giữa List và Tuple không?",
+                "Về mặt bộ nhớ và tính bất biến (Immutability), khi nào bạn ưu tiên dùng Tuple hơn List trong Python?",
+                "Trong Python, bạn hiểu cơ chế hoạt động của Generator và từ khóa yield như thế nào?",
+                "Khi làm việc với dự án Python, bạn đã từng dùng Decorator hoặc Context Manager trong trường hợp cụ thể nào?"
+            ]
+        },
+        {
+            "keywords": ["javascript", "js", "typescript", "ts"],
+            "name": "JavaScript / TypeScript",
+            "questions": [
+                "Được rồi, trong JavaScript, bạn hãy giải thích sự khác nhau giữa toán tử == và === nhé?",
+                "Bạn hiểu cơ chế Event Loop và thứ tự ưu tiên giữa Microtask và Macrotask trong JS ra sao?",
+                "Trong TypeScript, bạn phân biệt sự khác nhau giữa Interface và Type Alias như thế nào?",
+                "Bạn có thể giải thích khái niệm Closure trong JavaScript và một trường hợp thực tế bạn từng áp dụng không?"
+            ]
+        },
+        {
+            "keywords": ["java core", "java"],
+            "name": "Java Core",
+            "questions": [
+                "Được rồi, trong Java Core, bạn hãy phân biệt sự khác nhau cơ bản giữa ArrayList và LinkedList nhé?",
+                "Về mặt hiệu năng (Big-O), khi cần truy xuất ngẫu nhiên get(i) hay thêm/xóa phần tử, ArrayList và LinkedList khác nhau ra sao?",
+                "Trong đồ án thực tế của bạn, bạn đã áp dụng ArrayList hay LinkedList trong trường hợp cụ thể nào và vì sao?",
+                "Bạn hiểu cơ chế hoạt động của Garbage Collection (GC) trong Java giải phóng bộ nhớ Heap như thế nào?"
+            ]
+        },
+        {
+            "keywords": ["c#", "csharp", ".net", "dotnet"],
+            "name": "C# / .NET",
+            "questions": [
+                "Được rồi, trong C#, bạn có thể nêu sự khác nhau giữa Value Type và Reference Type không?",
+                "Trong C#, bạn phân biệt sự khác nhau giữa IEnumerable, ICollection và IList như thế nào?",
+                "Bạn hiểu cơ chế Async/Await và Task trong C# xử lý bất đồng bộ ra sao?"
+            ]
+        },
+        {
+            "keywords": ["golang", "go"],
+            "name": "Golang",
+            "questions": [
+                "Được rồi, trong Golang, bạn hiểu cơ chế hoạt động cơ bản của Goroutine và Channel như thế nào?",
+                "Bạn phân biệt sự khác nhau giữa Slice và Array trong Golang ra sao?",
+                "Trong Go, bạn xử lý Race Condition và đồng bộ hóa dữ liệu giữa các Goroutine bằng công cụ gì?"
+            ]
+        },
+        {
+            "keywords": ["react", "reactjs"],
+            "name": "React",
+            "questions": [
+                "Được rồi, trong React, bạn phân biệt sự khác nhau cơ bản giữa Props và State như thế nào?",
+                "Bạn hiểu cơ chế hoạt động của Virtual DOM và thuật toán Diffing trong React ra sao?",
+                "Khi nào bạn cần dùng hook useMemo hoặc useCallback để tránh re-render không cần thiết trong React?"
+            ]
+        },
+        {
+            "keywords": ["node", "nodejs", "express"],
+            "name": "Node.js",
+            "questions": [
+                "Được rồi, trong Node.js, bạn hiểu cơ chế bất đồng bộ (Asynchronous) và Event Loop cơ bản ra sao?",
+                "Trong Express.js, bạn hiểu Middleware hoạt động theo luồng như thế nào?",
+                "Khi xử lý một tác vụ nặng tốn CPU (CPU-intensive) trong Node.js, giải pháp kiến trúc của bạn là gì?"
+            ]
+        },
+        {
+            "keywords": ["sql", "database", "cơ sở dữ liệu", "mysql", "postgres"],
+            "name": "Cơ sở dữ liệu SQL",
+            "questions": [
+                "Được rồi, trong SQL, bạn hãy giải thích sự khác nhau cơ bản giữa INNER JOIN và LEFT JOIN nhé?",
+                "Khi một câu lệnh SQL query chạy chậm trên bảng dữ liệu lớn, các bước bạn kiểm tra và tối ưu Index là gì?",
+                "Bạn hiểu 4 tính chất ACID trong Database Transaction như thế nào và vì sao nó quan trọng?"
+            ]
+        },
+        {
+            "keywords": ["oop", "hướng đối tượng", "lập trình hướng đối tượng"],
+            "name": "Lập trình hướng đối tượng (OOP)",
+            "questions": [
+                "Được rồi, trong OOP, bạn có thể nêu sự khác nhau cơ bản giữa Interface và Abstract Class được không?",
+                "Trong 4 tính chất của OOP, bạn tâm đắc nhất tính chất nào và trong code đồ án bạn áp dụng nó ở đâu?",
+                "Bạn hiểu nguyên lý Dependency Inversion (chữ D trong SOLID) như thế nào trong thiết kế phần mềm?"
+            ]
+        },
+        {
+            "keywords": ["git", "github"],
+            "name": "Git & Quản lý mã nguồn",
+            "questions": [
+                "Được rồi, với Git, bạn hãy phân biệt sự khác nhau giữa git pull và git fetch nhé?",
+                "Khi gặp Git Merge Conflict trong dự án nhóm, quy trình bạn xử lý an toàn để không mất code là gì?"
+            ]
+        },
+        {
+            "keywords": ["docker", "devops"],
+            "name": "Docker cơ bản",
+            "questions": [
+                "Được rồi, với Docker, bạn có thể phân biệt sự khác nhau cơ bản giữa Container và Image không?",
+                "Bạn đã từng viết file Dockerfile để đóng gói một ứng dụng backend bao giờ chưa?"
+            ]
+        }
+    ]
+
+    all_asked = [current_question]
+    if history:
+        all_asked.extend([h.get("question_text", "") for h in history if h.get("question_text")])
+
+    def pick_next_unique_tech_question(questions_list: list, default_q: str) -> str:
+        for q in questions_list:
+            q_lower = q.lower()
+            already = any(
+                p.lower() == q_lower or
+                ("arraylist" in q_lower and "linkedlist" in q_lower and "arraylist" in p.lower() and "linkedlist" in p.lower()) or
+                ("list" in q_lower and "tuple" in q_lower and "list" in p.lower() and "tuple" in p.lower()) or
+                ("==" in q_lower and "===" in q_lower and "==" in p.lower() and "===" in p.lower())
+                for p in all_asked
+            )
+            if not already:
+                return q
+        return default_q
+
+    # 1. Kiểm tra ứng viên chủ động xin đổi chủ đề (PIVOT_REQUEST)
+    pivot_triggers = [
+        "hỏi em về", "hỏi về", "chuyển sang", "đổi câu", "đổi chủ đề", "hỏi phần khác",
+        "hỏi em câu khác", "chuyển qua", "hỏi sang", "đổi sang", "chủ đề khác", "câu hỏi khác",
+        "em tự tin về", "thay vì câu này", "xin phép bỏ qua câu"
+    ]
+    matched_tech = next((t for t in tech_topics if any(k in lower_ans for k in t["keywords"])), None)
+    is_explicit_pivot = any(k in lower_ans for k in pivot_triggers)
+
+    if is_explicit_pivot:
+        target_topic = matched_tech["name"] if matched_tech else "phần kiến thức bạn tự tin"
+        fallback_pivot_q = pick_next_unique_tech_question(
+            matched_tech["questions"],
+            f"Trong {target_topic}, bạn tự tin nhất với tính năng nào đã từng trực tiếp xây dựng?"
+        ) if matched_tech else "Được rồi! Trong các công nghệ hoặc công cụ mà bạn đã làm quen, bạn cảm thấy tự tin và muốn chia sẻ về phần nào nhất?"
+
+        res = {
+            "intent": "PIVOT_REQUEST",
+            "turn_score": 4.0,
+            "feedback_phrase": f"Được chứ, không sao cả! Chúng ta cùng trao đổi về {target_topic} nhé.",
+            "next_question": fallback_pivot_q,
+            "critique": f"Ứng viên chủ động đề xuất chuyển sang trao đổi về {target_topic}. Giám khảo đồng thuận và hỏi câu hỏi nền tảng vừa sức.",
+            "is_pivot": True,
+            "should_advance_stage": True
+        }
+        print_adaptive_turn_terminal_log(stage_index, stage_name, current_question, ans_clean, res)
+        return res
+
+    # 2. Kiểm tra ứng viên không biết / kêu khó / xin qua câu (DONT_KNOW)
+    is_dont_know = any(k in lower_ans for k in [
+        "không biết", "chưa biết", "chưa rõ", "chưa từng", "chịu", "qua câu", "bỏ qua",
+        "chưa tìm hiểu", "em không rành", "mình không biết", "khó quá", "chưa học", "chưa làm", "quên rồi"
+    ])
     
     if is_dont_know:
+        brief_phrases = [
+            "Không sao cả, kiến thức công nghệ rất rộng và ai cũng có thế mạnh riêng. Chúng ta chuyển sang một phần quen thuộc và nhẹ nhàng hơn nhé!",
+            "Được rồi, không vấn đề gì! Mình chuyển sang một chủ đề dễ thở hơn nhé.",
+            "Tôi ghi nhận rồi, chúng ta cùng đổi sang một nội dung gần gũi với công việc hàng ngày nhé."
+        ]
+        gentle_fallback_questions = [
+            "Trong quá trình tự học và làm bài tập, khi code gặp lỗi bug, công cụ hoặc cách debug quen thuộc nhất mà bạn hay dùng là gì?",
+            "Khi tiếp cận một công nghệ hoặc ngôn ngữ mới, phương pháp tự học và tra cứu tài liệu hiệu quả nhất của bạn là gì?",
+            "Ngoài phần vừa rồi ra, trong các bài tập hoặc dự án đã từng làm, bạn tự tin nhất với tính năng nào?",
+            "Trong quá trình làm việc nhóm, bạn thường dùng Git với những lệnh cơ bản nào để quản lý mã nguồn?"
+        ]
+        picked_q = pick_next_unique_tech_question(gentle_fallback_questions, gentle_fallback_questions[0])
         res = {
             "intent": "DONT_KNOW",
-            "turn_score": 1.0,
-            "feedback_phrase": "Tôi hiểu rồi, trong kỹ thuật chúng ta luôn có những mảng mới cần thời gian trau dồi. Không sao cả, chúng ta hãy cùng chuyển sang một chủ đề khác nhé.",
-            "next_question": default_next_question or f"Vậy ngoài mảng đó ra, trong các bài toán kỹ thuật với {role}, bạn tự tin nhất với phần việc nào?",
-            "critique": "Ứng viên thừa nhận chưa có trải nghiệm về chủ đề này.",
+            "turn_score": 2.0,
+            "feedback_phrase": random.choice(brief_phrases),
+            "next_question": picked_q,
+            "critique": "Ứng viên chưa nắm vững phần này. Giám khảo chủ động hạ độ khó và chuyển sang chủ đề quen thuộc hàng ngày để giảm áp lực.",
             "is_pivot": True,
             "should_advance_stage": True
         }
@@ -528,11 +863,24 @@ Trả về duy nhất JSON hợp lệ (không kèm markdown):
         print_adaptive_turn_terminal_log(stage_index, stage_name, current_question, ans_clean, res)
         return res
 
+    is_good = len(ans_clean) > 40
+    resolved_next = default_next_question
+    is_default_dup = not resolved_next or any(p.lower() == resolved_next.lower() for p in all_asked)
+
+    if is_default_dup:
+        if matched_tech:
+            resolved_next = pick_next_unique_tech_question(
+                matched_tech["questions"],
+                "Trong đồ án thực tế gần nhất, tính năng phức tạp nhất mà bạn trực tiếp code là gì?"
+            )
+        else:
+            resolved_next = "Trong đồ án hoặc dự án gần nhất, bạn tâm đắc nhất với đoạn code hoặc module nào mà mình tự tay triển khai?"
+
     res = {
-        "intent": "GOOD" if len(ans_clean) > 40 else "SHALLOW",
-        "turn_score": 7.0 if len(ans_clean) > 40 else 4.0,
+        "intent": "GOOD" if is_good else "SHALLOW",
+        "turn_score": 7.0 if is_good else 4.0,
         "feedback_phrase": "Cảm ơn chia sẻ của bạn, tôi đã ghi nhận nội dung kỹ thuật này.",
-        "next_question": default_next_question or "Chúng ta hãy tiếp tục với câu hỏi tiếp theo nhé.",
+        "next_question": resolved_next,
         "critique": "Câu trả lời cơ bản đáp ứng yêu cầu câu hỏi.",
         "is_pivot": False,
         "should_advance_stage": True
@@ -587,7 +935,7 @@ QUY TẮC CHẤM ĐIỂM THEO CHUẨN CẤP BẬC {lvl.upper()}:
 QUY TẮC TÍNH ĐIỂM NGHIÊM NGẶT:
 1. Chấm điểm từng câu dựa trên sự đối chiếu trực tiếp giữa CÂU HỎI và CÂU TRẢ LỜI:
    - Nếu ứng viên trả lời "không biết", "chưa học", im lặng hoặc từ chối trả lời: Câu đó chỉ được từ 0.0 đến 2.0 / 10 điểm.
-   - Nếu ứng viên trả lời sai kiến thức cốt lõi, lạc đề, hoặc nói linh tinh: Chỉ từ 1.0 đến 3.0 / 10 điểm.
+   - Nếu ứng viên chủ động xin chuyển hướng sang chủ đề khác (ví dụ: xin hỏi Java Core/OOP): Cho 3.0 đến 4.0 / 10 điểm vì có tinh thần thẳng thắn, cầu thị.
    - Nếu trả lời đúng lý thuyết nhưng chưa có kinh nghiệm thực chiến/số liệu: 4.0 đến 6.0 / 10 điểm.
    - Nếu trả lời tốt, đúng trọng tâm, có tư duy rõ ràng theo chuẩn STAR: 7.0 đến 10.0 / 10 điểm.
 
@@ -603,6 +951,13 @@ QUY TẮC TÍNH ĐIỂM NGHIÊM NGẶT:
    - Nếu ứng viên có nhiều câu nói "không biết" hoặc trả lời sai (ví dụ {dont_know_count}/{total_turns} câu không biết):
      Tổng điểm CHỈ ĐƯỢC DAO ĐỘNG TỪ 15 ĐẾN 45 ĐIỂM, và is_passed BẮT BUỘC LÀ FALSE!
    - Chỉ khi ứng viên trả lời thực sự thuyết phục phần lớn các câu hỏi và total_score >= {cutoff} thì mới được is_passed = TRUE!
+
+QUY TẮC ĐẠO ĐỨC NGHỀ NGHIỆP & VĂN PHONG THẨM ĐỊNH (CONSTRUCTIVE EVALUATION):
+1. TUYỆT ĐỐI CẤM dùng từ ngữ quy chụp nhân cách, xúc phạm hoặc nặng lời như:
+   - "không trung thực", "dối trá", "gian lận", "bịa đặt", "chém gió", "né tránh thiếu thành thật".
+2. MỌI NHẬN XÉT PHẢI MANG TÍNH ĐÓNG GÓP XÂY DỰNG, KHÁCH QUAN VÀ TÔN TRỌNG (CONSTRUCTIVE FEEDBACK):
+   - Nếu ứng viên chưa trả lời được đồ án trong CV: Nhận xét khách quan: "Ứng viên chưa nắm vững chi tiết kỹ thuật/cơ chế vận hành của đồ án trong CV, cần rà soát lại kiến trúc code để tự tin hơn khi phỏng vấn."
+   - Nếu ứng viên chủ động xin chuyển hướng (ví dụ xin hỏi Java Core, OOP): Ghi nhận: "Ứng viên thẳng thắn chia sẻ thế mạnh và chủ động đề xuất trao đổi về Java Core/OOP thay vì đồ án; thể hiện tinh thần cầu thị nhưng cần củng cố thêm kiến thức đồ án để hoàn thiện hồ sơ."
 
 ĐỊNH DẠNG ĐẦU RA:
 Trả về duy nhất chuỗi JSON hợp lệ (không kèm markdown):

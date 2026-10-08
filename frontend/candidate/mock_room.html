@@ -12,6 +12,14 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400;1,600;1,700&display=swap" rel="stylesheet">
 
+  <!-- Three.js 3D WebGL Virtual Human Engine (Local First with CDN Fallback) -->
+  <script src="js/three.min.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      document.write('<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"><\/script>');
+    }
+  </script>
+
   <script>
     tailwind.config = {
       theme: {
@@ -175,6 +183,7 @@
       <span class="text-slate-400">Vị trí:</span>
       <span class="font-bold text-white" id="roomRoleHeader">Backend Software Engineer</span>
       <span class="text-sky-400 font-semibold" id="roomDifficultyHeader">(Hỏi xoáy: Mức 4/5)</span>
+      <span id="roomDurationBadge" class="px-2.5 py-0.5 rounded-md bg-slate-900 text-amber-300 border border-amber-500/40 text-[10px] font-mono font-bold">⏱️ 30 Phút</span>
     </div>
 
     <!-- Right: Timer & Exit Actions -->
@@ -182,11 +191,11 @@
       <!-- Session Timer -->
       <div class="flex items-center gap-1.5 bg-slate-800/90 border border-slate-700 px-3 py-1.5 rounded-lg text-xs font-mono font-bold text-sky-400">
         <svg class="w-3.5 h-3.5 text-sky-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        <span id="timerDisplay">14:28</span>
+        <span id="timerDisplay">30:00</span>
       </div>
 
       <!-- End Button -->
-      <button type="button" onclick="endInterview()" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg transition shadow-md shadow-rose-900/30">
+      <button type="button" onclick="confirmEarlyFinish()" class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-lg transition shadow-md shadow-rose-900/30" title="Nộp bài và hoàn tất buổi phỏng vấn">
         <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/></svg>
         <span>Kết thúc &amp; Chấm điểm</span>
       </button>
@@ -262,7 +271,7 @@
             <span class="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
             <span class="font-bold text-white tracking-wide">LIVE 1080p</span>
             <span class="text-slate-600">|</span>
-            <span id="avatarStateHUD" class="text-sky-300 font-semibold">AI Cử chỉ &amp; Khẩu hình Realtime</span>
+            <span id="avatarStateHUD" class="text-sky-300 font-semibold">🎙️ 3D Virtual Human &bull; Lip-Sync 60FPS</span>
           </div>
         </div>
 
@@ -272,8 +281,13 @@
           <div id="avatarAuraRing2" class="absolute w-60 sm:w-80 h-60 sm:h-80 rounded-full border border-sky-400/25 transition-all duration-300"></div>
         </div>
 
+        <!-- REALTIME 3D VIRTUAL HUMAN AVATAR STAGE (Three.js WebGL Engine) -->
+        <div id="avatar3DStage" class="absolute inset-0 flex items-center justify-center z-10 pointer-events-none overflow-hidden">
+          <canvas id="avatar3DCanvas" class="w-full h-full object-cover"></canvas>
+        </div>
+
         <!-- AVATAR UPPER BODY CHARACTER RIG (TORSO, HEAD, EYE BLINK, LIP-SYNC & GESTURING HANDS) -->
-        <div class="relative z-10 flex flex-col items-center justify-end h-full w-full max-w-md pointer-events-none select-none pb-2" id="avatarBodyRig">
+        <div class="relative z-10 flex flex-col items-center justify-end h-full w-full max-w-md pointer-events-none select-none pb-2 opacity-0" id="avatarBodyRig">
           
           <!-- HEAD & FACE RIG -->
           <div class="relative z-20 flex flex-col items-center transition-transform duration-300 head-sway" id="avatarHeadRig" style="transform-origin: bottom center;">
@@ -370,13 +384,13 @@
       <div class="relative z-20 p-4 sm:p-6 space-y-2.5">
         
         <!-- Live Audio Waveform Equalizer Bar & Current Stage Indicator (NO QUESTION COUNT) -->
-        <div class="flex items-center justify-between glass-panel px-4 py-2 rounded-xl">
-          <div class="flex items-center gap-2.5">
+        <div class="flex items-center justify-between glass-panel px-4 py-2 rounded-xl flex-wrap gap-2">
+          <div class="flex items-center gap-2.5 flex-wrap">
             <span class="text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5" id="speakerStatus">
               <span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span>
               Alex Chen đang nói:
             </span>
-            <div class="flex items-end gap-1 h-4 w-20" id="audioEqualizer">
+            <div class="flex items-end gap-1 h-4 w-16" id="audioEqualizer">
               <span class="w-1 bg-sky-400 rounded-full wave-bar h-2"></span>
               <span class="w-1 bg-sky-400 rounded-full wave-bar h-4"></span>
               <span class="w-1 bg-sky-400 rounded-full wave-bar h-3"></span>
@@ -385,9 +399,34 @@
               <span class="w-1 bg-sky-400 rounded-full wave-bar h-4"></span>
               <span class="w-1 bg-sky-400 rounded-full wave-bar h-1"></span>
             </div>
+
+            <!-- DYNAMIC 3-BRANCH STRATEGY BADGE (NHÁNH THÍCH ỨNG REALTIME) -->
+            <div id="adaptiveBranchBadge" class="hidden items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-bold border transition-all">
+              <span id="adaptiveBranchIcon">🚀</span>
+              <span id="adaptiveBranchTitle">Thử thách Đào sâu (+1 Lv)</span>
+            </div>
           </div>
 
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2.5">
+            <!-- COMPETENCY FOCUS PILL (TRỌNG TÂM NĂNG LỰC) -->
+            <div id="competencyFocusPill" class="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-slate-300 bg-slate-900/90 px-2.5 py-1 rounded-lg border border-slate-700/80 font-mono shadow-sm">
+              <span class="text-sky-400 font-bold">🎯 Trọng tâm:</span>
+              <span id="competencyFocusText" class="text-slate-200">Kiến trúc &amp; Đồ án</span>
+            </div>
+
+            <!-- BLAZE AI VOICE SELECTOR (ĐỔI GIỌNG PHỎNG VẤN) -->
+            <div class="flex items-center gap-1.5">
+              <select id="blazeVoiceSelector" onchange="onVoiceChange(this.value)" class="bg-slate-900/90 text-[11px] sm:text-xs font-semibold text-slate-200 border border-slate-700/80 rounded-lg px-2 sm:px-2.5 py-1.5 focus:outline-none focus:border-sky-500 cursor-pointer shadow-sm hover:border-sky-400 transition">
+                <option value="HN-Nam-2-BL" selected>🎙️ Nam BTV: Khắc Cường</option>
+                <option value="HN-Nam-3-BL">🎙️ Nam BTV: Thanh Tùng</option>
+                <option value="quangminh_mc">🎙️ Nam MC: Quang Minh</option>
+                <option value="Nam-AdamTiktok">🎙️ Nam Sài Gòn: Adam</option>
+                <option value="HN-Nu-1-TM">🎙️ Nữ BTV: Hương Giang</option>
+                <option value="HN-Pod-Nu-NgocNhu">🎙️ Nữ Podcast: Ngọc Như</option>
+                <option value="HCM-Nar-Nu-SaleThuyVy">🎙️ Nữ Sài Gòn: Thúy Vy</option>
+              </select>
+            </div>
+
             <button type="button" onclick="repeatQuestion()" class="text-xs text-sky-400 hover:text-sky-300 font-semibold flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-sky-500/10 hover:bg-sky-500/20 border border-sky-500/30 transition">
               <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
               <span>Nghe lại</span>
@@ -396,7 +435,12 @@
         </div>
 
         <!-- Live Subtitle Box (Toàn bộ chiều rộng, không bị che khuất) -->
-        <div class="glass-panel p-4 sm:p-5 rounded-2xl border-l-4 border-[#2980B9] shadow-xl">
+        <div id="liveSubtitleBox" class="glass-panel p-4 sm:p-5 rounded-2xl border-l-4 border-[#2980B9] shadow-xl transition-all duration-300">
+          <!-- Subtle Tech Lead Reasoning Banner -->
+          <div id="branchReasonBanner" class="hidden mb-2.5 text-[11px] text-slate-300 items-center gap-2 pb-2 border-b border-slate-800/80">
+            <span id="branchReasonDot" class="w-2 h-2 rounded-full bg-sky-400 shrink-0 animate-ping"></span>
+            <span id="branchReasonText" class="text-slate-300"></span>
+          </div>
           <p class="text-sm sm:text-base font-semibold text-slate-100 leading-relaxed" id="liveSubtitleText">
             "Chào mừng bạn đến với phòng phỏng vấn kỹ thuật của TalentAI! Giám khảo AI đang sẵn sàng bắt đầu buổi phỏng vấn cùng bạn..."
           </p>
@@ -513,18 +557,18 @@
   <div id="finishModal" class="hidden fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
     <div class="max-w-md w-full bg-slate-900 border border-slate-700 rounded-3xl p-6 sm:p-8 text-center space-y-6 shadow-2xl relative animate-scale-up">
       
-      <div id="modalIconContainer" class="w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-3xl font-extrabold shadow-lg">
-        <span id="modalIconSymbol">✓</span>
+      <div id="modalIconContainer" class="w-16 h-16 mx-auto rounded-2xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400 text-3xl font-extrabold shadow-lg">
+        <span id="modalIconSymbol">⏳</span>
       </div>
 
       <div>
-        <div id="modalBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-800">
-          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-          <span id="modalBadgeText">✓ ĐẠT CHUẨN VÒNG 1 &bull; VƯỢT NGƯỠNG CUT-OFF (&ge;80đ)</span>
+        <div id="modalBadgeStatus" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-950 text-sky-400 text-xs font-bold uppercase tracking-wider mb-2 border border-sky-800">
+          <span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span>
+          <span id="modalBadgeText">⏳ HỘI ĐỒNG AI ĐANG CHẤM ĐIỂM STAR THỰC TẾ...</span>
         </div>
         <h3 class="text-2xl font-bold text-white" id="modalTitle">Hoàn Tất Buổi Phỏng Vấn AI!</h3>
         <p class="text-xs text-slate-300 mt-2 leading-relaxed" id="modalSubSummary">
-          Động cơ AI đã tổng kết câu trả lời của bạn theo khung chuẩn <strong>STAR Rubric</strong> và <span id="modalForwardText">tự động chuyển tiếp hồ sơ tới Hội đồng tuyển dụng</span>.
+          Đang kết nối <strong>Google Gemini AI</strong> để phân tích đối chiếu từng câu hỏi &amp; câu trả lời theo chuẩn STAR...
         </p>
       </div>
 
@@ -532,10 +576,10 @@
       <div class="bg-slate-800/80 rounded-2xl p-4 border border-slate-700 space-y-3">
         <div class="flex items-center justify-between text-xs">
           <span class="text-slate-400">Điểm STAR Tổng Kết:</span>
-          <span class="font-extrabold text-emerald-400 text-xl font-mono" id="modalScoreText">88 / 100 Điểm</span>
+          <span class="font-extrabold text-sky-400 text-xl font-mono animate-pulse" id="modalScoreText">Đang tính điểm...</span>
         </div>
         <div class="w-full bg-slate-700 h-2 rounded-full overflow-hidden">
-          <div id="modalScoreBar" class="bg-emerald-500 h-full rounded-full transition-all duration-700" style="width: 88%"></div>
+          <div id="modalScoreBar" class="bg-sky-500 h-full rounded-full transition-all duration-700 animate-pulse" style="width: 25%"></div>
         </div>
         <div class="flex justify-between text-[11px] text-slate-400 pt-1">
           <span>Ngưỡng yêu cầu: <strong class="text-emerald-400" id="modalCutoffText">&ge; 80đ</strong></span>
@@ -553,10 +597,10 @@
 
       <!-- Actions -->
       <div class="space-y-2.5">
-        <a href="application_status.html" class="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg transition">
+        <a id="btnViewApplicationStatus" href="application_status.html" class="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-sm shadow-lg transition">
           <span>Theo Dõi Tiến Độ Tuyển Dụng (Status) &rarr;</span>
         </a>
-        <a href="report_detail.html" class="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs shadow-md transition">
+        <a id="btnViewReportDetail" href="report_detail.html" class="w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-[#2980B9] hover:bg-[#1F6B9E] text-white font-bold text-xs shadow-md transition">
           <span>Xem Báo Cáo Điểm STAR Chi Tiết</span>
         </a>
       </div>
@@ -595,6 +639,8 @@
     ];
 
     let currentStageIndex = 0;
+    let currentTurnNumber = 1;
+    let activeLiveQuestionText = "";
     let followUpAskedInCurrentStage = false;
     let questionsList = [];
 
@@ -611,6 +657,19 @@
         tag: 'VP of Engineering',
         role: 'Phỏng vấn Chuẩn STAR &bull; Quản trị Dự án, Lãnh đạo & Xử lý Xung đột',
         photo: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80'
+      },
+      // Chưa có ảnh riêng: giữ ảnh hiện tại, chỉ đổi tên/giọng đọc cho khớp giám khảo đã chọn ở setup.html
+      'David Miller': {
+        name: 'David Miller',
+        tag: 'Senior Tech Director',
+        role: 'Hỏi xoáy gắt &bull; Tư duy giải quyết lỗi & Áp lực',
+        photo: null
+      },
+      'Rachel Vance': {
+        name: 'Rachel Vance',
+        tag: 'Executive Vice President',
+        role: 'Lãnh đạo C-Level &bull; Tư duy kinh doanh & Dẫn dắt đội ngũ',
+        photo: null
       },
       'Nguyễn Hữu Nam': {
         name: 'Nguyễn Hữu Nam',
@@ -629,29 +688,63 @@
 
       // 1. Backend / Java / Software Engineer Track
       if (roleLower.includes('backend') || roleLower.includes('java') || roleLower.includes('software') || roleLower.includes('engineer') || roleLower.includes('lập trình') || roleLower.includes('c#') || roleLower.includes('golang') || roleLower.includes('python')) {
+        const isDavid = p.includes('David');
+        const isSarah = p.includes('Sarah');
+        const isRachel = p.includes('Rachel');
+
         if (lvl === 'intern') {
           return [
-            `Xin chào bạn, tôi là ${p}, rất vui được phỏng vấn bạn cho vị trí Thực tập sinh (Intern) ${roleTitle} tại ${company} hôm nay! Bạn cảm thấy thế nào và đã sẵn sàng chưa?`,
-            `Đầu tiên, bạn hãy giới thiệu ngắn gọn về bản thân, chuyên ngành tại trường và lý do bạn muốn bắt đầu định hướng sự nghiệp với Backend nhé?`,
-            `Trong các bài tập lớn hoặc đồ án môn học ở trường được nêu trong CV của bạn, bạn tự hào nhất về đồ án nào và phần việc bạn tự tay code là gì?`,
-            `Về mặt kiến thức nền tảng Lập trình hướng đối tượng (OOP), bạn giải thích thế nào về 4 tính chất OOP và trong đồ án bạn áp dụng tính Kế thừa (Inheritance) hoặc Đa hình (Polymorphism) ở đâu?`,
-            `Hãy kể về một tình huống thực tế khi làm bài tập lớn nhóm ở trường, khi gặp phải một lỗi bug khó hoặc thành viên trong nhóm trễ hạn, bạn đã xử lý theo chuẩn STAR ra sao?`,
+            `Xin chào bạn, tôi là ${p}, rất vui được phỏng vấn bạn cho vị trí Thực tập sinh ${roleTitle} tại ${company} hôm nay! Bạn cảm thấy thế nào và đã sẵn sàng chưa?`,
+            `Đầu tiên, bạn hãy giới thiệu ngắn gọn về bản thân, chuyên ngành và cơ duyên đưa bạn định hướng làm việc với Backend nhé?`,
+            isDavid 
+              ? `Trong các bài tập lớn trong CV, bạn tự tay viết bao nhiêu dòng code và module nào do chính bạn chịu trách nhiệm từ đầu đến cuối?`
+              : isSarah
+              ? `Trong bài tập lớn ở trường, bạn và các bạn trong nhóm đã phân chia công việc và phối hợp giao tiếp với nhau như thế nào?`
+              : `Trong các bài tập lớn hoặc đồ án môn học ở trường nêu trong CV, bạn tự hào nhất về đồ án nào và phần việc bạn tự tay code là gì?`,
+            isDavid
+              ? `Về OOP, bạn giải thích ngắn gọn đa hình và chỉ rõ một trường hợp bạn từng thiết kế sai kế thừa gây lỗi hoặc khó bảo trì?`
+              : isSarah
+              ? `Khi học Lập trình hướng đối tượng (OOP) và làm bài tập lớn, khi đồng đội chưa hiểu rõ cấu trúc class, bạn đã chia sẻ và hướng dẫn họ ra sao?`
+              : `Về mặt kiến thức nền tảng Lập trình hướng đối tượng (OOP), bạn giải thích thế nào về 4 tính chất OOP và trong đồ án bạn áp dụng tính Kế thừa hoặc Đa hình ở đâu?`,
+            isDavid
+              ? `Kể về một tình huống khi bài tập nhóm bị trễ deadline hoặc bạn gặp một con bug hóc búa, hành động cụ thể từng bước của bạn để giải quyết dứt điểm là gì?`
+              : isSarah
+              ? `Hãy kể về một tình huống khi các thành viên trong nhóm bất đồng quan điểm về hướng làm đồ án, bạn đã lắng nghe và dung hòa xung đột ra sao theo chuẩn STAR?`
+              : `Hãy kể về một tình huống thực tế khi làm bài tập lớn nhóm ở trường, khi gặp phải một bug khó hoặc thành viên trễ hạn, bạn đã xử lý theo chuẩn STAR ra sao?`,
             `Điều gì tạo cho bạn động lực lớn nhất khi đăng ký thực tập vị trí ${roleTitle}, và bạn kỳ vọng học hỏi được những gì nhiều nhất trong kỳ thực tập này?`,
-            `Theo bạn tự đánh giá, điểm mạnh về khả năng tự học hoặc tư duy logic của bạn là gì, và đâu là một kiến thức kỹ thuật bạn đang nỗ lực học thêm?`,
-            `Về môi trường thực tập tại ${company}, bạn kỳ vọng một người hướng dẫn (Mentor) và văn hóa hỗ trợ thực tập sinh như thế nào để giúp bạn tiến bộ nhanh nhất?`,
-            `Tôi đã hoàn thành các câu hỏi khảo sát năng lực. Bạn có câu hỏi nào muốn dành cho tôi về chương trình đào tạo thực tập sinh hoặc dự án tại ${company} không?`,
+            `Theo bạn tự đánh giá, đâu là điểm mạnh nhất của bạn và đâu là một kiến thức kỹ thuật bạn đang nỗ lực học thêm mỗi ngày?`,
+            isSarah
+              ? `Bạn kỳ vọng văn hóa đội ngũ, sự đồng cảm và sự hỗ trợ từ Mentor tại ${company} như thế nào để bạn tự tin hòa nhập?`
+              : `Về môi trường thực tập tại ${company}, bạn kỳ vọng một người hướng dẫn (Mentor) và quy trình kỹ thuật như thế nào để giúp bạn tiến bộ nhanh nhất?`,
+            `Tôi đã hoàn thành các câu hỏi khảo sát năng lực. Bạn có câu hỏi nào muốn dành cho tôi về chương trình đào tạo hoặc dự án tại ${company} không?`,
             `Cảm ơn bạn rất nhiều vì buổi trao đổi rất tự tin và cởi mở hôm nay! Buổi phỏng vấn xin được khép lại tại đây, hệ thống sẽ tổng hợp bảng phân tích năng lực chi tiết cho bạn ngay bây giờ.`
           ];
         } else if (lvl === 'fresher') {
           return [
             `Xin chào bạn, tôi là ${p}, rất vui được phỏng vấn bạn cho vị trí Fresher ${roleTitle} tại ${company} hôm nay! Bạn đã sẵn sàng để chúng ta bắt đầu chưa?`,
             `Đầu tiên, bạn hãy giới thiệu ngắn gọn về bản thân và quá trình bạn làm chủ Tech Stack phục vụ cho vị trí ${roleTitle} nhé?`,
-            `Trong đồ án tốt nghiệp hoặc dự án cá nhân gần nhất trong CV, bạn tâm đắc nhất về module nào và luồng dữ liệu (Data flow) của nó hoạt động ra sao?`,
-            `Về mặt chuyên môn kỹ thuật, khi một HTTP Request đi từ Client vào Database và trả ngược về, bạn hãy giải thích vòng đời của Request đó và cách bạn thiết kế RESTful API chuẩn?`,
-            `Hãy kể về một tình huống thực tế khi deploy sản phẩm bị lỗi (như lỗi kết nối DB hoặc CORS) hoặc API phản hồi chậm, bạn đã chủ động debug và khắc phục theo chuẩn STAR ra sao?`,
+            isDavid
+              ? `Trong đồ án trong CV, module phức tạp nhất do chính bạn viết là gì? Hãy chỉ rõ số liệu lượng request hoặc bảng dữ liệu mà module đó xử lý?`
+              : isSarah
+              ? `Khi làm đồ án tốt nghiệp, vai trò kết nối giữa các thành viên và phong cách làm việc nhóm của bạn đã phát huy hiệu quả ra sao?`
+              : `Trong đồ án tốt nghiệp hoặc dự án cá nhân gần nhất trong CV, bạn tâm đắc nhất về module nào và luồng dữ liệu (Data flow) của nó hoạt động ra sao?`,
+            isDavid
+              ? `Về chuyên môn Java và SQL: Nếu một truy vấn lấy dữ liệu chạy mất 5 giây gây nghẽn kết nối, tại sao bạn không dùng Index hoặc Explain Query để tối ưu? Hãy nêu giải pháp đo đạc cụ thể.`
+              : isSarah
+              ? `Khi nhận phản hồi (feedback) khắt khe về chất lượng code hoặc thiết kế từ giảng viên hay đồng nghiệp, bạn tiếp nhận và cải thiện tâm lý ra sao?`
+              : `Về mặt chuyên môn kỹ thuật, khi một HTTP Request đi từ Client vào Database và trả ngược về, bạn hãy giải thích vòng đời của Request đó và cách bạn thiết kế RESTful API chuẩn?`,
+            isDavid
+              ? `Hãy kể về sự cố nghiêm trọng nhất khi bạn deploy sản phẩm (lỗi kết nối DB, crash hoặc trễ deadline), bạn đã chịu trách nhiệm và khắc phục theo chuẩn STAR ra sao?`
+              : isSarah
+              ? `Hãy kể về một tình huống thực tế khi làm việc nhóm nảy sinh căng thẳng về tiến độ hoặc giải pháp kỹ thuật, bạn đã chủ động giải quyết theo chuẩn STAR ra sao?`
+              : `Hãy kể về một tình huống thực tế khi deploy sản phẩm bị lỗi hoặc API phản hồi chậm, bạn đã chủ động debug và khắc phục theo chuẩn STAR ra sao?`,
             `Mục tiêu phát triển chuyên môn kỹ thuật trong 2 đến 3 năm tới của bạn tại ${company} là gì?`,
             `Theo bạn tự đánh giá, đâu là thế mạnh cạnh tranh lớn nhất của bạn ở vị trí này, và một điểm hạn chế về công nghệ bạn nhận thấy mình đang tiếp tục rèn luyện?`,
-            `Về quy trình làm việc tại ${company}, bạn kỳ vọng một văn hóa Engineering (như Code Review, tài liệu API, Agile/Scrum) như thế nào?`,
+            isDavid
+              ? `Bạn chịu được áp lực deadline và quy trình Code Review nghiêm ngặt đến mức nào khi gia nhập đội ngũ Engineering tại ${company}?`
+              : isSarah
+              ? `Về quy trình làm việc tại ${company}, bạn kỳ vọng văn hóa Engineering đề cao sự tôn trọng, minh bạch và gắn kết đội ngũ như thế nào?`
+              : `Về quy trình làm việc tại ${company}, bạn kỳ vọng một văn hóa Engineering (như Code Review, tài liệu API, Agile/Scrum) như thế nào?`,
             `Tôi đã hoàn thành các câu hỏi khảo sát. Bạn có câu hỏi hoặc thắc mắc nào muốn dành cho tôi về dự án và công nghệ tại ${company} không?`,
             `Cảm ơn bạn rất nhiều vì buổi trao đổi rất chất lượng hôm nay! Buổi phỏng vấn xin được khép lại tại đây, hệ thống sẽ tổng hợp bảng điểm STAR chi tiết cho bạn ngay bây giờ.`
           ];
@@ -660,12 +753,26 @@
           return [
             `Xin chào bạn, tôi là ${p}, rất vui được đồng hành cùng bạn trong buổi phỏng vấn vị trí ${roleTitle} tại ${company} hôm nay! Bạn cảm thấy thế nào và đã sẵn sàng để chúng ta bắt đầu chưa?`,
             `Tuyệt vời! Trước tiên, bạn hãy tóm tắt ngắn gọn về bản thân, các dự án thực chiến và Tech Stack chủ lực mà bạn đã làm việc thực tế tại doanh nghiệp nhé?`,
-            `Trong các dự án thực tế được nêu trong CV của bạn, module hoặc hệ thống backend phức tạp nhất mà bạn trực tiếp phụ trách là gì và đóng góp cốt lõi của bạn ra sao?`,
-            `Về mặt chuyên môn backend tại ${company}, khi hệ thống phải xử lý lượng request cao đồng thời ghi vào database, bạn giải quyết bài toán race condition, deadlock và tối ưu truy vấn Index theo chuẩn STAR ra sao?`,
-            `Hãy kể về một tình huống thực tế khi hệ thống production gặp sự cố khẩn cấp (như nghẽn kết nối, CPU cao hoặc lỗi dữ liệu) hoặc deadline bị siết chặt, bạn đã chủ động xử lý theo chuẩn STAR ra sao?`,
+            isDavid
+              ? `Trong CV của bạn, hệ thống backend nào bạn tự tay thiết kế mang lại tác động lớn nhất? Các chỉ số latency, throughput cụ thể trước và sau khi tối ưu là bao nhiêu?`
+              : isSarah
+              ? `Khi bạn onboard vào một dự án có codebase cũ và nhiều technical debt, bạn đã hòa nhập với đội ngũ hiện tại và tạo dựng sự tin tưởng ra sao?`
+              : `Trong các dự án thực tế được nêu trong CV của bạn, module hoặc hệ thống backend phức tạp nhất mà bạn trực tiếp phụ trách là gì và đóng góp cốt lõi của bạn ra sao?`,
+            isDavid
+              ? `Khi xảy ra sự cố deadlock hoặc race condition trên production khiến doanh thu bị ảnh hưởng, tại sao giải pháp của bạn lại vượt trội hơn các giải pháp khác? Hãy phản biện chi tiết.`
+              : isSarah
+              ? `Khi bạn và Tech Lead hoặc Product Owner có sự bất đồng lớn về việc ưu tiên refactor code hay ra tính năng mới, bạn đã đàm phán và thuyết phục như thế nào?`
+              : `Về mặt chuyên môn backend tại ${company}, khi hệ thống phải xử lý lượng request cao đồng thời ghi vào database, bạn giải quyết bài toán race condition, deadlock và tối ưu truy vấn Index theo chuẩn STAR ra sao?`,
+            isDavid
+              ? `Hãy kể về một lần dự án bị outage nghiêm trọng do lỗi kỹ thuật của chính bạn hoặc team, bạn đã phản ứng dưới áp lực và xử lý theo chuẩn STAR ra sao?`
+              : isSarah
+              ? `Hãy kể về một tình huống bạn phải hỗ trợ một đồng nghiệp junior đang gặp khó khăn hoặc một mâu thuẫn nội bộ trong nhóm, bạn đã xử lý theo chuẩn STAR ra sao?`
+              : `Hãy kể về một tình huống thực tế khi hệ thống production gặp sự cố khẩn cấp (như nghẽn kết nối, CPU cao hoặc lỗi dữ liệu) hoặc deadline bị siết chặt, bạn đã chủ động xử lý theo chuẩn STAR ra sao?`,
             `Điều gì tạo cho bạn động lực lớn nhất khi làm việc ở vị trí ${roleTitle}, và mục tiêu phát triển chuyên môn trong 2 đến 3 năm tới của bạn là gì?`,
             `Theo bạn tự đánh giá, đâu là thế mạnh cạnh tranh lớn nhất của bạn ở vị trí này, và một sự đánh đổi kỹ thuật (Trade-offs) bạn từng cân nhắc giữa tiến độ và hiệu năng là gì?`,
-            `Về điều kiện và môi trường làm việc tại ${company}, bạn kỳ vọng một văn hóa đội nhóm và quy trình kỹ thuật như thế nào để có thể phát huy tối đa tiềm năng?`,
+            isSarah
+              ? `Bạn kỳ vọng văn hóa công ty hỗ trợ sự phát triển cá nhân, lắng nghe ý kiến phản biện và chăm sóc sức khỏe tinh thần ra sao tại ${company}?`
+              : `Về điều kiện và môi trường làm việc tại ${company}, bạn kỳ vọng một văn hóa đội nhóm và quy trình kỹ thuật như thế nào để có thể phát huy tối đa tiềm năng?`,
             `Tôi đã hoàn thành các câu hỏi khảo sát năng lực. Bây giờ, bạn có câu hỏi hoặc thắc mắc nào muốn dành cho tôi về kiến trúc hệ thống hoặc văn hóa làm việc tại ${company} không?`,
             `Cảm ơn bạn rất nhiều vì buổi phỏng vấn rất cởi mở, nhiệt huyết và chất lượng hôm nay! Buổi phỏng vấn xin được khép lại tại đây, hệ thống sẽ tổng hợp kết quả đánh giá và bảng điểm STAR chi tiết cho bạn ngay bây giờ.`
           ];
@@ -745,20 +852,620 @@
       return null;
     }
 
-    // ==================== AVATAR RIG: CỬ CHỈ, CHỚP MẮT & KHẨU HÌNH MIỆNG THEO GIỌNG NÓI ====================
+    // =========================================================================
+    // TALENTAI 3D VIRTUAL HUMAN AVATAR ENGINE (Three.js WebGL Real-time Engine)
+    // - Điêu khắc nhân vật 3D chuyên nghiệp: Đầu, tóc, mắt, xương hàm, môi, răng, vest
+    // - Khẩu hình miệng 3D (Viseme Lip-Sync) cử động mượt mà đồng bộ theo giọng nói (60 FPS)
+    // - Cử động sinh học tự nhiên: Nhịp thở, nghiêng đầu, chớp mắt, gật đầu lắng nghe
+    // - Đảm bảo 100% không ảnh hưởng đến bất kỳ luồng code nào khác
+    // =========================================================================
+    const Avatar3DEngine = {
+      initialized: false,
+      scene: null,
+      camera: null,
+      renderer: null,
+      clock: null,
+      avatarGroup: null,
+      headGroup: null,
+      jawGroup: null,
+      torsoGroup: null,
+      eyeL: null,
+      eyeR: null,
+      eyelidL: null,
+      eyelidR: null,
+      upperLip: null,
+      lowerLip: null,
+      teethUpper: null,
+      teethLower: null,
+      hairMesh: null,
+      headMesh: null,
+      neckMesh: null,
+      suitMesh: null,
+      tieMesh: null,
+      shirtMesh: null,
+      animFrameId: null,
+
+      // State
+      isSpeaking: false,
+      isListening: false,
+      targetJawOpen: 0,
+      currentJawOpen: 0,
+      targetMouthWidth: 1.0,
+      currentMouthWidth: 1.0,
+      isBlinking: false,
+      blinkProgress: 0,
+      nodTarget: 0,
+      nodCurrent: 0,
+      currentPersona: "Alex Chen",
+
+      // Audio analysis
+      audioCtx: null,
+      analyserNode: null,
+      audioDataArray: null,
+      connectedAudioSource: null,
+
+      // Bảng màu & đặc trưng nhân vật 3D
+      personasConfig: {
+        'Alex Chen': {
+          skinColor: 0xd49b7d,
+          hairColor: 0x18181b,
+          eyeColor: 0x3f2213,
+          suitColor: 0x0f172a,   // Midnight Navy Executive
+          shirtColor: 0xf8fafc,
+          tieColor: 0x2563eb,     // Royal Tech Blue
+          lipColor: 0xaa5447,
+          style: 'alex'
+        },
+        'Sarah Jenkins': {
+          skinColor: 0xf2c4b0,
+          hairColor: 0x3d2012,   // Chestnut layered
+          eyeColor: 0x1e3a8a,   // Sapphire / Hazel
+          suitColor: 0x1e293b,   // Slate Charcoal
+          shirtColor: 0xfff1f2,
+          tieColor: 0xe11d48,     // Elegant Rose
+          lipColor: 0xbe4b5e,
+          style: 'sarah'
+        },
+        'Nguyễn Hữu Nam': {
+          skinColor: 0xd8a183,
+          hairColor: 0x09090b,   // Modern Black Crop
+          eyeColor: 0x24180d,
+          suitColor: 0x334155,   // Dark Grey Suit
+          shirtColor: 0xe0f2fe,
+          tieColor: 0x0284c7,     // Ocean Blue
+          lipColor: 0xa85348,
+          style: 'nam'
+        }
+      },
+
+      init() {
+        const canvas = document.getElementById('avatar3DCanvas');
+        if (!canvas || typeof THREE === 'undefined') {
+          console.warn("Three.js not loaded or avatar3DCanvas missing, using fallback.");
+          return false;
+        }
+
+        try {
+          const container = canvas.parentElement || document.getElementById('avatarVideoFeed');
+          const width = container.clientWidth || 960;
+          const height = container.clientHeight || 540;
+
+          // 1. Renderer
+          this.renderer = new THREE.WebGLRenderer({
+            canvas: canvas,
+            alpha: true,
+            antialias: true,
+            powerPreference: "high-performance"
+          });
+          this.renderer.setSize(width, height);
+          this.renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+          this.renderer.toneMapping = THREE.ACESFilmicToneMapping;
+          this.renderer.toneMappingExposure = 1.15;
+
+          // 2. Scene & Camera (Góc máy 3D chân dung điện ảnh 38mm)
+          this.scene = new THREE.Scene();
+          this.camera = new THREE.PerspectiveCamera(38, width / height, 0.1, 100);
+          this.camera.position.set(0, 0.38, 2.75);
+          this.camera.lookAt(0, 0.34, 0);
+
+          this.clock = new THREE.Clock();
+
+          // 3. Hệ thống Ánh sáng Studio 3 Điểm chuyên nghiệp
+          this.setupLighting();
+
+          // 4. Dựng mô hình 3D Nhân vật Thực tế (Human Rig)
+          this.build3DCharacter(this.currentPersona);
+
+          // 5. Vòng lặp Render 60 FPS
+          this.animate();
+
+          // 6. Xử lý co giãn màn hình (Responsive Resize)
+          window.addEventListener('resize', () => this.handleResize());
+
+          // Ẩn avatar 2D phẳng cũ để nhường sân khấu chính cho 3D
+          const old2DRig = document.getElementById('avatarBodyRig');
+          if (old2DRig) old2DRig.style.display = 'none';
+
+          this.initialized = true;
+          console.log("✓ TalentAI 3D Virtual Human Engine initialized successfully with real-time lip-sync");
+          return true;
+        } catch (err) {
+          console.warn("3D Engine init error:", err);
+          return false;
+        }
+      },
+
+      setupLighting() {
+        // Ánh sáng môi trường
+        const ambient = new THREE.AmbientLight(0xffffff, 0.55);
+        this.scene.add(ambient);
+
+        // Key Light (Ánh sáng chính từ góc trên trước mặt)
+        const keyLight = new THREE.DirectionalLight(0xfff5ea, 1.35);
+        keyLight.position.set(1.8, 2.5, 2.2);
+        this.scene.add(keyLight);
+
+        // Fill Light (Ánh sáng phụ tông mát bên hông)
+        const fillLight = new THREE.DirectionalLight(0x7dd3fc, 0.7);
+        fillLight.position.set(-2.2, 1.2, 1.8);
+        this.scene.add(fillLight);
+
+        // Rim Light (Viền sáng xanh công nghệ từ phía sau tạo chiều sâu 3D đẳng cấp)
+        const rimLight = new THREE.PointLight(0x38bdf8, 2.4, 8);
+        rimLight.position.set(0, 1.8, -1.6);
+        this.scene.add(rimLight);
+
+        // Soft Bounce Light
+        const bounce = new THREE.DirectionalLight(0x1e293b, 0.4);
+        bounce.position.set(0, -2, 1);
+        this.scene.add(bounce);
+      },
+
+      build3DCharacter(personaName) {
+        if (this.avatarGroup) {
+          this.scene.remove(this.avatarGroup);
+        }
+
+        const cfg = this.personasConfig[personaName] || this.personasConfig['Alex Chen'];
+        this.avatarGroup = new THREE.Group();
+
+        // Material da PBR
+        const skinMat = new THREE.MeshStandardMaterial({
+          color: cfg.skinColor,
+          roughness: 0.55,
+          metalness: 0.04
+        });
+
+        // ----------------- A. THÂN TRÊN & TRANG PHỤC VEST CHUYÊN NGHIỆP -----------------
+        this.torsoGroup = new THREE.Group();
+        this.torsoGroup.position.set(0, -0.45, 0);
+
+        // Áo vest (Suit Blazer)
+        const suitGeo = new THREE.CylinderGeometry(0.38, 0.45, 0.85, 24);
+        suitGeo.scale(1.22, 1.0, 0.72);
+        this.suitMesh = new THREE.Mesh(suitGeo, new THREE.MeshStandardMaterial({
+          color: cfg.suitColor,
+          roughness: 0.85,
+          metalness: 0.08
+        }));
+        this.suitMesh.position.set(0, -0.15, 0);
+        this.torsoGroup.add(this.suitMesh);
+
+        // Ve áo vest (Lapels)
+        const lapelGeoL = new THREE.BoxGeometry(0.12, 0.45, 0.05);
+        lapelGeoL.rotateZ(-0.25);
+        const lapelL = new THREE.Mesh(lapelGeoL, new THREE.MeshStandardMaterial({ color: cfg.suitColor, roughness: 0.8 }));
+        lapelL.position.set(-0.16, 0.05, 0.28);
+        this.torsoGroup.add(lapelL);
+
+        const lapelGeoR = new THREE.BoxGeometry(0.12, 0.45, 0.05);
+        lapelGeoR.rotateZ(0.25);
+        const lapelR = new THREE.Mesh(lapelGeoR, new THREE.MeshStandardMaterial({ color: cfg.suitColor, roughness: 0.8 }));
+        lapelR.position.set(0.16, 0.05, 0.28);
+        this.torsoGroup.add(lapelR);
+
+        // Cổ áo sơ mi trắng (Shirt Collar)
+        this.shirtMesh = new THREE.Mesh(
+          new THREE.ConeGeometry(0.17, 0.22, 16, 1, true),
+          new THREE.MeshStandardMaterial({ color: cfg.shirtColor, roughness: 0.55 })
+        );
+        this.shirtMesh.rotation.x = Math.PI;
+        this.shirtMesh.position.set(0, 0.22, 0.18);
+        this.torsoGroup.add(this.shirtMesh);
+
+        // Cà vạt (Necktie)
+        const tieGeo = new THREE.CylinderGeometry(0.045, 0.065, 0.55, 8);
+        tieGeo.scale(1.0, 1.0, 0.25);
+        this.tieMesh = new THREE.Mesh(tieGeo, new THREE.MeshStandardMaterial({
+          color: cfg.tieColor,
+          roughness: 0.4,
+          metalness: 0.18
+        }));
+        this.tieMesh.position.set(0, -0.06, 0.27);
+        this.torsoGroup.add(this.tieMesh);
+
+        // Cổ (Neck)
+        this.neckMesh = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.125, 0.145, 0.28, 20),
+          skinMat
+        );
+        this.neckMesh.position.set(0, 0.25, 0);
+        this.torsoGroup.add(this.neckMesh);
+
+        this.avatarGroup.add(this.torsoGroup);
+
+        // ----------------- B. KHỐI ĐẦU & KHUÔN MẶT 3D ĐIỀU HƯỚNG -----------------
+        this.headGroup = new THREE.Group();
+        this.headGroup.position.set(0, 0.28, 0);
+
+        // Hộp sọ & Khuôn mặt (Head Skull)
+        const headGeo = new THREE.SphereGeometry(0.34, 32, 28);
+        headGeo.scale(0.92, 1.14, 0.98);
+        this.headMesh = new THREE.Mesh(headGeo, skinMat);
+        this.headGroup.add(this.headMesh);
+
+        // Mũi tự nhiên (Natural 3D Nose Group)
+        const noseGroup = new THREE.Group();
+        const bridgeGeo = new THREE.CylinderGeometry(0.018, 0.024, 0.11, 12);
+        bridgeGeo.scale(1.0, 1.0, 1.3);
+        const bridge = new THREE.Mesh(bridgeGeo, skinMat);
+        bridge.position.set(0, 0.035, 0.325);
+        bridge.rotation.x = -0.12;
+        noseGroup.add(bridge);
+
+        const tipGeo = new THREE.SphereGeometry(0.032, 16, 14);
+        tipGeo.scale(1.0, 0.85, 1.15);
+        const tip = new THREE.Mesh(tipGeo, skinMat);
+        tip.position.set(0, -0.015, 0.345);
+        noseGroup.add(tip);
+
+        const nostrilGeo = new THREE.SphereGeometry(0.018, 12, 10);
+        const alarL = new THREE.Mesh(nostrilGeo, skinMat);
+        alarL.position.set(-0.03, -0.018, 0.33);
+        const alarR = new THREE.Mesh(nostrilGeo, skinMat);
+        alarR.position.set(0.03, -0.018, 0.33);
+        noseGroup.add(alarL, alarR);
+        this.headGroup.add(noseGroup);
+
+        // Tai (Ears)
+        const earGeo = new THREE.SphereGeometry(0.065, 12, 12);
+        earGeo.scale(0.35, 1.1, 0.75);
+        const earL = new THREE.Mesh(earGeo, skinMat);
+        earL.position.set(-0.31, 0.02, -0.02);
+        this.headGroup.add(earL);
+
+        const earR = new THREE.Mesh(earGeo, skinMat);
+        earR.position.set(0.31, 0.02, -0.02);
+        this.headGroup.add(earR);
+
+        // ----------------- C. ĐÔI MẮT 3D TINH ANH CÓ CHỚP MẮT & ĐỒNG TỬ -----------------
+        const eyeMat = new THREE.MeshStandardMaterial({ color: 0xffffff, roughness: 0.1 });
+        const irisMat = new THREE.MeshStandardMaterial({ color: cfg.eyeColor, roughness: 0.25 });
+        const pupilMat = new THREE.MeshBasicMaterial({ color: 0x050505 });
+        const eyelidMat = new THREE.MeshStandardMaterial({ color: cfg.skinColor, roughness: 0.6 });
+
+        // Mắt trái (Hốc mắt sâu tự nhiên, không lồi nhãn cầu)
+        this.eyeL = new THREE.Group();
+        this.eyeL.position.set(-0.115, 0.07, 0.285);
+        const eyeSphereL = new THREE.Mesh(new THREE.SphereGeometry(0.038, 16, 16), eyeMat);
+        const irisL = new THREE.Mesh(new THREE.CircleGeometry(0.020, 20), irisMat);
+        irisL.position.set(0, 0, 0.037);
+        const pupilL = new THREE.Mesh(new THREE.CircleGeometry(0.009, 16), pupilMat);
+        pupilL.position.set(0, 0, 0.0375);
+        this.eyeL.add(eyeSphereL, irisL, pupilL);
+
+        // Mí mắt trái (Tự nhiên che nhẹ viền trên con ngươi)
+        const lidGeo = new THREE.SphereGeometry(0.040, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+        this.eyelidL = new THREE.Mesh(lidGeo, eyelidMat);
+        this.eyelidL.rotation.x = -0.65; // Mở mắt thư thái
+        this.eyeL.add(this.eyelidL);
+        this.headGroup.add(this.eyeL);
+
+        // Mắt phải
+        this.eyeR = new THREE.Group();
+        this.eyeR.position.set(0.115, 0.07, 0.285);
+        const eyeSphereR = new THREE.Mesh(new THREE.SphereGeometry(0.038, 16, 16), eyeMat);
+        const irisR = new THREE.Mesh(new THREE.CircleGeometry(0.020, 20), irisMat);
+        irisR.position.set(0, 0, 0.037);
+        const pupilR = new THREE.Mesh(new THREE.CircleGeometry(0.009, 16), pupilMat);
+        pupilR.position.set(0, 0, 0.0375);
+        this.eyeR.add(eyeSphereR, irisR, pupilR);
+
+        // Mí mắt phải
+        this.eyelidR = new THREE.Mesh(lidGeo, eyelidMat);
+        this.eyelidR.rotation.x = -0.65;
+        this.eyeR.add(this.eyelidR);
+        this.headGroup.add(this.eyeR);
+
+        // Lông mày (Eyebrows)
+        const browMat = new THREE.MeshStandardMaterial({ color: cfg.hairColor, roughness: 0.9 });
+        const browGeo = new THREE.BoxGeometry(0.10, 0.016, 0.02);
+        const browL = new THREE.Mesh(browGeo, browMat);
+        browL.position.set(-0.115, 0.135, 0.31);
+        browL.rotation.z = 0.05;
+        this.headGroup.add(browL);
+
+        const browR = new THREE.Mesh(browGeo, browMat);
+        browR.position.set(0.115, 0.135, 0.31);
+        browR.rotation.z = -0.05;
+        this.headGroup.add(browR);
+
+        // ----------------- D. KHẨU HÌNH MIỆNG 3D & XƯƠNG HÀM LIP-SYNC -----------------
+        this.jawGroup = new THREE.Group();
+        this.jawGroup.position.set(0, -0.075, 0.12);
+
+        // Cằm & hàm dưới
+        const chinGeo = new THREE.SphereGeometry(0.12, 16, 14);
+        chinGeo.scale(0.85, 0.70, 1.10);
+        const chin = new THREE.Mesh(chinGeo, skinMat);
+        chin.position.set(0, -0.09, 0.17);
+        this.jawGroup.add(chin);
+
+        // Môi trên (Upper Lip)
+        const lipMat = new THREE.MeshStandardMaterial({
+          color: cfg.lipColor,
+          roughness: 0.45,
+          metalness: 0.08
+        });
+        const upperLipGeo = new THREE.TorusGeometry(0.058, 0.013, 12, 20, Math.PI);
+        this.upperLip = new THREE.Mesh(upperLipGeo, lipMat);
+        this.upperLip.position.set(0, -0.085, 0.325);
+        this.headGroup.add(this.upperLip);
+
+        // Môi dưới (Lower Lip)
+        const lowerLipGeo = new THREE.TorusGeometry(0.055, 0.013, 12, 20, Math.PI);
+        this.lowerLip = new THREE.Mesh(lowerLipGeo, lipMat);
+        this.lowerLip.rotation.z = Math.PI;
+        this.lowerLip.position.set(0, -0.015, 0.208);
+        this.jawGroup.add(this.lowerLip);
+
+        // Răng trên & răng dưới
+        const teethMat = new THREE.MeshStandardMaterial({ color: 0xfcfcfc, roughness: 0.2 });
+        const teethUpperGeo = new THREE.BoxGeometry(0.08, 0.015, 0.018);
+        this.teethUpper = new THREE.Mesh(teethUpperGeo, teethMat);
+        this.teethUpper.position.set(0, -0.092, 0.312);
+        this.headGroup.add(this.teethUpper);
+
+        const teethLowerGeo = new THREE.BoxGeometry(0.075, 0.014, 0.018);
+        this.teethLower = new THREE.Mesh(teethLowerGeo, teethMat);
+        this.teethLower.position.set(0, 0.003, 0.20);
+        this.jawGroup.add(this.teethLower);
+
+        // Khoang miệng tối
+        const cavityGeo = new THREE.SphereGeometry(0.075, 12, 12);
+        const cavityMat = new THREE.MeshBasicMaterial({ color: 0x120404 });
+        const cavity = new THREE.Mesh(cavityGeo, cavityMat);
+        cavity.position.set(0, -0.088, 0.26);
+        this.headGroup.add(cavity);
+
+        this.headGroup.add(this.jawGroup);
+
+        // ----------------- E. MÁI TÓC 3D LỊCH LÃM (EXECUTIVE HAIRSTYLE) -----------------
+        const hairMat = new THREE.MeshStandardMaterial({
+          color: cfg.hairColor,
+          roughness: 0.85,
+          metalness: 0.05
+        });
+        const hairGroup = new THREE.Group();
+
+        // Đỉnh đầu & chỏm tóc (Top Crown Hair - Không bao giờ phủ trán hay che mắt)
+        const topHairGeo = new THREE.SphereGeometry(0.338, 24, 16, 0, Math.PI * 2, 0, Math.PI / 3.2);
+        topHairGeo.scale(0.96, 1.06, 1.01);
+        const topHair = new THREE.Mesh(topHairGeo, hairMat);
+        topHair.position.set(0, 0.165, -0.02);
+        hairGroup.add(topHair);
+
+        // Phần tóc sau đầu & gáy (Back & Nape Hair)
+        const backHairGeo = new THREE.SphereGeometry(0.342, 24, 16, Math.PI * 0.55, Math.PI * 0.9, 0, Math.PI / 1.6);
+        backHairGeo.scale(0.95, 1.12, 1.0);
+        const backHair = new THREE.Mesh(backHairGeo, hairMat);
+        backHair.position.set(0, 0.05, -0.04);
+        hairGroup.add(backHair);
+
+        // Tóc mai 2 bên (Sideburns)
+        const sideburnGeo = new THREE.BoxGeometry(0.025, 0.10, 0.07);
+        const sideburnL = new THREE.Mesh(sideburnGeo, hairMat);
+        sideburnL.position.set(-0.305, 0.07, 0.04);
+        const sideburnR = new THREE.Mesh(sideburnGeo, hairMat);
+        sideburnR.position.set(0.305, 0.07, 0.04);
+        hairGroup.add(sideburnL, sideburnR);
+
+        // Lọn tóc chải rẽ ngôi nhẹ nhàng trên cao (Executive Side-part Quiff)
+        const quiffGeo = new THREE.CylinderGeometry(0.035, 0.065, 0.22, 12);
+        quiffGeo.scale(1.0, 0.45, 1.15);
+        const quiff = new THREE.Mesh(quiffGeo, hairMat);
+        quiff.rotation.z = Math.PI / 2.3;
+        quiff.rotation.x = -0.3;
+        quiff.position.set(0.04, 0.25, 0.22);
+        hairGroup.add(quiff);
+
+        this.hairMesh = hairGroup;
+        this.headGroup.add(hairGroup);
+
+        this.avatarGroup.add(this.headGroup);
+        this.scene.add(this.avatarGroup);
+      },
+
+      setPersona(pName) {
+        if (!this.personasConfig[pName]) return;
+        this.currentPersona = pName;
+        if (this.initialized) {
+          this.build3DCharacter(pName);
+        }
+      },
+
+      // Xử lý chuyển động sinh học & render 60 FPS
+      animate() {
+        this.animFrameId = requestAnimationFrame(() => this.animate());
+        if (!this.renderer || !this.scene || !this.camera) return;
+
+        const time = this.clock.getElapsedTime();
+
+        // 1. Nhịp thở tự nhiên (Natural Human Breathing - Torso expansion)
+        if (this.avatarGroup) {
+          const breath = Math.sin(time * 1.6) * 0.008;
+          this.avatarGroup.position.y = breath;
+        }
+
+        // 2. Nghiêng đầu vi mô tự nhiên (Idle Micro-Sway)
+        if (this.headGroup) {
+          const swayY = Math.sin(time * 0.75) * 0.035;
+          const swayX = Math.sin(time * 1.1) * 0.015;
+          
+          if (!this.isListening && !this.isSpeaking) {
+            this.headGroup.rotation.y = swayY;
+            this.headGroup.rotation.x = swayX;
+            this.headGroup.rotation.z = Math.sin(time * 0.5) * 0.012;
+          }
+        }
+
+        // 3. Chu kỳ chớp mắt tự nhiên (Natural Eye Blink)
+        if (this.eyelidL && this.eyelidR) {
+          if (this.isBlinking) {
+            this.blinkProgress += 0.22;
+            if (this.blinkProgress >= Math.PI) {
+              this.isBlinking = false;
+              this.blinkProgress = 0;
+              this.eyelidL.rotation.x = -0.65;
+              this.eyelidR.rotation.x = -0.65;
+            } else {
+              const closed = Math.sin(this.blinkProgress);
+              const angle = -0.65 + closed * 0.72;
+              this.eyelidL.rotation.x = angle;
+              this.eyelidR.rotation.x = angle;
+            }
+          } else {
+            // Ngẫu nhiên chớp mắt mỗi 3.5 giây
+            if (Math.random() < 0.008) {
+              this.isBlinking = true;
+              this.blinkProgress = 0;
+            }
+          }
+        }
+
+        // 4. CỬ ĐỘNG KHẨU HÌNH MIỆNG 3D THỜI GIAN THỰC (Real-time Lip-Sync)
+        if (this.jawGroup && this.upperLip && this.lowerLip) {
+          if (this.isSpeaking) {
+            let volume = this.sampleSpeechVolume(time);
+            this.targetJawOpen = Math.min(1.0, volume * 1.75);
+            this.targetMouthWidth = 1.0 + Math.sin(time * 8.5) * 0.2;
+
+            // Đầu nhịp nhàng diễn giải cử chỉ khi nói
+            if (this.headGroup) {
+              this.headGroup.rotation.z = Math.sin(time * 2.8) * 0.025;
+              this.headGroup.rotation.x = 0.02 + Math.sin(time * 3.5) * 0.03;
+            }
+          } else {
+            this.targetJawOpen = 0;
+            this.targetMouthWidth = 1.0;
+          }
+
+          // Nội suy lò xo mượt mà (Damped Spring Smoothing)
+          this.currentJawOpen += (this.targetJawOpen - this.currentJawOpen) * 0.38;
+          this.currentMouthWidth += (this.targetMouthWidth - this.currentMouthWidth) * 0.35;
+
+          // Xương hàm mở góc xuống dưới
+          this.jawGroup.rotation.x = this.currentJawOpen * 0.30;
+          // Môi trên nhấc nhẹ
+          this.upperLip.position.y = -0.088 + this.currentJawOpen * 0.012;
+          // Môi dưới biến dạng theo hàm
+          this.lowerLip.scale.x = this.currentMouthWidth;
+          this.upperLip.scale.x = this.currentMouthWidth;
+        }
+
+        // 5. Cử chỉ lắng nghe gật đầu (Active Listening Nod)
+        if (this.isListening && this.headGroup) {
+          this.nodCurrent += (this.nodTarget - this.nodCurrent) * 0.15;
+          this.headGroup.rotation.x = this.nodCurrent;
+          this.headGroup.rotation.z = 0.035; // nghiêng nhẹ đầu lắng nghe
+        }
+
+        this.renderer.render(this.scene, this.camera);
+      },
+
+      sampleSpeechVolume(time) {
+        // Tận dụng Web Audio Analyser nếu audio đang phát
+        if (this.analyserNode && this.audioDataArray) {
+          try {
+            this.analyserNode.getByteFrequencyData(this.audioDataArray);
+            let sum = 0;
+            const count = Math.min(32, this.audioDataArray.length);
+            for (let i = 0; i < count; i++) {
+              sum += this.audioDataArray[i];
+            }
+            const avg = sum / count;
+            if (avg > 10) {
+              return Math.min(1.0, avg / 120);
+            }
+          } catch(e) {}
+        }
+
+        // Mô phỏng âm tiết tiếng Việt đa hài hòa (Vowel Phonation Harmonics)
+        const v1 = Math.sin(time * 11.5) * 0.45;
+        const v2 = Math.sin(time * 6.2) * 0.35;
+        const v3 = Math.sin(time * 18.0) * 0.2;
+        const pause = Math.sin(time * 1.8) > 0.65 ? 0.05 : 1.0;
+        const raw = (0.35 + v1 + v2 + v3) * pause;
+        return Math.max(0.04, Math.min(0.95, raw));
+      },
+
+      connectAudio(audioEl) {
+        if (!audioEl) return;
+        try {
+          if (!this.audioCtx) {
+            const AudioCtx = window.AudioContext || window.webkitAudioContext;
+            if (AudioCtx) this.audioCtx = new AudioCtx();
+          }
+          if (this.audioCtx && this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+          }
+          if (this.audioCtx && !this.analyserNode) {
+            this.analyserNode = this.audioCtx.createAnalyser();
+            this.analyserNode.fftSize = 64;
+            this.audioDataArray = new Uint8Array(this.analyserNode.frequencyBinCount);
+            const source = this.audioCtx.createMediaElementSource(audioEl);
+            source.connect(this.analyserNode);
+            this.analyserNode.connect(this.audioCtx.destination);
+            console.log("✓ Connected 3D Lip-Sync Analyser to TTS Audio Stream");
+          }
+        } catch(e) {
+          // Cross-origin audio or already connected
+        }
+      },
+
+      triggerNodGesture() {
+        this.nodTarget = 0.12;
+        setTimeout(() => {
+          this.nodTarget = 0.02;
+          setTimeout(() => {
+            this.nodTarget = 0.09;
+            setTimeout(() => {
+              this.nodTarget = 0.0;
+            }, 300);
+          }, 250);
+        }, 350);
+      },
+
+      handleResize() {
+        const canvas = document.getElementById('avatar3DCanvas');
+        if (!canvas || !this.renderer || !this.camera) return;
+        const container = canvas.parentElement || document.getElementById('avatarVideoFeed');
+        const width = container.clientWidth || 960;
+        const height = container.clientHeight || 540;
+        this.camera.aspect = width / height;
+        this.camera.updateProjectionMatrix();
+        this.renderer.setSize(width, height);
+      }
+    };
+
+    // ==================== AVATAR RIG: CẦU NỐI HOÀN HẢO GIỮA CODE PHÒNG & ENGINE 3D ====================
     const AvatarRig = {
       isSpeaking: false,
       isListening: false,
-      audioCtx: null,
-      analyserNode: null,
-      sourceNode: null,
-      animFrameId: null,
-      blinkTimeoutId: null,
       nodIntervalId: null,
-      proceduralTickerId: null,
 
       init() {
-        this.startBlinkEngine();
+        Avatar3DEngine.init();
         this.setGesture('welcome');
       },
 
@@ -766,218 +1473,82 @@
         if (!personas[pName]) return;
         const p = personas[pName];
         currentInterviewerName = p.name;
-        const mainImg = document.getElementById('mainAvatarImg');
         const badgeImg = document.getElementById('avatarPhoto');
         const nameEl = document.getElementById('interviewerName');
         const tagEl = document.getElementById('interviewerTag');
         const roleEl = document.getElementById('interviewerRole');
 
-        if (mainImg) mainImg.src = p.photo;
-        if (badgeImg) badgeImg.src = p.photo;
+        if (badgeImg && p.photo) badgeImg.src = p.photo;
         if (nameEl) nameEl.innerText = p.name;
         if (tagEl) tagEl.innerText = p.tag;
         if (roleEl) roleEl.innerHTML = p.role;
+
+        // Cập nhật mô hình 3D tương ứng
+        Avatar3DEngine.setPersona(pName);
       },
 
-      // Natural Eye Blink Cycle
-      startBlinkEngine() {
-        const triggerBlink = () => {
-          const overlay = document.getElementById('eyeBlinkOverlay');
-          if (overlay) {
-            overlay.style.opacity = '1';
-            setTimeout(() => {
-              overlay.style.opacity = '0';
-              // 15% chance of realistic double-blink
-              if (Math.random() < 0.15) {
-                setTimeout(() => {
-                  overlay.style.opacity = '1';
-                  setTimeout(() => { overlay.style.opacity = '0'; }, 100);
-                }, 140);
-              }
-            }, 120);
-          }
-          const nextDelay = 3000 + Math.random() * 2500;
-          this.blinkTimeoutId = setTimeout(triggerBlink, nextDelay);
-        };
-        this.blinkTimeoutId = setTimeout(triggerBlink, 2800);
-      },
-
-      // Gestures Engine
       setGesture(gestureName) {
-        const leftHand = document.getElementById('avatarHandLeft');
-        const rightHand = document.getElementById('avatarHandRight');
-        const headRig = document.getElementById('avatarHeadRig');
         const hudState = document.getElementById('avatarStateHUD');
-
-        if (!leftHand || !rightHand) return;
-
-        // Reset classes
-        leftHand.className = "absolute left-0 sm:left-4 bottom-2 transition-all duration-500 transform origin-bottom-left";
-        rightHand.className = "absolute right-0 sm:right-4 bottom-2 transition-all duration-500 transform origin-bottom-right";
-
         if (gestureName === 'welcome') {
-          leftHand.classList.add('hand-welcome-left');
-          rightHand.classList.add('hand-welcome-right');
-          if (hudState) hudState.innerText = "AI Chào đón & Phá băng";
+          if (hudState) hudState.innerText = "🎙️ 3D Virtual Human • Chào đón & Phá băng";
         } else if (gestureName === 'speaking') {
-          leftHand.classList.add('gesture-speaking-left');
-          rightHand.classList.add('gesture-speaking-right');
-          if (hudState) hudState.innerText = "AI Đang nói & Diễn giải cử chỉ";
+          if (hudState) hudState.innerText = "🎙️ 3D Virtual Human • Đang nói & Khẩu hình 60FPS";
         } else if (gestureName === 'listen') {
-          // Hand on chin attentive listening pose
-          rightHand.classList.add('hand-to-chin');
-          if (headRig) headRig.style.transform = "rotate(2.5deg) translateY(-2px)";
-          if (hudState) hudState.innerText = "AI Đang lắng nghe chăm chú (Gật đầu)";
+          if (hudState) hudState.innerText = "🎙️ 3D Virtual Human • Lắng nghe chăm chú (Gật đầu)";
         } else if (gestureName === 'wrapup') {
-          leftHand.classList.add('hand-wrapup-left');
-          rightHand.classList.add('hand-wrapup-right');
-          if (hudState) hudState.innerText = "AI Chúc mừng & Tổng kết";
+          if (hudState) hudState.innerText = "🎙️ 3D Virtual Human • Chúc mừng & Tổng kết";
         } else {
-          // idle
-          leftHand.style.transform = "translateY(20px) rotate(-6deg)";
-          rightHand.style.transform = "translateY(20px) rotate(6deg)";
-          if (headRig) headRig.style.transform = "rotate(0deg) translateY(0)";
-          if (hudState) hudState.innerText = "AI Cử chỉ & Khẩu hình Sync";
+          if (hudState) hudState.innerText = "🎙️ 3D Virtual Human • Lip-Sync Realtime";
         }
       },
 
-      // Trigger Active Listening Nod
       triggerNod() {
-        const headRig = document.getElementById('avatarHeadRig');
-        if (!headRig) return;
-        headRig.classList.remove('head-nodding');
-        void headRig.offsetWidth; // re-flow
-        headRig.classList.add('head-nodding');
-        setTimeout(() => {
-          headRig.classList.remove('head-nodding');
-        }, 1250);
+        Avatar3DEngine.triggerNodGesture();
       },
 
-      // Candidate is Speaking -> AI Listens Attentively
       startListening() {
         this.isListening = true;
         this.isSpeaking = false;
-        this.stopSpeakingAnimations();
+        Avatar3DEngine.isSpeaking = false;
+        Avatar3DEngine.isListening = true;
         this.setGesture('listen');
 
-        // Periodic gentle nods every 3.5 - 5 seconds
         if (this.nodIntervalId) clearInterval(this.nodIntervalId);
-        this.triggerNod();
+        Avatar3DEngine.triggerNodGesture();
         this.nodIntervalId = setInterval(() => {
           if (this.isListening) {
-            this.triggerNod();
+            Avatar3DEngine.triggerNodGesture();
           }
-        }, 3800);
+        }, 3600);
       },
 
       stopListening() {
         this.isListening = false;
+        Avatar3DEngine.isListening = false;
         if (this.nodIntervalId) {
           clearInterval(this.nodIntervalId);
           this.nodIntervalId = null;
         }
-        const headRig = document.getElementById('avatarHeadRig');
-        if (headRig) headRig.style.transform = "rotate(0deg) translateY(0)";
         this.setGesture('idle');
       },
 
-      // AI Starts Speaking -> Animate Mouth Lip-Sync & Speaking Gestures
       startSpeaking(audioEl, speechText) {
         this.isSpeaking = true;
         this.isListening = false;
         if (this.nodIntervalId) clearInterval(this.nodIntervalId);
 
         this.setGesture('speaking');
-        const glow = document.getElementById('speakingGlow');
-        if (glow) glow.style.opacity = '1';
+        Avatar3DEngine.isSpeaking = true;
+        Avatar3DEngine.isListening = false;
 
-        // Connect Web Audio API Analyser for genuine voice reactivity
-        try {
-          if (!this.audioCtx) {
-            this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-          }
-          if (this.audioCtx.state === 'suspended') {
-            this.audioCtx.resume();
-          }
-        } catch(e) {}
-
-        const mouthCavity = document.getElementById('mouthCavity');
-        const mouthTeeth = document.getElementById('mouthTeeth');
-        const mouthUpper = document.getElementById('mouthUpperLip');
-        const mouthLower = document.getElementById('mouthLowerLip');
-        const ring1 = document.getElementById('avatarAuraRing1');
-        const ring2 = document.getElementById('avatarAuraRing2');
-        const headImg = document.getElementById('avatarHead');
-
-        let tick = 0;
-        const animateMouth = () => {
-          if (!this.isSpeaking) return;
-
-          tick += 0.22;
-          // Procedural syllable frequency with natural human speech rhythm
-          const naturalVolume = 18 + Math.sin(tick * 3.5) * 14 + Math.sin(tick * 1.8) * 10;
-          const volNorm = Math.max(0, Math.min(45, naturalVolume));
-
-          if (mouthCavity) {
-            const ry = 2 + (volNorm / 45) * 8.5;
-            const rx = 8 + (volNorm / 45) * 4;
-            mouthCavity.setAttribute('ry', ry.toFixed(1));
-            mouthCavity.setAttribute('rx', rx.toFixed(1));
-          }
-          if (mouthUpper) {
-            const y1 = (14 - (volNorm / 45) * 3).toFixed(1);
-            const yMid = (11 - (volNorm / 45) * 4).toFixed(1);
-            mouthUpper.setAttribute('d', `M 20 ${y1} Q 30 ${yMid} 40 ${y1}`);
-          }
-          if (mouthLower) {
-            const y2 = (16 + (volNorm / 45) * 3.5).toFixed(1);
-            const yMid2 = (19 + (volNorm / 45) * 5.5).toFixed(1);
-            mouthLower.setAttribute('d', `M 20 ${y2} Q 30 ${yMid2} 40 ${y2}`);
-          }
-          if (headImg) {
-            const bob = Math.sin(tick * 3.5) * 2;
-            headImg.style.transform = `translateY(${bob.toFixed(1)}px)`;
-          }
-          if (ring1) {
-            ring1.style.transform = `scale(${1 + (volNorm / 45) * 0.12})`;
-          }
-          if (ring2) {
-            ring2.style.transform = `scale(${1 + (volNorm / 45) * 0.18})`;
-          }
-
-          this.animFrameId = requestAnimationFrame(animateMouth);
-        };
-
-        if (this.animFrameId) cancelAnimationFrame(this.animFrameId);
-        this.animFrameId = requestAnimationFrame(animateMouth);
+        if (audioEl) {
+          Avatar3DEngine.connectAudio(audioEl);
+        }
       },
 
       stopSpeakingAnimations() {
         this.isSpeaking = false;
-        if (this.animFrameId) {
-          cancelAnimationFrame(this.animFrameId);
-          this.animFrameId = null;
-        }
-
-        // Relax mouth back to natural smiling lips
-        const mouthCavity = document.getElementById('mouthCavity');
-        const mouthUpper = document.getElementById('mouthUpperLip');
-        const mouthLower = document.getElementById('mouthLowerLip');
-        const glow = document.getElementById('speakingGlow');
-        const headImg = document.getElementById('avatarHead');
-        const ring1 = document.getElementById('avatarAuraRing1');
-        const ring2 = document.getElementById('avatarAuraRing2');
-
-        if (mouthCavity) {
-          mouthCavity.setAttribute('ry', '2');
-          mouthCavity.setAttribute('rx', '8');
-        }
-        if (mouthUpper) mouthUpper.setAttribute('d', 'M 20 14 Q 30 11 40 14');
-        if (mouthLower) mouthLower.setAttribute('d', 'M 20 16 Q 30 19 40 16');
-        if (glow) glow.style.opacity = '0';
-        if (headImg) headImg.style.transform = 'translateY(0)';
-        if (ring1) ring1.style.transform = 'scale(1)';
-        if (ring2) ring2.style.transform = 'scale(1)';
+        Avatar3DEngine.isSpeaking = false;
       },
 
       stopSpeaking() {
@@ -1006,17 +1577,21 @@
         try { window.speechSynthesis.cancel(); } catch(e){}
       }
 
-      if (audioEqualizer) audioEqualizer.classList.remove('opacity-40');
       if (speakerStatus) {
         speakerStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> ${currentInterviewerName} đang nói:`;
         speakerStatus.className = "text-xs font-bold text-sky-400 uppercase tracking-wider flex items-center gap-1.5";
       }
 
-      AvatarRig.startSpeaking(null, text);
+      const voiceSelect = document.getElementById('blazeVoiceSelector');
+      const selectedVoice = (voiceSelect && voiceSelect.value) ? voiceSelect.value : 'HN-Nam-2-BL';
 
-      const audioUrl = `http://127.0.0.1:8000/api/interviews/tts?text=${encodeURIComponent(text)}`;
+      const audioUrl = `http://127.0.0.1:8000/api/interviews/tts?text=${encodeURIComponent(text)}&voice=${encodeURIComponent(selectedVoice)}&persona=${encodeURIComponent(currentInterviewerName || 'Alex Chen')}`;
       currentTtsAudio = new Audio(audioUrl);
       currentTtsAudio.crossOrigin = "anonymous";
+
+      currentTtsAudio.onplay = () => {
+        AvatarRig.startSpeaking(currentTtsAudio, text);
+      };
 
       currentTtsAudio.onended = () => {
         AvatarRig.stopSpeaking();
@@ -1029,32 +1604,36 @@
       };
 
       currentTtsAudio.onerror = (err) => {
-        console.warn("TTS backend fetch failed, using browser speech synthesis fallback:", err);
-        if ('speechSynthesis' in window) {
-          const utterance = new SpeechSynthesisUtterance(text);
-          utterance.lang = 'vi-VN';
-          utterance.rate = 0.95;
-          const voices = window.speechSynthesis.getVoices();
-          const viVoice = voices.find(v => v.lang && (v.lang.includes('vi') || v.lang.includes('VI')));
-          if (viVoice) utterance.voice = viVoice;
-          utterance.onend = () => {
-            AvatarRig.stopSpeaking();
-            if (audioEqualizer) audioEqualizer.classList.add('opacity-40');
-            if (speakerStatus) {
-              speakerStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Đang chờ bạn trả lời:`;
-            }
-            if (onCompleteCallback) onCompleteCallback();
-          };
-          window.speechSynthesis.speak(utterance);
-        } else {
-          AvatarRig.stopSpeaking();
-          if (audioEqualizer) audioEqualizer.classList.add('opacity-40');
+        console.warn("Blaze TTS audio stream failed or pending:", err);
+        AvatarRig.stopSpeaking();
+        if (audioEqualizer) audioEqualizer.classList.add('opacity-40');
+        if (speakerStatus) {
+          speakerStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Đang chờ bạn trả lời:`;
+          speakerStatus.className = "text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5";
         }
+        if (onCompleteCallback) onCompleteCallback();
       };
 
       currentTtsAudio.play().catch(err => {
         console.warn("Audio play prevented or interrupted:", err);
+        // Fallback procedural speaking if audio blocked but callback needed
+        AvatarRig.startSpeaking(null, text);
       });
+    }
+
+    function onVoiceChange(newVoice) {
+      console.log("Đã chọn giọng Blaze Voice AI:", newVoice);
+      if (newVoice.includes('Nu') || newVoice.includes('ThuyVy')) {
+        currentInterviewerName = 'Sarah Jenkins';
+        AvatarRig.setPersona('Sarah Jenkins');
+      } else {
+        currentInterviewerName = 'Alex Chen';
+        AvatarRig.setPersona('Alex Chen');
+      }
+      const speakerStatus = document.getElementById('speakerStatus');
+      if (speakerStatus) {
+        speakerStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400"></span> Đang chờ bạn trả lời:`;
+      }
     }
 
     let currentInterimTranscript = "";
@@ -1230,7 +1809,12 @@
         }
       }
 
-      // Check localStorage for config
+      // Check URL and localStorage for config
+      const urlDuration = urlParams.get('duration');
+      if (urlDuration) {
+        totalDurationMinutes = parseInt(urlDuration) || 30;
+      }
+
       const cfg = localStorage.getItem('interview_config');
       if (cfg) {
         try {
@@ -1253,9 +1837,8 @@
             const diffHeader = document.getElementById('roomDifficultyHeader');
             if (diffHeader) diffHeader.innerText = `(Độ khó: Level ${data.probing}/5)`;
           }
-          if (data.duration) {
+          if (data.duration && !urlDuration) {
             totalDurationMinutes = parseInt(data.duration) || 30;
-            secondsLeft = totalDurationMinutes * 60;
           }
           if (data.persona && personas[data.persona]) {
             AvatarRig.setPersona(data.persona);
@@ -1266,11 +1849,14 @@
       // 1. Generate customized 10-stage questions for this specific role and persona
       questionsList = build10StageQuestions(currentRole, currentCompany, currentInterviewerName, currentLevel);
 
-      // 2. Query backend for real Gemini AI questions
+      // 2. Query backend for real Gemini AI questions and synchronized session duration
       try {
         const res = await fetch(`http://127.0.0.1:8000/api/interviews/${activeSessionId}`);
         if (res.ok) {
           const sessionData = await res.json();
+          if (sessionData.duration_minutes && !urlDuration) {
+            totalDurationMinutes = parseInt(sessionData.duration_minutes) || totalDurationMinutes;
+          }
           if (sessionData.target_level) {
             currentLevel = sessionData.target_level;
             updateLevelBadgeUI(sessionData.target_level);
@@ -1281,7 +1867,7 @@
             questionsList = build10StageQuestions(currentRole, currentCompany, currentInterviewerName, currentLevel);
           }
           console.log(`🎯 [TalentAI Adaptive Engine] Đã kích hoạt phỏng vấn thích ứng 100% cấp bậc: ${currentLevel.toUpperCase()}`);
-          console.log(`💡 AI không dùng kịch bản cứng: Mỗi câu trả lời của bạn sẽ được Gemini phân tích thời gian thực để sinh câu hỏi tiếp theo bám sát thực tế!`);
+          console.log(`⏱️ [Thời lượng phiên]: ${totalDurationMinutes} Phút (Khảo sát thời gian thực)`);
           if (sessionData.role_target) {
             const headerRole = document.getElementById('roomRoleHeader');
             if (headerRole) headerRole.innerText = sessionData.role_target;
@@ -1294,14 +1880,28 @@
         console.warn("Backend fetch offline, using tailored 10-stage question bank:", err);
       }
 
+      // Synchronize exact duration and seconds
+      secondsLeft = totalDurationMinutes * 60;
+      const initialMins = Math.floor(secondsLeft / 60);
+      const initialSecs = secondsLeft % 60;
+      const timerDisplayEl = document.getElementById('timerDisplay');
+      if (timerDisplayEl) {
+        timerDisplayEl.innerText = `${initialMins.toString().padStart(2, '0')}:${initialSecs.toString().padStart(2, '0')}`;
+      }
+      const durBadgeEl = document.getElementById('roomDurationBadge');
+      if (durBadgeEl) {
+        durBadgeEl.innerText = `⏱️ ${totalDurationMinutes} Phút`;
+      }
+
       // Pre-cache Vietnamese TTS audio in background
       questionsList.slice(0, 3).forEach(q => {
-        fetch(`http://127.0.0.1:8000/api/interviews/tts?text=${encodeURIComponent(q)}`).catch(()=>{});
+        fetch(`http://127.0.0.1:8000/api/interviews/tts?text=${encodeURIComponent(q)}&persona=${encodeURIComponent(currentInterviewerName || 'Alex Chen')}`).catch(()=>{});
       });
 
       // Display 1st question (Giai đoạn: Chào hỏi)
       updateStageUI();
       const firstQ = questionsList[0];
+      activeLiveQuestionText = firstQ;
       document.getElementById('speakerStatus').innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> ${currentInterviewerName} đang nói:`;
       document.getElementById('liveSubtitleText').innerText = `"${firstQ}"`;
       startTimer();
@@ -1797,40 +2397,138 @@
       }
     }
 
+    // Thông báo Toast khi chạm hạn mức API miễn phí (Quota Exceeded / Rate Limit)
+    function showQuotaWarningBanner(msg) {
+      console.warn("%c[API QUOTA WARNING] " + msg, "color: #f39c12; font-weight: bold; font-size: 13px;");
+      let banner = document.getElementById('apiQuotaBanner');
+      if (!banner) {
+        banner = document.createElement('div');
+        banner.id = 'apiQuotaBanner';
+        banner.className = 'fixed top-5 right-5 z-50 max-w-sm sm:max-w-md bg-amber-950/95 border-2 border-amber-500 text-amber-100 p-4 rounded-2xl shadow-2xl backdrop-blur flex items-start gap-3 transition-all';
+        banner.innerHTML = `
+          <div class="text-2xl shrink-0">⚠️</div>
+          <div class="text-xs space-y-1 flex-1">
+            <p class="font-extrabold text-amber-300 text-sm">Hạn mức API Miễn phí (Quota Limit)</p>
+            <p id="apiQuotaBannerMsg" class="leading-relaxed text-slate-200"></p>
+            <p class="text-[10px] text-amber-400 font-semibold mt-1">🔄 Hệ thống đã tự động chuyển sang chế độ dự phòng để tiếp tục phỏng vấn mượt mà!</p>
+          </div>
+          <button onclick="this.parentElement.remove()" class="text-amber-400 hover:text-white font-extrabold text-base ml-2">&times;</button>
+        `;
+        document.body.appendChild(banner);
+      }
+      const msgEl = document.getElementById('apiQuotaBannerMsg');
+      if (msgEl) msgEl.innerText = msg;
+      setTimeout(() => {
+        if (banner && banner.parentElement) banner.remove();
+      }, 10000);
+    }
+
+    let turnsInCurrentStage = 0;
+
+    // Phân bổ giai đoạn phỏng vấn theo thời lượng thực tế (Time-Paced Probing Engine)
+    function computeNextStageIndex(currentStageIdx, turnsInStage, secsLeft, totalSecs) {
+      // 1. Khi thời gian sắp hết (còn <= 2.5 phút): Chuyển sang Ứng viên đặt câu hỏi (Stage 8) hoặc Kết thúc (Stage 9)
+      if (secsLeft <= 60) return 9; // Kết thúc phỏng vấn
+      if (secsLeft <= 180) return 8; // Ứng viên đặt câu hỏi
+
+      const elapsed = Math.max(0, totalSecs - secsLeft);
+      const ratio = totalSecs > 0 ? (elapsed / totalSecs) : 0; // 0.0 -> 1.0
+
+      // Stage 0: Chào hỏi -> Qua Giới thiệu sau 1 câu
+      if (currentStageIdx === 0) return 1;
+
+      // Stage 1: Giới thiệu bản thân (chiếm ~10% thời gian, tối đa 2 câu)
+      if (currentStageIdx === 1) {
+        return (ratio >= 0.10 || turnsInStage >= 2) ? 2 : 1;
+      }
+
+      // Stage 2: CV & Đồ án thực tế (chiếm ~30% thời gian, đào sâu 3-5 câu)
+      if (currentStageIdx === 2) {
+        return (ratio >= 0.30 || turnsInStage >= 4) ? 3 : 2;
+      }
+
+      // Stage 3: Chuyên môn kỹ thuật sâu (chiếm ~65% thời gian, hỏi xoáy 3 nhánh nhiều câu)
+      if (currentStageIdx === 3) {
+        return (ratio >= 0.65 || turnsInStage >= 6) ? 4 : 3;
+      }
+
+      // Stage 4: Tình huống STAR & Xử lý sự cố (chiếm ~80% thời gian, 3-4 câu)
+      if (currentStageIdx === 4) {
+        return (ratio >= 0.80 || turnsInStage >= 4) ? 5 : 4;
+      }
+
+      // Stage 5: Động lực & Mục tiêu (chiếm ~87% thời gian)
+      if (currentStageIdx === 5) {
+        return (ratio >= 0.87 || turnsInStage >= 2) ? 6 : 5;
+      }
+
+      // Stage 6: Điểm mạnh & Điểm yếu (chiếm ~92% thời gian)
+      if (currentStageIdx === 6) {
+        return (ratio >= 0.92 || turnsInStage >= 2) ? 7 : 6;
+      }
+
+      // Stage 7: Điều kiện công việc & Văn hóa (đến khi còn 3 phút)
+      if (currentStageIdx === 7) {
+        return (secsLeft <= 180 || turnsInStage >= 2) ? 8 : 7;
+      }
+
+      // Stage 8: Ứng viên hỏi
+      if (currentStageIdx === 8) {
+        return (secsLeft <= 60) ? 9 : 8;
+      }
+
+      return Math.min(9, currentStageIdx);
+    }
+
     // Xử lý câu trả lời bằng Google Gemini AI Engine và sinh phản hồi / câu hỏi tiếp theo
     async function processCandidateAnswerAndGetNextQuestion(recordedAnswer) {
       const currentStage = INTERVIEW_STAGES[currentStageIndex] || INTERVIEW_STAGES[0];
-      const currentQ = questionsList[currentStageIndex] || "Câu hỏi phỏng vấn";
+      const currentQ = activeLiveQuestionText || questionsList[currentStageIndex] || "Câu hỏi phỏng vấn";
 
       const subtitleEl = document.getElementById('liveSubtitleText');
-      subtitleEl.innerHTML = `<span class="italic text-sky-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span> AI đang phân tích câu trả lời và chuẩn bị phản hồi...</span>`;
+      let thinkingSec = 1;
+      subtitleEl.innerHTML = `<span class="italic text-sky-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span> ${currentInterviewerName} đang suy nghĩ và phân tích phản hồi (${thinkingSec}s)...</span>`;
+      
+      const thinkingTimer = setInterval(() => {
+        thinkingSec++;
+        if (subtitleEl && subtitleEl.innerHTML.includes("đang suy nghĩ")) {
+          subtitleEl.innerHTML = `<span class="italic text-sky-300 flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-400 animate-ping"></span> ${currentInterviewerName} đang suy nghĩ và phân tích phản hồi (${thinkingSec}s)...</span>`;
+        }
+      }, 1000);
 
-      // 1. Ghi nhận lượt hỏi đáp vào MySQL
+      // 1. Ghi nhận lượt hỏi đáp vào MySQL (với turn_number thực tế tăng dần 1, 2, 3...)
       try {
-        fetch('http://127.0.0.1:8000/api/interviews/turns', {
+        await fetch('http://127.0.0.1:8000/api/interviews/turns', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             session_id: activeSessionId,
-            turn_number: currentStageIndex + 1,
+            turn_number: currentTurnNumber,
             question_text: currentQ,
             answer_transcript: recordedAnswer,
             audio_url: null
           })
-        }).then(res => console.log("✓ Recorded turn to MySQL")).catch(e => console.warn("Turn recording offline:", e));
-      } catch(e) {}
+        });
+        console.log(`✓ Recorded turn ${currentTurnNumber} to MySQL with Working Memory sync`);
+      } catch(e) {
+        console.warn("Turn recording offline:", e);
+      }
+      currentTurnNumber++;
 
-      // 2. Nếu đã hoàn thành lượt cuối (stage 10)
-      if (currentStageIndex >= 9) {
+      // 2. Không bao giờ tự động thoát sớm nếu thời gian vẫn còn!
+      // Chỉ khi thời gian thực sự hết (secondsLeft <= 0) mới tự động kết thúc.
+      if (secondsLeft <= 0) {
+        clearInterval(thinkingTimer);
         endInterview();
         return;
       }
 
-      // 3. Gọi backend AI Engine phân tích phản xạ tức thời
+      // 3. Gọi backend AI Engine phân tích phản xạ tức thời (Bộ não Thích ứng 3 Nhánh & Điều phối Thời lượng)
       let defaultNext = questionsList[currentStageIndex + 1] || "";
       let feedbackPhrase = "";
       let nextQuestionText = defaultNext;
-      let shouldAdvance = true;
+      let v2StageIndex = null;
+      let v2Finished = false;
 
       try {
         const res = await fetch('http://127.0.0.1:8000/api/interviews/next-question', {
@@ -1844,39 +2542,70 @@
             current_question: currentQ,
             candidate_answer: recordedAnswer,
             target_level: currentLevel,
-            default_next_question: defaultNext
+            default_next_question: defaultNext,
+            duration_minutes: totalDurationMinutes,
+            seconds_left: secondsLeft
           })
         });
+
+        clearInterval(thinkingTimer);
 
         if (res.ok) {
           const aiData = await res.json();
           feedbackPhrase = aiData.feedback_phrase || "";
           nextQuestionText = aiData.next_question || defaultNext;
-          shouldAdvance = aiData.should_advance_stage;
 
-          console.log(`🤖 [AI Phân tích câu trả lời & Sinh câu hỏi mới]:`, {
-            "1. Ý định (Intent)": aiData.intent,
-            "2. Điểm lượt này": `${aiData.turn_score}/10`,
-            "3. Lời nhận xét nối ý": feedbackPhrase,
-            "4. Câu hỏi tiếp theo được sinh ra (Thích ứng 100%)": nextQuestionText,
-            "5. Chuyển hướng vì chưa rõ (Pivot)": aiData.is_pivot ? "Có" : "Không"
-          });
-
-          if (shouldAdvance && currentStageIndex + 1 < questionsList.length) {
-            questionsList[currentStageIndex + 1] = nextQuestionText;
+          if (aiData.quota_warning) {
+            showQuotaWarningBanner(aiData.quota_warning);
           }
+
+          // Cập nhật câu hỏi thực tế đang diễn ra để lượt kế tiếp biết chính xác câu vừa hỏi
+          activeLiveQuestionText = nextQuestionText;
+          if (questionsList && currentStageIndex < questionsList.length) {
+            questionsList[currentStageIndex] = nextQuestionText;
+          }
+
+          // Engine v2: backend quyết định giai đoạn và thời điểm kết thúc
+          if (aiData.engine === 'v2') {
+            v2StageIndex = aiData.stage_index;
+            v2Finished = Boolean(aiData.is_finished);
+          }
+
+          // Cập nhật huy hiệu Nhánh Thích Ứng 3 Nhánh (3-Branch Strategy)
+          updateAdaptiveBranchUI(aiData.branch, aiData.branch_reason, aiData.competency_focus);
+
+          console.log(`🤖 [AI Phân tích thích ứng 3 Nhánh & Điều phối Thời lượng]:`, {
+            "Thời lượng toàn phiên": `${totalDurationMinutes} phút`,
+            "Thời gian còn lại": `${Math.floor(secondsLeft / 60)}p ${secondsLeft % 60}s`,
+            "Giai đoạn hiện tại": `${currentStageIndex + 1}/10: ${currentStage.name}`,
+            "Số lượt trong giai đoạn này": turnsInCurrentStage,
+            "Nhánh điều hướng (Branch)": aiData.branch,
+            "Điểm lượt này": `${aiData.turn_score}/10`,
+            "Câu hỏi tiếp theo (Dynamic)": nextQuestionText
+          });
         }
       } catch (err) {
+        clearInterval(thinkingTimer);
         console.warn("Backend dynamic AI offline, fallback to standard progression:", err);
       }
 
       // Tạo câu nói hoàn chỉnh của AI Giám khảo
       const fullSpeech = feedbackPhrase ? `${feedbackPhrase} ${nextQuestionText}` : nextQuestionText;
 
-      // Cập nhật bước phỏng vấn
-      if (shouldAdvance) {
-        currentStageIndex++;
+      // Cập nhật câu hỏi đang phát ngôn
+      activeLiveQuestionText = nextQuestionText;
+
+      // Điều phối giai đoạn tiếp theo: engine v2 do backend quyết định, engine cũ tự tính theo thời lượng
+      const totalSecs = totalDurationMinutes * 60;
+      const nextStageIdx = v2StageIndex !== null
+        ? v2StageIndex
+        : computeNextStageIndex(currentStageIndex, turnsInCurrentStage, secondsLeft, totalSecs);
+      if (nextStageIdx !== currentStageIndex) {
+        currentStageIndex = nextStageIdx;
+        turnsInCurrentStage = 0;
         updateStageUI();
+      } else {
+        turnsInCurrentStage++;
       }
 
       const speakerStatus = document.getElementById('speakerStatus');
@@ -1884,18 +2613,81 @@
         speakerStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-sky-400 animate-pulse"></span> ${currentInterviewerName} đang nói:`;
       }
 
+      // HIỂN THỊ CÂU HỎI NGAY TRÊN MÀN HÌNH ĐỂ ỨNG VIÊN ĐỌC ĐƯỢC NGAY
       subtitleEl.innerText = `"${fullSpeech}"`;
       speakText(fullSpeech, () => {
-        if (currentStageIndex >= 9) {
+        // Wrap-up khi giám khảo đã nói lời kết (v2) hoặc thời gian thực sự đã hết
+        if (v2Finished || secondsLeft <= 0) {
           AvatarRig.setGesture('wrapup');
           setTimeout(endInterview, 1500);
         }
       });
     }
 
-    // Khi hết 30 phút hoặc sắp hết giờ -> AI tổng kết nhẹ nhàng và hoàn tất
+    // Cập nhật giao diện Huy hiệu Chiến lược Thích ứng 3 Nhánh (3-Branch Strategy) & Trí nhớ làm việc
+    function updateAdaptiveBranchUI(branch, branchReason, competencyFocus) {
+      const badge = document.getElementById('adaptiveBranchBadge');
+      const icon = document.getElementById('adaptiveBranchIcon');
+      const title = document.getElementById('adaptiveBranchTitle');
+      const compPill = document.getElementById('competencyFocusPill');
+      const compText = document.getElementById('competencyFocusText');
+      const reasonBanner = document.getElementById('branchReasonBanner');
+      const reasonText = document.getElementById('branchReasonText');
+      const reasonDot = document.getElementById('branchReasonDot');
+      const subtitleBox = document.getElementById('liveSubtitleBox');
+
+      if (!badge) return;
+
+      badge.classList.remove('hidden');
+      badge.classList.add('inline-flex');
+
+      if (branch === 'PROBE_DEEPER') {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all bg-emerald-950/90 text-emerald-300 border-emerald-500 shadow-md shadow-emerald-950/50';
+        if (icon) icon.innerText = '🚀';
+        if (title) title.innerText = 'Thử thách Đào sâu (+1 Lv)';
+        if (subtitleBox) subtitleBox.style.borderLeftColor = '#10b981';
+        if (reasonDot) reasonDot.className = 'w-2 h-2 rounded-full bg-emerald-400 shrink-0';
+      } else if (branch === 'GROUND_TO_PRACTICE') {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all bg-sky-950/90 text-sky-300 border-sky-500 shadow-md shadow-sky-950/50';
+        if (icon) icon.innerText = '🔍';
+        if (title) title.innerText = 'Bóc tách Mã nguồn Thực tế';
+        if (subtitleBox) subtitleBox.style.borderLeftColor = '#0ea5e9';
+        if (reasonDot) reasonDot.className = 'w-2 h-2 rounded-full bg-sky-400 shrink-0';
+      } else if (branch === 'EMPATHIC_PIVOT') {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold border transition-all bg-amber-950/90 text-amber-300 border-amber-500 shadow-md shadow-amber-950/50';
+        if (icon) icon.innerText = '🤝';
+        if (title) title.innerText = 'Đồng cảm & Đổi hướng Gợi mở';
+        if (subtitleBox) subtitleBox.style.borderLeftColor = '#f59e0b';
+        if (reasonDot) reasonDot.className = 'w-2 h-2 rounded-full bg-amber-400 shrink-0';
+      }
+
+      if (competencyFocus && compPill && compText) {
+        compText.innerText = competencyFocus;
+        compPill.classList.remove('hidden');
+        compPill.classList.add('sm:inline-flex');
+      }
+
+      if (branchReason && reasonBanner && reasonText) {
+        reasonText.innerHTML = `<span class="font-bold text-sky-300 uppercase tracking-wider text-[10px] mr-1">Chiến lược Lead:</span> ${branchReason}`;
+        reasonBanner.classList.remove('hidden');
+        reasonBanner.classList.add('flex');
+      }
+    }
+
+    // Xác nhận khi ứng viên chủ động muốn nộp bài / kết thúc phỏng vấn sớm
+    function confirmEarlyFinish() {
+      const minsLeft = Math.max(1, Math.ceil(secondsLeft / 60));
+      const isConfirmed = confirm(
+        `Thời lượng phỏng vấn vẫn còn ${minsLeft} phút.\n\nBạn có chắc chắn muốn nộp bài sớm và hoàn tất buổi phỏng vấn để xem Báo cáo STAR ngay không?`
+      );
+      if (isConfirmed) {
+        endInterview();
+      }
+    }
+
+    // Khi hết thời lượng (15, 30, hoặc 45 phút) -> AI tổng kết nhẹ nhàng và hoàn tất
     function handleTimeExpiredWrapUp() {
-      const closingText = `Thời lượng phỏng vấn 30 phút hôm nay của chúng ta đã hoàn tất. Cảm ơn bạn rất nhiều vì sự chuẩn bị kỹ lưỡng và các câu trả lời đầy nhiệt huyết! Chúng ta sẽ xem bảng đánh giá STAR ngay bây giờ.`;
+      const closingText = `Thời lượng phỏng vấn ${totalDurationMinutes} phút hôm nay của chúng ta đã hoàn tất. Cảm ơn bạn rất nhiều vì sự chuẩn bị kỹ lưỡng và các câu trả lời đầy nhiệt huyết! Chúng ta sẽ xem bảng đánh giá STAR ngay bây giờ.`;
       document.getElementById('liveSubtitleText').innerText = `"${closingText}"`;
       speakText(closingText, () => {
         endInterview();
@@ -1939,12 +2731,20 @@
           console.log("✓ Recorded real Gemini STAR evaluation to MySQL:", evalData);
           localStorage.setItem('latest_evaluation', JSON.stringify(evalData));
 
+          const score = Number(evalData.total_score) || 0;
+
           // Update UI with genuine AI score
           const scoreEl = document.getElementById('modalScoreText');
-          if (scoreEl) scoreEl.innerText = `${evalData.total_score} / 100 Điểm`;
+          if (scoreEl) {
+            scoreEl.innerText = `${score} / 100 Điểm`;
+            scoreEl.classList.remove('animate-pulse');
+          }
 
           const barEl = document.getElementById('modalScoreBar');
-          if (barEl) barEl.style.width = `${Math.min(100, Math.max(0, evalData.total_score))}%`;
+          if (barEl) {
+            barEl.style.width = `${Math.min(100, Math.max(0, score))}%`;
+            barEl.classList.remove('animate-pulse');
+          }
 
           const badgeEl = document.getElementById('modalBadgeStatus');
           const badgeText = document.getElementById('modalBadgeText');
@@ -1955,23 +2755,45 @@
           if (evalData.is_passed) {
             // Đạt chuẩn
             if (badgeEl) badgeEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-950 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2 border border-emerald-800";
-            if (badgeText) badgeText.innerText = "✓ ĐẠT CHUẨN VÒNG 1 • VƯỢT NGƯỠNG CUT-OFF (≥80đ)";
+            if (badgeText) badgeText.innerText = `✓ ĐẠT CHUẨN VÒNG 1 • VƯỢT NGƯỠNG CUT-OFF (${score}/100đ)`;
+            if (scoreEl) scoreEl.className = "font-extrabold text-emerald-400 text-xl font-mono";
             if (barEl) barEl.className = "bg-emerald-500 h-full rounded-full transition-all duration-700";
             if (iconContainer) iconContainer.className = "w-16 h-16 mx-auto rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-3xl font-extrabold shadow-lg";
             if (iconSymbol) iconSymbol.innerText = "✓";
             if (forwardText) forwardText.innerHTML = `tự động chuyển tiếp hồ sơ tới <strong>Hội Đồng Tuyển Dụng ${currentCompany}</strong> để xếp lịch Vòng 2 trực tiếp`;
           } else {
-            // Chưa đạt
-            if (badgeEl) badgeEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950 text-amber-400 text-xs font-bold uppercase tracking-wider mb-2 border border-amber-800";
-            if (badgeText) badgeText.innerText = `⚠️ CHƯA ĐẠT CHUẨN VÒNG 1 • DƯỚI NGƯỠNG CUT-OFF (<80đ)`;
-            if (barEl) barEl.className = "bg-amber-500 h-full rounded-full transition-all duration-700";
-            if (iconContainer) iconContainer.className = "w-16 h-16 mx-auto rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 text-3xl font-extrabold shadow-lg";
-            if (iconSymbol) iconSymbol.innerText = "⚠️";
+            // Chưa đạt (TRƯỢT THỰC CHẤT)
+            if (badgeEl) badgeEl.className = "inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-950 text-rose-400 text-xs font-bold uppercase tracking-wider mb-2 border border-rose-800";
+            if (badgeText) badgeText.innerText = `❌ CHƯA ĐẠT CHUẨN • DƯỚI NGƯỠNG CUT-OFF (${score}/100đ)`;
+            if (scoreEl) scoreEl.className = "font-extrabold text-rose-400 text-xl font-mono";
+            if (barEl) barEl.className = "bg-rose-500 h-full rounded-full transition-all duration-700";
+            if (iconContainer) iconContainer.className = "w-16 h-16 mx-auto rounded-2xl bg-rose-500/20 border border-rose-500/40 flex items-center justify-center text-rose-400 text-3xl font-extrabold shadow-lg";
+            if (iconSymbol) iconSymbol.innerText = "✕";
             if (forwardText) forwardText.innerHTML = `khuyến nghị bạn rèn luyện thêm các kỹ năng còn thiếu hổng trước khi ứng tuyển đợt sau`;
+            const nextDesc = document.getElementById('modalNextStepDesc');
+            if (nextDesc) {
+              nextDesc.innerText = `Kết quả: ${score}/100 điểm. Chưa đáp ứng tiêu chuẩn kỹ thuật tối thiểu. Vui lòng bấm "Xem Báo Cáo Điểm STAR Chi Tiết" để xem toàn bộ lỗi sai và hướng khắc phục.`;
+            }
+          }
+
+          // Cập nhật đường link dẫn tới báo cáo thực tế
+          const btnReport = document.getElementById('btnViewReportDetail');
+          if (btnReport) btnReport.href = `report_detail.html?session_id=${activeSessionId}`;
+          const btnStatus = document.getElementById('btnViewApplicationStatus');
+          if (btnStatus) btnStatus.href = `application_status.html?session_id=${activeSessionId}`;
+
+          if (!evalData.is_passed) {
+            if (btnStatus) {
+              btnStatus.className = "w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-extrabold text-sm shadow-lg transition";
+            }
+            if (btnReport) {
+              btnReport.className = "w-full inline-flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-rose-600 hover:bg-rose-500 text-white font-bold text-xs shadow-md transition";
+              btnReport.innerHTML = `<span>Xem Phân Tích Lỗ Hổng Kỹ Thuật STAR (${score}đ) &rarr;</span>`;
+            }
           }
 
           if (subSummary) {
-            subSummary.innerHTML = `AI đã đánh giá: <strong>${evalData.strengths || 'Điểm mạnh'}</strong>. Lỗ hổng: <span class="text-amber-300">${evalData.weaknesses || 'Cần bổ sung số liệu'}</span>.`;
+            subSummary.innerHTML = `AI đã đánh giá: <strong>${evalData.dossier_summary || 'Kết quả phỏng vấn'}</strong>.<br><strong class="text-emerald-400">Điểm mạnh:</strong> ${evalData.strengths || 'Không có'} &bull; <strong class="text-rose-400">Lỗ hổng:</strong> ${evalData.weaknesses || 'Cần bổ sung kiến thức'}`;
           }
         }
       } catch(err) {
